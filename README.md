@@ -1,2 +1,3 @@
-# networks
-Mantle Networks
+# Mantle Networks
+
+Mantle public resources
