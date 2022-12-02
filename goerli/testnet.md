@@ -46,4 +46,8 @@
 <td> backend-bridge </td>
 <td><a href="https://bridge.testnet.mantlenetwork.io/">https://bridge.testnet.mantlenetwork.io</a></td>
 </tr>
+ <tr>
+<td> sdk version </td>
+<td>0.1.2-alpha1</td>
+</tr>
 </table>
