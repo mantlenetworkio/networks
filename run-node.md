@@ -169,4 +169,3 @@ Use the following login details to access the dashboard:
 
 Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashboard, see the following gif if you need help:
 
-![met
