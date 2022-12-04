@@ -23,6 +23,7 @@ services:
     environment:
       # used for setting the address manager address
       # connect to the 2 layers
+      URL: http://47.113.193.8:8080/addresses.json
       DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT: https://goerli.infura.io/v3/bc9d7d959b1a4c2c9114ebf923bcfeeb
       DATA_TRANSPORT_LAYER__L2_RPC_ENDPOINT: https://rpc.testnet.mantlenetwork.io
       DATA_TRANSPORT_LAYER__SYNC_FROM_L2: 'true'
@@ -49,26 +50,10 @@ services:
       SEQUENCER_CLIENT_HTTP: https://rpc.testnet.mantlenetwork.io
       ROLLUP_STATE_DUMP_PATH: http://47.113.193.8:8080/genesis.json
       ROLLUP_CLIENT_HTTP: http://dtl:7878
-      ROLLUP_BACKEND: 'l1'
+      ROLLUP_BACKEND: 'l2'
       ETH1_CTC_DEPLOYMENT_HEIGHT: 8
       RETRIES: 60
       ROLLUP_VERIFIER_ENABLE: 'true'
     ports:
       - ${VERIFIER_HTTP_PORT:-8547}:8545
       - ${VERIFIER_WS_PORT:-8548}:8546
-
-  replica_healthcheck:
-    depends_on:
-      - verifier
-    deploy:
-      replicas: 0
-    build:
-      context: ..
-      dockerfile: ./ops/docker/Dockerfile.packages
-      target: replica-healthcheck
-    image: mantlenetworkio/replica-healthcheck:${DOCKER_TAG_REPLICA_HEALTHCHECK:-latest}
-    environment:
-      HEALTHCHECK__REFERENCE_RPC_PROVIDER: http://l2geth:8545
-      HEALTHCHECK__TARGET_RPC_PROVIDER: http://replica:8545
-    ports:
-      - ${HEALTHCHECK_HTTP_PORT:-7300}:7300
