@@ -47,9 +47,9 @@ services:
     environment:
       ETH1_HTTP: https://goerli.infura.io/v3/bc9d7d959b1a4c2c9114ebf923bcfeeb
       SEQUENCER_CLIENT_HTTP: https://rpc.testnet.mantlenetwork.io
-      ROLLUP_STATE_DUMP_PATH: https://github.com/mantlenetworkio/networks/blob/main/genesis.json
+      ROLLUP_STATE_DUMP_PATH: http://47.113.193.8:8080/genesis.json
       ROLLUP_CLIENT_HTTP: http://dtl:7878
-      ROLLUP_BACKEND: 'l2'
+      ROLLUP_BACKEND: 'l1'
       ETH1_CTC_DEPLOYMENT_HEIGHT: 8
       RETRIES: 60
       ROLLUP_VERIFIER_ENABLE: 'true'
