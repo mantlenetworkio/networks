@@ -124,8 +124,6 @@ You can also follow along with the logs for a service in real time by adding the
 
 The available services are:
 - [`dtl` and `l2geth`](#mantle-node)
-- [`healthcheck` and `fault-detector`](#healthcheck--fault-detector)
-- [`prometheus`, `grafana`, and `influxdb`](#metrics-dashboard)
 
 
 #### Update
@@ -150,22 +148,3 @@ Syncing from L2 is faster but (currently) requires trusting the L2 node you're s
 Many people are running nodes that sync from other L2 nodes, but I'd like to incentivize more people to run nodes that sync directly from L1.
 As a result, I've set this repository up to sync from L1 by default.
 I may later add the option to sync from L2 but I need to go do other things for a while.
-
-### Healthcheck
-
-When you run your Optimism node using these instructions, you will also be running two services that monitor the health of your node and the health of the network.
-The Healthcheck service will constantly compare the state computed by your node to the state of some other reference node.
-This is a great way to confirm that your node is syncing correctly.
-
-### Metrics Dashboard
-
-Grafana is exposed at [http://localhost:3000](http://localhost:3000) and comes with one pre-loaded dashboard ("Simple Node Dashboard").
-Simple Node Dashboard includes basic node information and will tell you if your node ever falls out of sync with the reference L2 node or if a state root fault is detected.
-
-Use the following login details to access the dashboard:
-
-* Username: `admin`
-* Password: `mantle`
-
-Navigate over to `Dashboards > Manage > Simple Node Dashboard` to see the dashboard, see the following gif if you need help:
-
