@@ -39,7 +39,7 @@
 <td><a href="wss://wss.testnet.mantlenetwork.io/">wss://ws.testnet.mantlenetwork.io</a> <a href="wss://wss.testnet.mantle.xyz/">wss://ws.testnet.mantle.xyz</a></td>
 </tr>
  <tr>
-<td> backend-bridge </td>
+<td> bridge </td>
 <td><a href="https://bridge.testnet.mantlenetwork.io/">https://bridge.testnet.mantlenetwork.io</a> <a href="https://bridge.testnet.mantle.xyz/">https://bridge.testnet.mantle.xyz</a></td>
 </tr>
  <tr>
