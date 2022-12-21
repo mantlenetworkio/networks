@@ -24,7 +24,7 @@ services:
       # used for setting the address manager address
       # connect to the 2 layers
       URL: https://mantlenetworkio.github.io/networks/goerli/addresses.json
-      DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT: https://goerli.infura.io/v3/bc9d7d959b1a4c2c9114ebf923bcfeeb
+      DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
       DATA_TRANSPORT_LAYER__L2_RPC_ENDPOINT: https://rpc.testnet.mantlenetwork.io
       DATA_TRANSPORT_LAYER__SYNC_FROM_L2: 'true'
       DATA_TRANSPORT_LAYER__L2_CHAIN_ID: 5001
@@ -43,10 +43,10 @@ services:
     entrypoint: sh ./geth.sh
     env_file:
       - ./goerli/envs/geth.env
-    volumes:
-      - ./data/verifier:/root/.ethereum/geth/
+#    volumes:
+#      - ./data/verifier:/root/.ethereum/geth/
     environment:
-      ETH1_HTTP: https://goerli.infura.io/v3/bc9d7d959b1a4c2c9114ebf923bcfeeb
+      ETH1_HTTP: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
       SEQUENCER_CLIENT_HTTP: https://rpc.testnet.mantlenetwork.io
       ROLLUP_STATE_DUMP_PATH: https://mantlenetworkio.github.io/networks/goerli/genesis.json
       ROLLUP_CLIENT_HTTP: http://dtl:7878
