@@ -31,62 +31,12 @@ sudo usermod -a -G docker `whoami`
 You'll need to log out and log in again for this change to take effect.
 
 
-
-### Configure the Node
-
-Make a copy of `.env.example` named `.env`.
-
-```sh
-cp .env.example .env
-```
-
-Open `.env` with your editor of choice and fill out the environment variables listed inside that file.
-Only the following variables are required:
-
-| Variable Name                           | Description                                                               |
-|-----------------------------------------|---------------------------------------------------------------------------|
-| `NETWORK_NAME`                          | Network to run the node on ("mainnet" or "goerli")                            |
-| `NODE_TYPE`                             | Type of node to run ("full" or "archive")                                      |
-| `SYNC_SOURCE`                           | Where to sync data from ("l1" or "l2")                                        |
-| `HEALTHCHECK__REFERENCE_RPC_PROVIDER`   | Another reference L2 node to check blocks against, just in case              |
-| `FAULT_DETECTOR__L1_RPC_PROVIDER`       | L1 node RPC to check state roots against                                  |
-| `DATA_TRANSPORT_LAYER__RPC_ENDPOINT`    | Node to get chain data from, must be an L1 node if `SYNC_SOURCE` is "l1" and vice versa for L2 |
-
-You can get L1/L2 RPC endpoints from [these node providers](https://github.com/mantlenetworkio/networks/blob/main/goerli/testnet.md).
-
-You can also modify any of the optional environment variables if you'd wish, but the defaults should work perfectly well for most people.
-Just make sure not to change anything under the line marked "NO TOUCHING" or you might break something!
-
-### Setting a Data Directory (Optional)
-
-Please note that this is an *optional* step but might be useful for anyone who was confused as I was about how to make Docker point at disk other than your primary disk.
-If you'd like your Docker data to live on a disk other than your primary disk, create a file `/etc/docker/daemon.json` with the following contents:
-
-```json
-{
-    "data-root": "/mnt/<disk>/docker_data"
-}
-```
-
-Make sure to restart docker after you do this or the changes won't apply:
-
-```sh
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-```
-
-Confirm that the changes were properly applied:
-
-```sh
-docker info | grep -i "Docker Root Dir"
-```
-
 ### Operating the Node
 
 #### Start
 
 ```sh
-docker compose up -d
+docker-compose up -d
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
@@ -98,7 +48,7 @@ This process takes hours.
 #### Stop
 
 ```sh
-docker compose down
+docker-compose down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -107,7 +57,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker compose down -v
+docker-compose down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
@@ -116,7 +66,7 @@ Note that this is a destructive action, be very careful!
 #### Logs
 
 ```sh
-docker compose logs <service name>
+docker-compose logs <service name>
 ```
 
 Will display the logs for a given service.
@@ -129,7 +79,7 @@ The available services are:
 #### Update
 
 ```sh
-docker compose pull
+docker-compose pull
 ```
 
 Will download the latest images for any services where you haven't hard-coded a service version.
