@@ -38,8 +38,12 @@
 <td> RPC Websocket </td>
 <td><a href="wss://wss.testnet.mantlenetwork.io/">wss://ws.testnet.mantlenetwork.io</a> <a href="wss://wss.testnet.mantle.xyz/">wss://ws.testnet.mantle.xyz</a></td>
 </tr>
+<tr>
+<td> backend </td>
+<td><a href=https://matle-bridge-backend.testnet.mantlenetwork.io">https://mantle-bridge-backend.testnet.mantlenetwork.io</a> (<a href="https://c1ey4wdv9g.larksuite.com/wiki/wikusHCG36d4Pyrb24NuUrw42jb?appStyle=UI4&domain=doesnotexists.larksuite.com&locale=zh-CN&refresh=1&tabName=space&theme=light&userId=7051803305470590981">Need Eaa VPN</a>)</td>
+</tr>
  <tr>
-<td> bridge </td>
+<td> backend-bridge </td>
 <td><a href="https://bridge.testnet.mantlenetwork.io/">https://bridge.testnet.mantlenetwork.io</a> <a href="https://bridge.testnet.mantle.xyz/">https://bridge.testnet.mantle.xyz</a></td>
 </tr>
  <tr>
