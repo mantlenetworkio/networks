@@ -1,9 +1,9 @@
-# address
+# Addresses
 
-## Testnet L1/L2 addresses
+## Testnet L1/L2 Addresses
 [L1/L2 addresses info](info/testnet-info.yaml)
 
-## Testnet Layer 2 Urls
+## Testnet Layer 2 URLs
 <table>
 <tr>
 <th>
