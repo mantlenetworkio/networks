@@ -16,7 +16,7 @@
 </th>
 </tr> 
 <tr>
-<td> chainId </td>
+<td> ChainId </td>
 <td>5001</td>
 </tr>
 <tr>
@@ -40,7 +40,7 @@
 <td><a href="https://bridge.testnet.mantle.xyz/">https://bridge.testnet.mantle.xyz</a></td>
 </tr>
 <tr>
-<td> sdk version </td>
+<td> SDK Version </td>
 <td>0.1.4</td>
 </tr>
 </table>
