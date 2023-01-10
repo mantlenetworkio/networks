@@ -1,12 +1,9 @@
 # address
 
-## L1 addresses
-[l1 addresses infos](info/testnet-info.yaml)
+## Testnet L1/L2 addresses
+[L1/L2 addresses info](info/testnet-info.yaml)
 
-## L2 addresses
-[l2 addresses infos](info/common.yaml)
-
-## testnet Layer 2 Urls
+## Testnet Layer 2 Urls
 <table>
 <tr>
 <th>
@@ -24,30 +21,26 @@
 </tr>
 <tr>
 <td> Faucet </td>
-<td><a href="https://faucet.testnet.mantlenetwork.io">https://faucet.testnet.mantlenetwork.io</a> <a href="https://faucet.testnet.mantle.xyz">https://faucet.testnet.mantle.xyz</a></td>
+<td><a href="https://faucet.testnet.mantle.xyz">https://faucet.testnet.mantle.xyz</a></td>
 </tr>
 <tr>
 <td> Explorer </td>
-<td><a href="https://explorer.testnet.mantlenetwork.io/">https://explorer.testnet.mantlenetwork.io</a> <a href="https://explorer.testnet.mantle.xyz">https://explorer.testnet.mantle.xyz</a></td>
+<td><a href="https://explorer.testnet.mantle.xyz">https://explorer.testnet.mantle.xyz</a></td>
 </tr>
 <tr>
 <td> RPC </td>
-<td><a href="https://rpc.testnet.mantlenetwork.io/">https://rpc.testnet.mantlenetwork.io</a> <a href="https://rpc.testnet.mantle.xyz">https://rpc.testnet.mantle.xyz</a></td>
+<td><a href="https://rpc.testnet.mantle.xyz">https://rpc.testnet.mantle.xyz</a></td>
 </tr>
 <tr>
 <td> RPC Websocket </td>
-<td><a href="wss://wss.testnet.mantlenetwork.io/">wss://ws.testnet.mantlenetwork.io</a> <a href="wss://wss.testnet.mantle.xyz/">wss://ws.testnet.mantle.xyz</a></td>
+<td><a href="wss://wss.testnet.mantle.xyz/">wss://ws.testnet.mantle.xyz</a></td>
 </tr>
 <tr>
-<td> backend </td>
-<td><a href=https://matle-bridge-backend.testnet.mantlenetwork.io">https://mantle-bridge-backend.testnet.mantlenetwork.io</a> (<a href="https://c1ey4wdv9g.larksuite.com/wiki/wikusHCG36d4Pyrb24NuUrw42jb?appStyle=UI4&domain=doesnotexists.larksuite.com&locale=zh-CN&refresh=1&tabName=space&theme=light&userId=7051803305470590981">Need Eaa VPN</a>)</td>
-</tr>
- <tr>
 <td> backend-bridge </td>
-<td><a href="https://bridge.testnet.mantlenetwork.io/">https://bridge.testnet.mantlenetwork.io</a> <a href="https://bridge.testnet.mantle.xyz/">https://bridge.testnet.mantle.xyz</a></td>
+<td><a href="https://bridge.testnet.mantle.xyz/">https://bridge.testnet.mantle.xyz</a></td>
 </tr>
- <tr>
+<tr>
 <td> sdk version </td>
-<td>0.1.2-alpha1</td>
+<td>0.1.4</td>
 </tr>
 </table>
