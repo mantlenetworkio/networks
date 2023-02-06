@@ -25,7 +25,7 @@ services:
       # connect to the 2 layers
       URL: https://mantlenetworkio.github.io/networks/goerli/addresses.json
       DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
-      DATA_TRANSPORT_LAYER__L2_RPC_ENDPOINT: https://rpc.testnet.mantlenetwork.io
+      DATA_TRANSPORT_LAYER__L2_RPC_ENDPOINT: https://rpc.testnet.mantle.xyz
       DATA_TRANSPORT_LAYER__SYNC_FROM_L2: 'true'
       DATA_TRANSPORT_LAYER__L2_CHAIN_ID: 5001
     ports:
@@ -47,7 +47,7 @@ services:
       - ./data/verifier:/root/.ethereum/geth/
     environment:
       ETH1_HTTP: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
-      SEQUENCER_CLIENT_HTTP: https://rpc.testnet.mantlenetwork.io
+      SEQUENCER_CLIENT_HTTP: https://rpc.testnet.mantle.xyz
       ROLLUP_STATE_DUMP_PATH: https://mantlenetworkio.github.io/networks/goerli/genesis.json
       ROLLUP_CLIENT_HTTP: http://dtl:7878
       ROLLUP_BACKEND: 'l2'
