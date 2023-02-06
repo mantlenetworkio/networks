@@ -9,10 +9,10 @@ x-healthcheck: &healthcheck
 
 services:
   dtl:
-    build:
-      context: ..
-      dockerfile: ./ops/docker/Dockerfile.packages
-      target: data-transport-layer
+#    build:
+#      context: ..
+#      dockerfile: ./ops/docker/Dockerfile.packages
+#      target: data-transport-layer
     image: mantlenetworkio/data-transport-layer:${DOCKER_TAG_DATA_TRANSPORT_LAYER:-latest}
     # override with the dtl script and the env vars required for it
     entrypoint: ./dtl.sh
@@ -36,9 +36,9 @@ services:
       - dtl
     # deploy:
     #   replicas: 1
-    build:
-      context: ..
-      dockerfile: ./l2geth/Dockerfile
+#    build:
+#      context: ..
+#      dockerfile: ./l2geth/Dockerfile
     image: mantlenetworkio/l2geth:0.7.2
     entrypoint: sh ./geth.sh
     env_file:
