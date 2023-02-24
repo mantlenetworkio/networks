@@ -8,7 +8,7 @@ if [ ! -f "/data/kzg/g1.point" ]; then
 fi
 
 if [ ! -f "/data/kzg/g2.point" ]; then
-   wget --no-check-certificate https://datalayr-testnet.s3.amazonaws.com/g2.point.3000 -O /data/kzg/g1.point
+   wget --no-check-certificate https://datalayr-testnet.s3.amazonaws.com/g2.point.3000 -O /data/kzg/g2.point
    echo 'download g2.point success'
 fi
 
