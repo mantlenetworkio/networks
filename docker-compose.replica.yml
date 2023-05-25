@@ -1,7 +1,7 @@
 version: '3.4'
 
 x-healthcheck: &healthcheck
-  test: [ "CMD", "curl", "-sf", "https://rpc-tob.testnet.mantle.xyz" ]
+  test: [ "CMD", "curl", "-sf", "http://127.0.0.1:8545" ]
   interval: 5s
   timeout: 5s
   retries: 3
@@ -28,3 +28,4 @@ services:
     ports:
       - ${VERIFIER_HTTP_PORT:-8547}:8545
       - ${VERIFIER_WS_PORT:-8548}:8546
+    x-healthcheck: *healthcheck
