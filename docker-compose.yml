@@ -33,7 +33,7 @@ services:
     ports:
       - ${DTL_PORT:-7878}:7878
 
-  verifier:
+  replica:
     depends_on:
       - dtl
     # deploy:
