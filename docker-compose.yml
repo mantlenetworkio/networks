@@ -41,7 +41,7 @@ services:
 #    build:
 #      context: ..
 #      dockerfile: ./l2geth/Dockerfile
-    image: mantlenetworkio/l2geth:v0.3.2
+    image: mantlenetworkio/l2geth:0.3.2
     entrypoint: sh ./geth.sh
     env_file:
       - ./goerli/envs/geth.env
