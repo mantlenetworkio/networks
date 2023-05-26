@@ -20,6 +20,8 @@ services:
       - ./goerli/envs/dtl.env
     # set the rest of the env vars for the network which do not
     # depend on the docker-compose setup
+    volumes:
+      - ./data/db:/db
     environment:
       # used for setting the address manager address
       # connect to the 2 layers
@@ -33,7 +35,7 @@ services:
     ports:
       - ${DTL_PORT:-7878}:7878
 
-  replica:
+  verifier:
     depends_on:
       - dtl
     # deploy:
