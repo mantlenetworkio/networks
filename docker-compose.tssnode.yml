@@ -1,0 +1,37 @@
+version: '3.4'
+
+
+services:
+  mpc-node:
+    image: ethereummantle/tss:v0.3.0
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./.tssnode:/data
+      - ./config:/app/config
+    environment:
+      TSS_NODE_PRIVATE_KEY: 
+      TSS_NODE_BOOTSTRAP_PEERS: >
+        /ip4/127.0.0.1/tcp/8000/p2p/123,
+        /ip4/127.0.0.1/tcp/8000/p2p/234,
+        /ip4/127.0.0.1/tcp/8000/p2p/455
+      TSS_NODE_EXTERNAL_IP: 
+      TSS_NODE_L2_ETH_RPC: 
+      TSS_NODE_WS_ADDR:
+      TSS_SCC_CONTRACT_ADDRESS: 
+      TSS_TSS_GROUP_CONTRACT_ADDRESS: 
+      TSS_TSS_STAKING_SLASH_CONTRACT_ADDRESS: 
+      TSS_L1_URL: 
+      TSS_L1_CONFIRM_BLOCKS: 0
+      TSS_L1_RECEIPT_CONFIRM_TIMEOUT: 30s
+      TSS_L1_START_BLOCK_NUMBER: 
+      TSS_MISS_SIGNED_NUMBER: 5
+      TSS_NODE_GAS_LIMIT_SCALER: 2
+      TSS_NODE_BASE_DIR: /data/tssnode
+      TSS_NODE_DB_DIR: /data/tssnode/db
+    command: ./tss node -c config/tss-node-config.toml
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+
