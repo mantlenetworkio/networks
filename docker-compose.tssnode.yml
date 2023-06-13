@@ -1,10 +1,26 @@
 version: '3.4'
 
-
 services:
-  mpc-node:
-    image: ethereummantle/tss:v0.3.0
-
+  da-verifier:
+    image: mantlenetworkio/l2geth:v0.4.0-1
+    entrypoint: sh ./geth.sh
+    env_file:
+      - ./goerli/envs/daverifier.env
+    volumes:
+      - ./data/verifier:/root/.ethereum/geth/
+    environment:
+      ETH1_HTTP: http://l1_chain:8545
+      SEQUENCER_L1_RPC: 
+      SEQUENCER_CLIENT_HTTP: http://l2geth:8545
+      ROLLUP_STATE_DUMP_PATH: http://deployer:8081/state-dump.latest.json
+      ROLLUP_CLIENT_HTTP: http://dtl:7878
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+  tss-node:
+    image: mantlenetworkio/tss:v0.4.0
+    depends_on:
+      - da-verifier
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
