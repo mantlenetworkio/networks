@@ -4,50 +4,55 @@ services:
   da-verifier:
     image: mantlenetworkio/l2geth:v0.4.0-1
     entrypoint: sh ./geth.sh
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     env_file:
       - ./goerli/envs/daverifier.env
     volumes:
       - ./data/verifier:/root/.ethereum/geth/
     environment:
-      ETH1_HTTP: http://l1_chain:8545
-      SEQUENCER_L1_RPC: 
-      SEQUENCER_CLIENT_HTTP: http://l2geth:8545
-      ROLLUP_STATE_DUMP_PATH: http://deployer:8081/state-dump.latest.json
-      ROLLUP_CLIENT_HTTP: http://dtl:7878
+      ETH1_HTTP: http://host.docker.internal:9545
+      SEQUENCER_L1_RPC: http://host.docker.internal:9545
+      SEQUENCER_CLIENT_HTTP: http://host.docker.internal:8545
+      ROLLUP_STATE_DUMP_PATH: http://host.docker.internal:8081/state-dump.latest.json
+      ROLLUP_CLIENT_HTTP: http://host.docker.internal:7878
+      BLOCK_SIGNER_KEY: 
+      BLOCK_SIGNER_ADDRESS: 
     ports:
-      - "8545:8545"
-      - "8546:8546"
+      - "3545:8545"
+      - "3546:8546"
+      - "33303:30303"
   tss-node:
     image: mantlenetworkio/tss:v0.4.0
-    depends_on:
-      - da-verifier
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - da-verifier
     volumes:
       - ./.tssnode:/data
       - ./config:/app/config
     environment:
       TSS_NODE_PRIVATE_KEY: 
       TSS_NODE_BOOTSTRAP_PEERS: >
-        /ip4/127.0.0.1/tcp/8000/p2p/123,
-        /ip4/127.0.0.1/tcp/8000/p2p/234,
-        /ip4/127.0.0.1/tcp/8000/p2p/455
-      TSS_NODE_EXTERNAL_IP: 
-      TSS_NODE_L2_ETH_RPC: 
-      TSS_NODE_WS_ADDR:
+        /dns4/host.docker.internal/tcp/17550/p2p/16Uiu2HAm4GxbCVcQU6a3MvHeAXz6GaxSVwoVZuEzDPNkLdzZ7V9v,
+        /dns4/host.docker.internal/tcp/17551/p2p/16Uiu2HAmKfKjF8NZQSiX34K61tC1UDs5S5KmuXdUo5sV2Grws9DR,
+        /dns4/host.docker.internal/tcp/17552/p2p/16Uiu2HAmPd2aH86WmaRKbzmS9znvGJ4zbYDbYkcoqek6UVK7k8cW,
+        /dns4/host.docker.internal/tcp/17553/p2p/16Uiu2HAm5nwe45HDYR6hBDpXq5cXKG3jnUYHppWx8jRNF71izex8
+      TSS_NODE_L2_ETH_RPC: http://host.docker.internal:3545
+      TSS_NODE_WS_ADDR: tcp://host.docker.internal:8181
       TSS_SCC_CONTRACT_ADDRESS: 
       TSS_TSS_GROUP_CONTRACT_ADDRESS: 
       TSS_TSS_STAKING_SLASH_CONTRACT_ADDRESS: 
-      TSS_L1_URL: 
+      TSS_L1_URL: http://host.docker.internal:9545
       TSS_L1_CONFIRM_BLOCKS: 0
       TSS_L1_RECEIPT_CONFIRM_TIMEOUT: 30s
-      TSS_L1_START_BLOCK_NUMBER: 
+      TSS_L1_START_BLOCK_NUMBER: 1
       TSS_MISS_SIGNED_NUMBER: 5
-      TSS_NODE_GAS_LIMIT_SCALER: 2
+      TSS_NODE_GAS_LIMIT_SCALER: 10
       TSS_NODE_BASE_DIR: /data/tssnode
       TSS_NODE_DB_DIR: /data/tssnode/db
     command: ./tss node -c config/tss-node-config.toml
     ports:
       - "8080:8080"
-      - "8000:8000"
+      - "18000:8000"
 
