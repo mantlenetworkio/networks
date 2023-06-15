@@ -1,37 +1,48 @@
 version: '3.4'
 
-services:
-  dl-node:
-    image: mantledlnode:v19
+volumes:
+  data-volume:
 
-    entrypoint: ./dl_node.sh
+services:
+  init:
+    build: ./init
+    volumes:
+      - data-volume:/app/data
+
+  dl-node:
+    image: mantlenetworkio/da-node
+
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    env_file:
-      - ./da/envs/node.env
     volumes:
-      - ./data/dl_node:/root/.eigen/da/
+      - data-volume:/data/kzg
     environment:
-      DL_NODE_CHAIN_ID: 31337
-      DL_NODE_CHAIN_PROVIDER: http://host.docker.internal:9545
-      DL_NODE_CHALLENGE_ORDER: 3000
-      DL_NODE_DB_PATH: /data/da-node1
-      DL_NODE_DLR_ADDRESS: 0xa3025AB7Fb7Ba30488622F75080995A4F48b6F6D
+      DL_NODE_CHAIN_ID: 5
+      DL_NODE_CHAIN_RPC: https://rpc.ankr.com/eth_goerli
+      DL_NODE_CHALLENGE_ORDER: 200000
+      DL_NODE_DB_PATH: /data/da-node
+      DL_NODE_DLSM_ADDRESS: 0x5d88885659dc1ba1C25d9e9a78ec4df313672d48
       DL_NODE_FILE_LOG_LEVEL: trace
       DL_NODE_G1_PATH: /data/kzg/g1.point
       DL_NODE_G2_PATH: /data/kzg/g2.point
-      DL_NODE_GRAPH_PROVIDER: http://host.docker.internal:8000/subgraphs/name/datalayr
-      DL_NODE_GRPC_PORT: 32111
-      DL_NODE_HOSTNAME: 0.0.0.0
-      DL_NODE_LOG_PATH: /data/logs/dl-node1
-      DL_NODE_ORDER: 3000
-      DL_NODE_PRIVATE: 6a6494edf0c00b3d0117f1635ad32a6005587cb6e9e808874da622f7b8925697
-      DL_NODE_PRIVATE_BLS: 3617697886
+      DL_NODE_GRAPH_PROVIDER: http://k8s-app-graphnod-30887b7825-5c5d19b37726120d.elb.ap-southeast-1.amazonaws.com:8000/subgraphs/name/datalayr
+      DL_NODE_GRPC_PORT: 32000
+      DL_NODE_HOSTNAME: ${publicip_of_da-node}
+      DL_NODE_LOG_PATH: /data/logs/da-node
+      DL_NODE_SRS_ORDER: 200000
+      DL_NODE_PRIVATE_BLS: '8332518314' 
       DL_NODE_SRS_TABLE_PATH: /data/kzg/SRSTables
       DL_NODE_STD_LOG_LEVEL: debug
       DL_NODE_TIMEOUT: 3000ms
+      DL_NODE_CACHE_PATH: data/kzg/SRSTables
+      DL_NODE_VERBOSE: true
+      DL_NODE_NUM_WORKERS: 8
+      DL_NODE_ENABLE_METRICS: true
+      DL_NODE_METRICS_PORT: 7001
+      DL_NODE_PRIVATE_KEY: ${danode-privatekey}
 
     ports:
-      - ${DL_NODE_GRPC_PORT:-32111}:32111
-
+      - ${DL_NODE_GRPC_PORT:-32000}:32000
+    depends_on:
+      - init
 
