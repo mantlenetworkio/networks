@@ -1,37 +1,51 @@
 version: '3.4'
 
-
 services:
-  mpc-node:
-    image: ethereummantle/tss:v0.3.0
-
+  da-verifier:
+    image: mantlenetworkio/l2geth:v0.4.0-1
+    entrypoint: sh ./geth.sh
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    env_file:
+      - ./goerli/envs/daverifier.env
+    volumes:
+      - ./data/verifier:/root/.ethereum/geth/
+    environment:
+      ETH1_HTTP: ${RPC_URL}
+      SEQUENCER_L1_RPC: ${RPC_URL}
+      SEQUENCER_CLIENT_HTTP: ${MANTLE-TESTNET-URL}
+      ROLLUP_STATE_DUMP_PATH:  ${MANTLE-TESTNET-URL-Deployer}state-dump.latest.json
+      ROLLUP_CLIENT_HTTP: ${MANTLE-TESTNET-URL-DTL}:7878
+      BLOCK_SIGNER_KEY: ${key}
+      BLOCK_SIGNER_ADDRESS: ''
+    ports:
+      - "3545:8545"
+      - "3546:8546"
+      - "33303:30303"
+  tss-node:
+    image: mantlenetworkio/tss:v0.4.0
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - da-verifier
     volumes:
       - ./.tssnode:/data
       - ./config:/app/config
     environment:
-      TSS_NODE_PRIVATE_KEY: 
+      TSS_NODE_PRIVATE_KEY: ${key}
       TSS_NODE_BOOTSTRAP_PEERS: >
-        /ip4/127.0.0.1/tcp/8000/p2p/123,
-        /ip4/127.0.0.1/tcp/8000/p2p/234,
-        /ip4/127.0.0.1/tcp/8000/p2p/455
-      TSS_NODE_EXTERNAL_IP: 
-      TSS_NODE_L2_ETH_RPC: 
-      TSS_NODE_WS_ADDR:
+        /ip4/${IP_OF_MANTLE_TESTNET_TSSNODE}/tcp/80/p2p/${PEERID}
+      TSS_NODE_EXTERNAL_IP: ${PUBLIC IP}
       TSS_SCC_CONTRACT_ADDRESS: 
       TSS_TSS_GROUP_CONTRACT_ADDRESS: 
       TSS_TSS_STAKING_SLASH_CONTRACT_ADDRESS: 
-      TSS_L1_URL: 
-      TSS_L1_CONFIRM_BLOCKS: 0
-      TSS_L1_RECEIPT_CONFIRM_TIMEOUT: 30s
-      TSS_L1_START_BLOCK_NUMBER: 
-      TSS_MISS_SIGNED_NUMBER: 5
-      TSS_NODE_GAS_LIMIT_SCALER: 2
-      TSS_NODE_BASE_DIR: /data/tssnode
-      TSS_NODE_DB_DIR: /data/tssnode/db
+      TSS_L1_START_BLOCK_NUMBER: 1
+      TSS_MISS_SIGNED_NUMBER: 10
+      TSS_NODE_GAS_LIMIT_SCALER: 15
+      TSS_L1_URL:  ${RPC_URL}
+      TSS_NODE_L2_ETH_RPC:  "http://da-verifier:8545"
+      TSS_NODE_WS_ADDR:  "tcp://${MATNLE-TESTNET-TSSMANAGER}:8081"
     command: ./tss node -c config/tss-node-config.toml
     ports:
       - "8080:8080"
       - "8000:8000"
-
