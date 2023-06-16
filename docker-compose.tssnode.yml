@@ -13,11 +13,11 @@ services:
     environment:
       ETH1_HTTP: ${RPC_URL}
       SEQUENCER_L1_RPC: ${RPC_URL}
-      SEQUENCER_CLIENT_HTTP: http://k8s-app-mantlel2-2bd455b2ee-23bc4de7e1402a47.elb.ap-southeast-1.amazonaws.com:8545
-      ROLLUP_STATE_DUMP_PATH: http://k8s-app-mantlede-9c527c4fc8-0dec9fae63645efd.elb.ap-southeast-1.amazonaws.com/state-dump.latest.json
-      ROLLUP_CLIENT_HTTP: http://k8s-app-mantledt-bee0520e12-db81d7540cb3f4a3.elb.ap-southeast-1.amazonaws.com:7878
+      SEQUENCER_CLIENT_HTTP: ${MANTLE-TESTNET-URL}
+      ROLLUP_STATE_DUMP_PATH:  ${MANTLE-TESTNET-URL-Deployer}state-dump.latest.json
+      ROLLUP_CLIENT_HTTP: ${MANTLE-TESTNET-URL-DTL}:7878
       BLOCK_SIGNER_KEY: ${key}
-      BLOCK_SIGNER_ADDRESS: '0x9a5165b94acc2b95a9d12a4efe4fd95772ae0980'
+      BLOCK_SIGNER_ADDRESS: ''
     ports:
       - "3545:8545"
       - "3546:8546"
@@ -34,17 +34,17 @@ services:
     environment:
       TSS_NODE_PRIVATE_KEY: ${key}
       TSS_NODE_BOOTSTRAP_PEERS: >
-        /ip4/13.214.116.8/tcp/80/p2p/16Uiu2HAmEa1AX7r573rsG1BPj4acvAXsr8AEbvEZAnQDswiWGLpt
-      TSS_NODE_EXTERNAL_IP: 54.151.216.197
-      TSS_SCC_CONTRACT_ADDRESS: 0x88EC574e2ef0EcF9043373139099f7E535F94dBC
-      TSS_TSS_GROUP_CONTRACT_ADDRESS: 0xa2B74e4b2aB55e236BaBd2dA57C9aB826CfAB88E
-      TSS_TSS_STAKING_SLASH_CONTRACT_ADDRESS: 0xD56afa77Ec5F9CADE20C50000303F15FAFe2e83d
+        /ip4/${IP_OF_MANTLE_TESTNET_TSSNODE}/tcp/80/p2p/${PEERID}
+      TSS_NODE_EXTERNAL_IP: ${PUBLIC IP}
+      TSS_SCC_CONTRACT_ADDRESS: 
+      TSS_TSS_GROUP_CONTRACT_ADDRESS: 
+      TSS_TSS_STAKING_SLASH_CONTRACT_ADDRESS: 
       TSS_L1_START_BLOCK_NUMBER: 1
       TSS_MISS_SIGNED_NUMBER: 10
       TSS_NODE_GAS_LIMIT_SCALER: 15
-      TSS_L1_URL: http://dev-bitnetwork-eth-goerli.node.bybchain.io
+      TSS_L1_URL:  ${RPC_URL}
       TSS_NODE_L2_ETH_RPC:  "http://da-verifier:8545"
-      TSS_NODE_WS_ADDR:  "tcp://k8s-app-mantlets-91a08e5de5-2e208d42be48529b.elb.ap-southeast-1.amazonaws.com:8081"
+      TSS_NODE_WS_ADDR:  "tcp://${MATNLE-TESTNET-TSSMANAGER}:8081"
     command: ./tss node -c config/tss-node-config.toml
     ports:
       - "8080:8080"
