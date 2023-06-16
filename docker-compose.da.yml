@@ -21,7 +21,7 @@ services:
       DL_NODE_CHAIN_RPC: https://rpc.ankr.com/eth_goerli
       DL_NODE_CHALLENGE_ORDER: 200000
       DL_NODE_DB_PATH: /data/da-node
-      DL_NODE_DLSM_ADDRESS: 0x5d88885659dc1ba1C25d9e9a78ec4df313672d48
+      DL_NODE_DLSM_ADDRESS: #find this value in https://github.com/mantlenetworkio/networks/blob/main/goerli/da-address.json#L8
       DL_NODE_FILE_LOG_LEVEL: trace
       DL_NODE_G1_PATH: /data/kzg/g1.point
       DL_NODE_G2_PATH: /data/kzg/g2.point
