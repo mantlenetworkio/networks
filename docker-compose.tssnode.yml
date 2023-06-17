@@ -13,9 +13,9 @@ services:
     environment:
       ETH1_HTTP: ${RPC_URL}
       SEQUENCER_L1_RPC: ${RPC_URL}
-      SEQUENCER_CLIENT_HTTP: ${MANTLE-TESTNET-URL}
-      ROLLUP_STATE_DUMP_PATH:  ${MANTLE-TESTNET-URL-Deployer}state-dump.latest.json
-      ROLLUP_CLIENT_HTTP: ${MANTLE-TESTNET-URL-DTL}:7878
+      SEQUENCER_CLIENT_HTTP: https://rpc.testnet.mantle.xyz
+      ROLLUP_STATE_DUMP_PATH:  https://mantlenetworkio.github.io/networks/goerli/genesis.json
+      ROLLUP_CLIENT_HTTP: https://dtl.testnet.mantle.xyz
       BLOCK_SIGNER_KEY: ${key}
       BLOCK_SIGNER_ADDRESS: ''
     ports:
