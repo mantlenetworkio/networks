@@ -30,7 +30,7 @@ services:
       DL_NODE_HOSTNAME: ${publicip_of_da-node}
       DL_NODE_LOG_PATH: /data/logs/da-node
       DL_NODE_SRS_ORDER: 200000
-      DL_NODE_PRIVATE_BLS: '' #need a generate bls12-381 key random seed,  mantle will reply your this value on email after you email mantle request whitelist your IP and EOA
+      DL_NODE_PRIVATE_BLS: '#fixme' #need a generate bigint （length at least 10）
       DL_NODE_SRS_TABLE_PATH: /data/kzg/SRSTables
       DL_NODE_STD_LOG_LEVEL: debug
       DL_NODE_TIMEOUT: 3000ms
