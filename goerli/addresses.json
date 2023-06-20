@@ -17,6 +17,6 @@
     "L1StandardBridge_for_verification_only": "0x6544Edd5862A26fE8DB7f783f7D779770508d5fE",
     "BVM_EigenDataLayrChain": "0x1D8f521D20Aa256D88b6AC774F7A51E74f62fd32",
     "Proxy__BVM_EigenDataLayrChain": "0xb8B7d27b71c409CC5f0eCf733CE32dDe07bb6828",
-    "TestBitToken": "0x5a94Dc6cc85fdA49d8E9A8b85DDE8629025C42be",
+    "Proxy__L1MantleToken": "0xc1dC2d65A2243c22344E725677A3E3BEBD26E604",
     "AddressManager": "0xA647F5947C50248bc4b2eF773791c9C2bc01C65A"
  }
