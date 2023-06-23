@@ -1,7 +1,7 @@
 version: '3.4'
 
 x-healthcheck: &healthcheck
-  test: [ "CMD", "curl", "-sf", "http://localhost:8545" ]
+  test: [ "CMD", "curl", "-sf", "http://127.0.0.1:8545" ]
   interval: 5s
   timeout: 5s
   retries: 3
@@ -20,14 +20,18 @@ services:
       - ./goerli/envs/dtl.env
     # set the rest of the env vars for the network which do not
     # depend on the docker-compose setup
+    volumes:
+      - ./data/db:/db
     environment:
       # used for setting the address manager address
       # connect to the 2 layers
       URL: https://mantlenetworkio.github.io/networks/goerli/addresses.json
       DATA_TRANSPORT_LAYER__L1_RPC_ENDPOINT: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
-      DATA_TRANSPORT_LAYER__L2_RPC_ENDPOINT: https://rpc.testnet.mantle.xyz
+      DATA_TRANSPORT_LAYER__L2_RPC_ENDPOINT: https://rpc-tob.testnet.mantle.xyz
       DATA_TRANSPORT_LAYER__SYNC_FROM_L2: 'true'
       DATA_TRANSPORT_LAYER__L2_CHAIN_ID: 5001
+      DATA_TRANSPORT_LAYER__EIGEN_UPGRADE_ENABLE: true
+      DATA_TRANSPORT_LAYER__SYNC_TO_DA: false
     ports:
       - ${DTL_PORT:-7878}:7878
 
@@ -39,7 +43,7 @@ services:
 #    build:
 #      context: ..
 #      dockerfile: ./l2geth/Dockerfile
-    image: mantlenetworkio/l2geth:0.7.2
+    image: mantlenetworkio/l2geth:0.3.2
     entrypoint: sh ./geth.sh
     env_file:
       - ./goerli/envs/geth.env
@@ -47,13 +51,15 @@ services:
       - ./data/verifier:/root/.ethereum/geth/
     environment:
       ETH1_HTTP: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
-      SEQUENCER_CLIENT_HTTP: https://rpc.testnet.mantle.xyz
+      SEQUENCER_CLIENT_HTTP:  https://rpc-tob.testnet.mantle.xyz
       ROLLUP_STATE_DUMP_PATH: https://mantlenetworkio.github.io/networks/goerli/genesis.json
       ROLLUP_CLIENT_HTTP: http://dtl:7878
       ROLLUP_BACKEND: 'l2'
       ETH1_CTC_DEPLOYMENT_HEIGHT: 8
       RETRIES: 60
       ROLLUP_VERIFIER_ENABLE: 'true'
+      ROLLUP_EIGEN_DA_BLOCK: "8280000"
     ports:
       - ${VERIFIER_HTTP_PORT:-8547}:8545
       - ${VERIFIER_WS_PORT:-8548}:8546
+    x-healthcheck: *healthcheck
