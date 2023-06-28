@@ -33,6 +33,23 @@ You'll need to log out and log in again for this change to take effect.
 
 ### Operating the Node
 
+#### Download latest data from mantle 
+
+this node will sync data from 0 if you don't download data first 
+you could download latest data to local folder ./data/verifier so won't need to sync from 0 
+example: 
+```sh 
+wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/
+20230614-testnet-chaindata.tar
+```
+you could change 20230614 to any date not today 
+
+after untar the files , the folder should some like this :
+```sh 
+$ ls ./data/verifier
+LOCK  chaindata  nodekey  nodes  transactions.rlp
+```
+
 #### Start
 
 ```sh

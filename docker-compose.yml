@@ -14,9 +14,6 @@ services:
     env_file:
       - ./goerli/envs/geth.env #
     volumes:
-      # you could download latest data to local folder ./data/verifier so won't need to sync from 0 
-      # example: wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/20230614-testnet-chaindata.tar
-      # you could change 20230614 to any date not today 
       - ./data/verifier:/root/.ethereum/geth/ 
     environment:
       ETH1_HTTP: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
@@ -28,5 +25,5 @@ services:
       RETRIES: 60
       ROLLUP_VERIFIER_ENABLE: 'true'
     ports:
-      - ${VERIFIER_HTTP_PORT:-8547}:8545
-      - ${VERIFIER_WS_PORT:-8548}:8546
+      - ${VERIFIER_HTTP_PORT:-8545}:8545
+      - ${VERIFIER_WS_PORT:-8546}:8546
