@@ -14,7 +14,7 @@ services:
     env_file:
       - ./goerli/envs/geth.env #
     volumes:
-      # you could download lasttest data to local folder ./data/verifier so won't need to sync from 0 
+      # you could download latest data to local folder ./data/verifier so won't need to sync from 0 
       # example: wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/20230614-testnet-chaindata.tar
       # you could change 20230614 to any date not today 
       - ./data/verifier:/root/.ethereum/geth/ 
