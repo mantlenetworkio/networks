@@ -26,4 +26,4 @@ services:
       ROLLUP_VERIFIER_ENABLE: 'true'
     ports:
       - ${VERIFIER_HTTP_PORT:-8545}:8545
-      - ${VERIFIER_WS_PORT:-8546 }:8546
+      - ${VERIFIER_WS_PORT:-8546}:8546
