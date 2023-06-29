@@ -35,8 +35,8 @@ You'll need to log out and log in again for this change to take effect.
 
 #### Download latest data from mantle 
 
-this node will sync data from 0 if you don't download data first 
-you could download latest data to local folder <strong>./data/verifier</strong> so won't need to sync from 0 
+this node will sync data from 0 if you don't download snapshot first 
+you could download latest snapshot to local folder <strong>./data/verifier</strong> so won't need to sync from 0 
 example: 
 ```sh 
 wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/
