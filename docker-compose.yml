@@ -19,7 +19,7 @@ services:
       ETH1_HTTP: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
       SEQUENCER_CLIENT_HTTP: https://rpc.testnet.mantle.xyz
       ROLLUP_STATE_DUMP_PATH: https://mantlenetworkio.github.io/networks/goerli/genesis.json
-      ROLLUP_CLIENT_HTTP: https://dtl.testnet.mantle.xyz
+      ROLLUP_CLIENT_HTTP: https://dtl-tob.testnet.mantle.xyz
       ROLLUP_BACKEND: 'l2'
       ETH1_CTC_DEPLOYMENT_HEIGHT: 8
       RETRIES: 60
