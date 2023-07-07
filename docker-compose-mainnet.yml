@@ -1,0 +1,29 @@
+version: '3.4'
+
+x-healthcheck: &healthcheck
+  test: [ "CMD", "curl", "-sf", "http://localhost:8545" ]
+  interval: 5s
+  timeout: 5s
+  retries: 3
+  start_period: 30s
+
+services:
+  verifier:
+    image: mantlenetworkio/l2geth:v0.4.2-beta.1
+    entrypoint: sh ./geth.sh
+    env_file:
+      - ./mainnet/envs/geth.env #
+    volumes:
+      - ./data/geth:/root/.ethereum/geth/ 
+    environment:
+      ETH1_HTTP: https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161
+      SEQUENCER_CLIENT_HTTP: https://rpc.mantle.xyz
+      ROLLUP_STATE_DUMP_PATH: https://mantlenetworkio.github.io/networks/mainnet/genesis.json
+      ROLLUP_CLIENT_HTTP: https://dtl.mantle.xyz
+      ROLLUP_BACKEND: 'l2'
+      ETH1_CTC_DEPLOYMENT_HEIGHT: 8
+      RETRIES: 60
+      ROLLUP_VERIFIER_ENABLE: 'true'
+    ports:
+      - ${VERIFIER_HTTP_PORT:-8545}:8545
+      - ${VERIFIER_WS_PORT:-8546}:8546
