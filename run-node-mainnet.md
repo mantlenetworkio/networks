@@ -48,7 +48,7 @@ This process takes hours.
 #### Stop
 
 ```sh
-docker-compose down
+docker-compose -f docker-compose-mainnet.yml down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -57,7 +57,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker-compose down -v
+docker-compose -f docker-compose-mainnet.yml down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
@@ -72,7 +72,6 @@ docker-compose logs <service name>
 Will display the logs for a given service.
 You can also follow along with the logs for a service in real time by adding the flag `-f`.
 
-The available services are:
-- [`l2geth`](#mantle-node)
+
 
 
