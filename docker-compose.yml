@@ -8,7 +8,7 @@ x-healthcheck: &healthcheck
   start_period: 30s
 
 services:
-  verifier:
+  replica:
     image: mantlenetworkio/l2geth:v0.4.0-1
     entrypoint: sh ./geth.sh
     env_file:
