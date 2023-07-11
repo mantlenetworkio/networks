@@ -90,7 +90,7 @@ Will display the logs for a given service.
 You can also follow along with the logs for a service in real time by adding the flag `-f`.
 
 The available services are:
-- [`l2geth`](#mantle-node)
+- [`replica`](#mantle-node)
 
 
 #### Update
