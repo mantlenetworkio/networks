@@ -2,6 +2,8 @@
 
 Mantle public resources
 
-### run-simple-node
+### run a replica node
 
-[run-simple-node](./run-node.md)
+[run a node in testnet](./run-node.md)
+
+[run a node in mainnet](./run-node-mainnet.md)
