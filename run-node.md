@@ -33,18 +33,25 @@ You'll need to log out and log in again for this change to take effect.
 
 ### Operating the Node
 
-#### Download latest data from mantle 
+#### Download latest snapshot from mantle 
 
-this node will sync data from 0 if you don't download snapshot first 
-you could download latest snapshot to local folder <strong>./data/geth</strong> so won't need to sync from 0 
+We recommend that you start the node with latest shapshot, so that you don't need to wait a long time to sync data.
+
 example: 
-```sh 
-wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/
-20230614-testnet-chaindata.tar
-```
-you could change 20230614 to any date not today 
 
-after untar the files , the folder should some like this :
+```sh 
+mkdir -p ./data/geth
+
+# yesterday's snapshot tarball
+tarball=$(TZ=UTC date +"%Y%m%d" --date="yesterday")-testnet-chaindata.tar
+
+wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/${tarball}
+
+tar xf ${tarball} -C ./data/geth
+
+```
+
+Check the data was unarchived successfully: 
 ```sh 
 $ ls ./data/geth
 LOCK  chaindata  nodekey  nodes  transactions.rlp
