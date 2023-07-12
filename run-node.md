@@ -40,7 +40,7 @@ We recommend that you start the node with latest shapshot, so that you don't nee
 example: 
 
 ```sh 
-mkdir ./data/geth
+mkdir -p ./data/geth
 
 # yesterday's snapshot tarball
 tarball=$(TZ=UTC date +"%Y%m%d" --date="yesterday")-testnet-chaindata.tar
