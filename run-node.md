@@ -40,20 +40,20 @@ We recommend that you start the node with latest shapshot, so that you don't nee
 example: 
 
 ```sh 
-mkdir data/geth
+mkdir ./data/geth
 
 # yesterday's snapshot tarball
 tarball=$(TZ=UTC date +"%Y%m%d" --date="yesterday")-testnet-chaindata.tar
 
 wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/${tarball}
 
-tar xf ${tarball} -C data/geth
+tar xf ${tarball} -C ./data/geth
 
 ```
 
 Check the data was unarchived successfully: 
 ```sh 
-$ ls data/geth
+$ ls ./data/geth
 LOCK  chaindata  nodekey  nodes  transactions.rlp
 ```
 
