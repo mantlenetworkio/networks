@@ -39,12 +39,11 @@ this node will sync data from 0 if you don't download snapshot first
 you could download latest snapshot to local folder <strong>./data/geth</strong> so won't need to sync from 0 
 example: 
 ```sh 
-wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/
-20230614-testnet-chaindata.tar
-```
-you could change 20230614 to any date not today 
+wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/$(date +"%Y%m%d" --date="yesterday")-testnet-chaindata.tar
 
-after untar the files , the folder should some like this :
+```
+
+after untar the files , the folder should be like this :
 ```sh 
 $ ls ./data/geth
 LOCK  chaindata  nodekey  nodes  transactions.rlp
