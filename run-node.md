@@ -39,7 +39,7 @@ this node will sync data from 0 if you don't download snapshot first
 you could download latest snapshot to local folder <strong>./data/geth</strong> so won't need to sync from 0 
 example: 
 ```sh 
-wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/$(date +"%Y%m%d" --date="yesterday")-testnet-chaindata.tar
+wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/$(TZ=UTC date +"%Y%m%d" --date="yesterday")-testnet-chaindata.tar
 
 ```
 
