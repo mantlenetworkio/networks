@@ -1,0 +1,13 @@
+{
+    "CanonicalTransactionChain": "0x291dc3819b863e19b0a9b9809F8025d2EB4aaE93",
+    "Proxy__BVM_L1CrossDomainMessenger": "0x676A795fe6E43C17c668de16730c3F690FEB7120",
+    "StateCommitmentChain": "0x89E9D387555AF0cDE22cb98833Bae40d640AD7fa",
+    "Proxy__BVM_L1StandardBridge": "0x95fC37A27a2f68e3A647CDc081F0A89bb47c3012",
+    "Proxy__BVM_EigenDataLayrChain": "0x50fa427235c7c8caa4a0c21b5009f5a0d015b23a",
+    "Proxy__L1MantleToken": "0x3c3a81e81dc49a522a592e7622a7e711c06bf354",
+    "Proxy__TssDelegation": "0xd4B5E3D46D202C3523C3Ad89dfe74eC272BFC96A",
+    "Proxy__TssDelegationManager": "0xA90FCe37D274e673f3850b835F18790542b1755d",
+    "Proxy__TssDelegationSlasher": "0x910265C29c099eAc87EF6d374b6f3bE45B516EB7",
+    "Proxy__TSS_GroupManager": "0x399ca67660B79F7aA8A7Efd5BEF9836A4c19CACF",
+    "Proxy__TSS_StakingSlashing": "0x78CF48880E9e1b3ab209779c0D8A76f611e53e81"
+}
