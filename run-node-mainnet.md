@@ -33,6 +33,8 @@ You'll need to log out and log in again for this change to take effect.
 
 ### Operating the Node
 
+> warning: **please change the ETH1_HTTP accordingly in docker-compose-mainnet.yml **:  this might cause failed sync
+
 #### Start
 
 ```sh
