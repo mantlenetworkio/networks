@@ -42,8 +42,8 @@ example:
 ```sh 
 mkdir -p ./data/geth
 
-# yesterday's snapshot tarball
-tarball=$(TZ=UTC date +"%Y%m%d" --date="yesterday")-testnet-chaindata.tar
+# latest snapshot tarball
+tarball="20230707-testnet-chaindata.tar"
 
 wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/${tarball}
 
