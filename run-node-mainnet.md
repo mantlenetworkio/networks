@@ -47,7 +47,6 @@ tarball="20230830-mainnet-chaindata.tar"
 
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${tarball}
 
-mkdir -p ./data/geth
 tar vxf ${tarball} -C ./data/geth
 
 ```
