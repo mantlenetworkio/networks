@@ -33,6 +33,30 @@ You'll need to log out and log in again for this change to take effect.
 
 ### Operating the Node
 
+#### Download latest snapshot from mantle 
+
+We recommend that you start the node with latest shapshot, so that you don't need to wait a long time to sync data.
+
+example: 
+
+```sh 
+mkdir -p ./data/geth
+
+# latest snapshot tarball
+tarball="20230830-mainnet-chaindata.tar"
+
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${tarball}
+
+tar vxf ${tarball} -C ./data/geth
+
+```
+
+Check the data was unarchived successfully: 
+```sh 
+$ ls ./data/geth
+chaindata 
+```
+
 > note: **please change the ETH1_HTTP accordingly in docker-compose-mainnet.yml **:  this might cause sync failed
 
 #### Start
