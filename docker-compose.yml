@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   replica:
-    image: mantlenetworkio/l2geth:v0.4.2-beta.1
+    image: mantlenetworkio/l2geth:v0.4.3
     entrypoint: sh ./geth.sh
     env_file:
       - ./goerli/envs/geth.env #
