@@ -71,7 +71,7 @@ You will need to run this again if you ever turn your machine off.
 The first time you start the node it synchronizes from regenesis (December 1th, 2022) to the present.
 This process takes hours.
 
-> note: if sync speed is slow , you could try to use https://dtl-us.mantle.xyz for US , https://dtl-eu.mantle.xyz/  for EU, https://dtl-ap.mantle.xyz/  for APAC , you could find this config in ./mainnet/envs/geth.env, the default value is : https://dtl.mantle.xyz
+> note: if sync speed is slow , you could try to use https://dtl-us.mantle.xyz for US , https://dtl-eu.mantle.xyz/  for EU, https://dtl-ap.mantle.xyz/  for APAC . you could find this config in ./mainnet/envs/geth.env, the default value is : https://dtl.mantle.xyz
 
 #### Stop
 
