@@ -7,7 +7,7 @@
 ## Recommended Hardware
 
 - 16GB+ RAM
-- 500GB+ disk (HDD works for now, SSD is better)
+- 1000GB+ disk (HDD works for now, SSD is better)
 - 10mb/s+ download
 
 ## Approximate Disk Usage
@@ -43,7 +43,7 @@ example:
 mkdir -p ./data/geth
 
 # latest snapshot tarball
-tarball="20230830-mainnet-chaindata.tar"
+tarball="20231007-mainnet-chaindata.tar"
 
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${tarball}
 
@@ -70,6 +70,8 @@ You will need to run this again if you ever turn your machine off.
 
 The first time you start the node it synchronizes from regenesis (December 1th, 2022) to the present.
 This process takes hours.
+
+> note: if sync speed is slow , you could try to use https://dtl-us.mantle.xyz for us , https://dtl-eu.mantle.xyz/  for eu, https://dtl-ap.mantle.xyz/  for apac , you could find this config in ./mainnet/envs/geth.env, the default value is : https://dtl.mantle.xyz
 
 #### Stop
 
