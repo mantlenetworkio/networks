@@ -54,13 +54,13 @@ tar xf ${tarball} -C ./data/geth
 Check the data was unarchived successfully: 
 ```sh 
 $ ls ./data/geth
-LOCK  chaindata  nodekey  nodes  transactions.rlp
+chaindata 
 ```
 
 #### Start
 
 ```sh
-docker-compose up -d
+docker-compose -f docker-compose.yml up -d 
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
@@ -72,7 +72,7 @@ This process takes hours.
 #### Stop
 
 ```sh
-docker-compose down
+docker-compose -f docker-compose.yml down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -81,7 +81,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker-compose down -v
+docker-compose -f docker-compose.yml down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
