@@ -15,7 +15,7 @@
 
 ## Approximate Disk Usage
 
-Usage as of 2023-12-20:
+Usage as of 2023-12-25:
 
 - Archive node: ~20gb
 
@@ -35,7 +35,7 @@ You'll need to log out and log in again for this change to take effect.
 
 
 
-### Generate the 'jwt_secret_txt' file and the 'p2p_node_key_txt'
+### Init to generate the 'jwt_secret_txt' file and the 'p2p_node_key_txt'
 
 ```sh
 sudo node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > sepolia/secret/jwt_secret_txt
@@ -55,7 +55,7 @@ example:
 mkdir -p ./data/sepolia-geth
 
 # latest snapshot tarball
-tarball="20231220-sepolia-chaindata.tar"
+tarball="20231225-sepolia-chaindata.tar"
 
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${tarball}
 
