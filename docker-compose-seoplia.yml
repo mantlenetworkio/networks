@@ -12,8 +12,8 @@ services:
     image: mantle-op-geth:v0.5.0
     extra_hosts:
       - "host.docker.internal:host-gateway"
-    entrypoint: ["exec", "geth"]
-    command: 
+    entrypoint: geth
+    command:
       - --datadir=/db
       - --verbosity=3
       - --port=30300
@@ -45,30 +45,49 @@ services:
       - --metrics.port=9001
     volumes:
       - ./sepolia/secret:/secret/
-      - ./data/geth:/db/geth/
+      - ./data/sepolia-geth:/db/geth/
     ports:
       - ${VERIFIER_HTTP_PORT:-8545}:8545
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantle-op-geth:v0.5.0
+    image: mantle-op-node:v0.5.0
     depends_on:
       - op-geth
-    env_file:
-      - ./sepolia/envs/node.env
     volumes:
       - ./sepolia/secret:/secret
       - ./sepolia/rollup.json:/config/rollup.json
     environment:
-      OP_NODE_L1_ETH_RPC: 'wss://eth-sepolia.g.alchemy.com/v2/WCsU3YbVKyCNkr99aTxumpV5yJOtlsXT'
+      OP_NODE_L1_ETH_RPC: 'wss://eth-sepolia-public.unifra.io' #change this
       OP_NODE_L2_ENGINE_RPC: 'http://op-geth:8551'
       OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
       OP_NODE_ROLLUP_CONFIG: '/config/rollup.json'
       OP_NODE_P2P_PRIV_PATH: /secret/p2p_node_key_txt
-      OP_NODE_RETRIEVER_SOCKET: 10.45.114.221:32000
-      OP_NODE_GRAPH_PROVIDER: http://10.45.86.238:8000/subgraphs/name/datalayr
-      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: http://10.45.93.51:8545
-      OP_NODE_P2P_STATIC: '/ip4/10.47.68.158/tcp/9003/p2p/16Uiu2HAmMMdS2hQigLBUjXVucQ9n3Ce4p81e58uiS5Vf32sR6yQc'
+      OP_NODE_VERIFIER_L1_CONFS: '3'
+      OP_NODE_RPC_ADDR: '0.0.0.0'
+      OP_NODE_RPC_PORT: 8545
+      OP_NODE_P2P_LISTEN_IP: '0.0.0.0'
+      OP_NODE_P2P_LISTEN_TCP_PORT: 9003
+      OP_NODE_P2P_LISTEN_UDP_PORT: 9003
+      OP_NODE_P2P_PEER_SCORING: 'light'
+      OP_NODE_P2P_PEER_BANNING: 'true'
+      OP_NODE_METRICS_ENABLED: 'true'
+      OP_NODE_METRICS_ADDR: '0.0.0.0'
+      OP_NODE_METRICS_PORT: 7300
+      OP_NODE_PPROF_ENABLED: 'true'
+      OP_NODE_PPROF_PORT: 6060
+      OP_NODE_PPROF_ADDR: '0.0.0.0'
+      OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
+      OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
+      # da retriever
+      OP_NODE_RETRIEVER_SOCKET: retriever.sepolia.mantle.xyz:8000
+      OP_NODE_GRAPH_PROVIDER: http://graphnode.sepolia.mantle.xyz/subgraphs/name/datalayr
+      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc0-op-geth.sepolia.mantle.xyz
+      OP_NODE_P2P_STATIC: '/ip4/18.139.118.7/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM'
+      OP_NODE_SEQUENCER_ENABLED: 'false'
+      OP_NODE_P2P_AGENT: 'mantle'
+      OP_NODE_L2_ENGINE_SYNC_ENABLED: 'true'
+      OP_NODE_L2_SKIP_SYNC_START_CHECK: 'true'
+      OP_NODE_P2P_SYNC_REQ_RESP: 'true'
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
-      - ${NODE_P2P_PORT:-9003}:9003
