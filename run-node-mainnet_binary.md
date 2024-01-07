@@ -24,6 +24,7 @@ Usage as of 2022-09-21:
 ```sh
 git clone https://github.com/mantlenetworkio/mantle.git
 cd mantle/l2geth
+git checkout v0.4.3-5
 make geth
 
 ```
