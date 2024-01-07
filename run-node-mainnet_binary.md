@@ -2,7 +2,7 @@
 
 ## Required Software
 
-- [golong 1.20 + ]
+- [golang 1.20 + ]
 
 ## Recommended Hardware
 
@@ -51,6 +51,9 @@ export DATADIR=~/mantle_l2geth_data
 cp ../mantle/l2geth/build/bin/geth .
 sh geth.sh
 ```
+
+you need to change DATADIR to where you want to store data 
+you need to change ETH1_HTTP to your own rpc 
 
 
 
