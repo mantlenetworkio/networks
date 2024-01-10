@@ -120,7 +120,7 @@ I recommend that you run this command every once in a while (once a week should 
 If the service status is 'up,' it means that the service has started without any issues.
 
 ```sh
-docker-compose -f docker-compose-sepolia.yaml ps
+docker-compose -f docker-compose-sepolia.yml ps
 ```
 
 ### Check Data
