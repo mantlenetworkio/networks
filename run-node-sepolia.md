@@ -100,7 +100,8 @@ Will display the logs for a given service.
 You can also follow along with the logs for a service in real time by adding the flag `-f`.
 
 The available services are:
-- [`replica`](#mantle-node)
+- [`op-geth`](#mantle-node)
+- [`op-node`](#mantle-node)
 
 
 #### Update
