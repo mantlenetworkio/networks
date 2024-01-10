@@ -55,7 +55,12 @@ example:
 mkdir -p ./data/sepolia-geth
 
 # latest snapshot tarball
-tarball="20231225-sepolia-chaindata.tar"
+linux:
+date=$(date -d "2 days ago" +%Y%m%d)
+mac:
+date=$(date -v-2d +%Y%m%d)
+
+tarball="$date-sepolia-chaindata.tar"
 
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${tarball}
 
