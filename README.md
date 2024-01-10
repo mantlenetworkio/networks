@@ -7,3 +7,5 @@ Mantle public resources
 [run a node in testnet](./run-node.md)
 
 [run a node in mainnet](./run-node-mainnet.md)
+
+[run a node in sepolia](./run-node-sepolia.md)
