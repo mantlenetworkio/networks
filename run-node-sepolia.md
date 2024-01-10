@@ -19,6 +19,8 @@
 ### Init to generate the 'jwt_secret_txt' file and the 'p2p_node_key_txt'
 
 ```sh
+cd networks/
+
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > sepolia/secret/jwt_secret_txt
 
 cast w n |grep "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > sepolia/secret/p2p_node_key_txt
