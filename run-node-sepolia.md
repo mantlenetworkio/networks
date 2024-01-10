@@ -141,5 +141,5 @@ example:
 
 ```sh
 cast bl 971982 |egrep "state|hash"
-cast bl 971982  --rpc-url https://rpc0-op-geth.sepolia.mantle.xyz |egrep "state|hash"
+cast bl 971982  --rpc-url https://rpc.sepolia.mantle.xyz |egrep "state|hash"
 ```
