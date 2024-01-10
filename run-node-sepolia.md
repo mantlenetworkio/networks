@@ -131,5 +131,5 @@ example:
 
 ```sh
 cast bn
-cast bn https://rpc.sepolia.mantle.xyz 
+cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
 ```
