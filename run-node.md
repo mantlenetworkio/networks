@@ -43,7 +43,8 @@ example:
 mkdir -p ./data/geth
 
 # latest snapshot tarball
-tarball="20231201-testnet-chaindata.tar"
+tarball="20240101-testnet-chaindata.tar"
+
 
 wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/${tarball}
 

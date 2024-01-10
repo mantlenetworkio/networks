@@ -21,6 +21,7 @@
 ```sh
 cd networks/
 
+
 mkdir sepolia/secret
 
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > sepolia/secret/jwt_secret_txt
