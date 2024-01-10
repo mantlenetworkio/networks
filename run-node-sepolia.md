@@ -13,34 +13,15 @@
 - 500GB+ disk (HDD works for now, SSD is better)
 - 10mb/s+ download
 
-## Approximate Disk Usage
-
-Usage as of 2023-12-25:
-
-- Archive node: ~20gb
-
 ## Installation and Setup Instructions
-
-
-### Configure Docker as a Non-Root User (Optional)
-
-If you're planning to run Docker as a root user, you can safely skip this step.
-However, if you're using Docker as a non-root user, you'll need to add yourself to the `docker` user group:
-
-```sh
-sudo usermod -a -G docker `whoami`
-```
-
-You'll need to log out and log in again for this change to take effect.
-
 
 
 ### Init to generate the 'jwt_secret_txt' file and the 'p2p_node_key_txt'
 
 ```sh
-sudo node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > sepolia/secret/jwt_secret_txt
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > sepolia/secret/jwt_secret_txt
 
-sudo cast w n |grep "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > sepolia/secret/p2p_node_key_txt
+cast w n |grep "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > sepolia/secret/p2p_node_key_txt
 ```
 
 ### Operating the Node
@@ -140,11 +121,10 @@ docker-compose -f docker-compose-sepolia.yaml ps
 ### Check Data
 
 Use the command 'cast bn' to execute multiple times and check if the height increases.
-Use 'cast bl block' command to check whether stateroot and blockhash are consistent.
 
 example: 
 
 ```sh
-cast bl 971982 |egrep "state|hash"
-cast bl 971982  --rpc-url https://rpc.sepolia.mantle.xyz |egrep "state|hash"
+cast bn
+cast bn https://rpc.sepolia.mantle.xyz 
 ```
