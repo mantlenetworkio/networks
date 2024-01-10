@@ -21,6 +21,9 @@
 ```sh
 cd networks/
 
+
+mkdir sepolia/secret
+
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > sepolia/secret/jwt_secret_txt
 
 cast w n |grep "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > sepolia/secret/p2p_node_key_txt
