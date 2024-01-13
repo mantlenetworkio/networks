@@ -7,4 +7,4 @@ Mantle public resources
 
 [run a node in goerli testnet](./run-node.md)
 
-[run a node in sepolia testnet(mantle v2)](./run-node-sepolia.md)
+[run a node in sepolia testnet](./run-node-sepolia.md)
