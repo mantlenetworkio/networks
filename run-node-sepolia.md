@@ -134,3 +134,14 @@ example:
 cast bn
 cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
 ```
+
+Use the command 'cast bn' to execute multiple times and check if the safe_l2 and inalized_l2 increases.
+It may need to be increased after thirty minutes
+
+example: 
+
+```sh
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
+
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+```
