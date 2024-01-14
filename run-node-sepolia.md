@@ -135,7 +135,7 @@ cast bn
 cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
 ```
 
-Use the command 'cast bn' to execute multiple times and check if the safe_l2 and inalized_l2 increases.
+Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe_l2 and inalized_l2 increases.
 It may need to be increased after thirty minutes
 
 example: 
