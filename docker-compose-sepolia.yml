@@ -9,7 +9,17 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantle-op-geth:v0.5.0
+    image: mantlenetworkio/op-geth:v0.5.0
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8000M
+        reservations:
+          cpus: '4'
+          memory: 8000M
+      restart_policy:
+        condition: on-failure
     extra_hosts:
       - "host.docker.internal:host-gateway"
     entrypoint: geth
@@ -51,7 +61,17 @@ services:
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantle-op-node:v0.5.0
+    image: mantlenetworkio/op-node:v0.5.0
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8000M
+        reservations:
+          cpus: '4'
+          memory: 8000M
+      restart_policy:
+        condition: on-failure
     depends_on:
       - op-geth
     volumes:

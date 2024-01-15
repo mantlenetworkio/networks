@@ -63,7 +63,7 @@ chaindata
 #### Start
 
 ```sh
-docker-compose -f docker-compose-seoplia.yml up -d 
+docker-compose -f docker-compose-sepolia.yml up -d 
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
@@ -75,7 +75,7 @@ This process takes hours.
 #### Stop
 
 ```sh
-docker-compose -f docker-compose-seoplia.yml down
+docker-compose -f docker-compose-sepolia.yml down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -84,7 +84,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker-compose -f docker-compose-seoplia.yml down -v
+docker-compose -f docker-compose-sepolia.yml down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
@@ -133,4 +133,15 @@ example:
 ```sh
 cast bn
 cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
+```
+
+Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe_l2 and inalized_l2 increases.
+It may need to be increased after thirty minutes
+
+example: 
+
+```sh
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
+
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 ```
