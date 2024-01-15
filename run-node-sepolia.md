@@ -63,7 +63,7 @@ chaindata
 #### Start
 
 ```sh
-docker-compose -f docker-compose-seoplia.yml up -d 
+docker-compose -f docker-compose-sepolia.yml up -d 
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
@@ -75,7 +75,7 @@ This process takes hours.
 #### Stop
 
 ```sh
-docker-compose -f docker-compose-seoplia.yml down
+docker-compose -f docker-compose-sepolia.yml down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -84,7 +84,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker-compose -f docker-compose-seoplia.yml down -v
+docker-compose -f docker-compose-sepolia.yml down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
