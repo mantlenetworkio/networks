@@ -11,13 +11,6 @@ services:
   op-geth:
     image: mantlenetworkio/op-geth:v0.5.0
     deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 8000M
-        reservations:
-          cpus: '4'
-          memory: 8000M
       restart_policy:
         condition: on-failure
     extra_hosts:
@@ -63,13 +56,6 @@ services:
   op-node:
     image: mantlenetworkio/op-node:v0.5.0
     deploy:
-      resources:
-        limits:
-          cpus: '4'
-          memory: 8000M
-        reservations:
-          cpus: '4'
-          memory: 8000M
       restart_policy:
         condition: on-failure
     depends_on:
