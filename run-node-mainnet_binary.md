@@ -29,6 +29,9 @@ make geth
 
 ```
 
+you need to configure this geth into your local environment variables
+or modify the geth directory in the geth.sh file below
+
 ### set up env  and run 
 ```sh
 git clone https://github.com/mantlenetworkio/networks.git
@@ -53,8 +56,10 @@ cp ../mantle/l2geth/build/bin/geth .
 sh geth.sh
 ```
 
-you need to change DATADIR to where you want to store data 
-you need to change ETH1_HTTP to your own rpc 
+you need to change DATADIR to where you want to store data \
+you need to change ETH1_HTTP to your own rpc
+> note: if sync speed is slow , You could try to use https://dtl-us.mantle.xyz for US , https://dtl-eu.mantle.xyz/ for EU, https://dtl-ap.mantle.xyz/ for APAC . You could find this config in ./mainnet/envs/geth.env, the default value is : https://dtl.mantle.xyz .
+
 
 
 
