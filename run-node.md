@@ -12,7 +12,7 @@
 
 ## Approximate Disk Usage
 
-Usage as of 2022-09-21:
+Usage as of 2024-01-17:
 
 - Archive node: ~800gb
 - Full node: ~60gb
@@ -43,7 +43,7 @@ example:
 mkdir -p ./data/geth
 
 # latest snapshot tarball
-tarball="20240101-testnet-chaindata.tar"
+tarball="20240117-testnet-chaindata.tar"
 
 
 wget https://s3.ap-southeast-1.amazonaws.com/static.testnet.mantle.xyz/${tarball}
