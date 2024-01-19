@@ -12,9 +12,9 @@
 
 ## Approximate Disk Usage
 
-Usage as of 2022-09-21:
+Usage as of 2024-01-17:
 
-- Archive node: ~800gb
+- Archive node: ~1500gb
 - Full node: ~60gb
 
 ## Installation and Setup Instructions
@@ -43,7 +43,7 @@ example:
 mkdir -p ./data/geth
 
 # latest snapshot tarball
-tarball="20240101-mainnet-chaindata.tar"
+tarball="20240117-mainnet-chaindata.tar"
 
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${tarball}
 
