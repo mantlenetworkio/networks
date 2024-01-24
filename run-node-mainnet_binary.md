@@ -2,7 +2,7 @@
 
 ## Required Software
 
-- [golang 1.20 + ]
+- [golang 1.19  ]
 
 ## Recommended Hardware
 
@@ -29,9 +29,6 @@ make geth
 
 ```
 
-you need to configure this geth into your local environment variables
-or modify the geth directory in the geth.sh file below
-
 ### set up env  and run 
 ```sh
 git clone https://github.com/mantlenetworkio/networks.git
@@ -53,6 +50,7 @@ export ROLLUP_VERIFIER_ENABLE='true'
 export DATADIR=~/mantle_l2geth_data
 
 cp ../mantle/l2geth/build/bin/geth .
+export PATH=$PATH:$(pwd)
 sh geth.sh
 ```
 
