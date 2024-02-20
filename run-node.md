@@ -111,15 +111,4 @@ Will download the latest images for any services where you haven't hard-coded a 
 Updates are regularly pushed to improve the stability of Mantle nodes or to introduce new quality-of-life features like better logging and better metrics.
 I recommend that you run this command every once in a while (once a week should be more than enough).
 
-## What's Included
 
-### Mantle Node
-
-Currently, an mantle node can either sync from L1 or from other L2 nodes.
-Syncing from L1 is generally the safest option but takes longer.
-A node that syncs from L1 will also lag behind the tip of the chain depending on how long it takes for the Mantle Sequencer to publish transactions to Ethereum.
-Syncing from L2 is faster but (currently) requires trusting the L2 node you're syncing from.
-
-Many people are running nodes that sync from other L2 nodes, but I'd like to incentivize more people to run nodes that sync directly from L1.
-As a result, I've set this repository up to sync from L1 by default.
-I may later add the option to sync from L2 but I need to go do other things for a while.
