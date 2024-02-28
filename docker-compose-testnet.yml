@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantlenetworkio/op-geth:v0.5.0-1 # need change
+    image: mantlenetworkio/op-geth:v0.5.0-1
     deploy:
       resources:
         limits:
@@ -53,15 +53,16 @@ services:
       - --metrics
       - --metrics.addr=0.0.0.0
       - --metrics.port=9001
+      - --snapshot=false 
     volumes:
-      - ./sepolia/secret:/secret/
-      - ./data/sepolia-geth:/db/geth/
+      - ./goerli/secret:/secret/
+      - ./data/goerli-geth:/db/geth/
     ports:
       - ${VERIFIER_HTTP_PORT:-8545}:8545
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantlenetworkio/op-node:v0.5.0-1 # need change
+    image: mantlenetworkio/op-node:v0.5.0-1
     deploy:
       resources:
         limits:
@@ -75,8 +76,8 @@ services:
     depends_on:
       - op-geth
     volumes:
-      - ./sepolia/secret:/secret
-      - ./sepolia/rollup.json:/config/rollup.json
+      - ./goerli/secret:/secret
+      - ./goerli/rollup.json:/config/rollup.json
     environment:
       OP_NODE_L1_ETH_RPC: 'wss://sepolia.gateway.tenderly.co' #change this
       OP_NODE_L2_ENGINE_RPC: 'http://op-geth:8551'
