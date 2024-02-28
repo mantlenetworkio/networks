@@ -24,9 +24,9 @@ cd networks/
 
 mkdir goerli/secret
 
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > testnet/secret/jwt_secret_txt
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > goerli/secret/jwt_secret_txt
 
-cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > testnet/secret/p2p_node_key_txt
+cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > goerli/secret/p2p_node_key_txt
 ```
 
 ### Operating the Node
@@ -46,7 +46,7 @@ date=$(date -d "2 days ago" +%Y%m%d)
 mac:
 date=$(date -v-2d +%Y%m%d)
 
-tarball="$date-testnet-chaindata.tar"
+tarball="$date-testnet1-chaindata.tar"
 
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.testnet.mantle.xyz/${tarball}
 
