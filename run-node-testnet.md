@@ -48,7 +48,8 @@ date=$(date -v-2d +%Y%m%d)
 
 tarball="$date-testnet1-chaindata.tar"
 
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.testnet.mantle.xyz/${tarball}
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/20240228-testnet1-chaindata.tar
+
 
 tar xf ${tarball} -C ./data/testnet-geth
 
