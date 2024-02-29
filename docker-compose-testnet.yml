@@ -103,8 +103,8 @@ services:
       # da retriever
       OP_NODE_RETRIEVER_SOCKET: retriever.testnet.mantle.xyz:8000
       OP_NODE_GRAPH_PROVIDER: https://graphnode.testnet.mantle.xyz/subgraphs/name/datalayr
-      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.mantle.xyz 
-      OP_NODE_P2P_STATIC: '/ip4/18.139.118.7/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM' # need change
+      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.testnet.mantle.xyz 
+      OP_NODE_P2P_STATIC: '/ip4/54.251.234.159/tcp/9003/p2p/16Uiu2HAkxjPnLpwenfrz6tXjvoc7U6i5sBHUVBoyUxjrcap8sM2i'
       OP_NODE_SEQUENCER_ENABLED: 'false'
       OP_NODE_P2P_AGENT: 'mantle'
       OP_NODE_L2_ENGINE_SYNC_ENABLED: 'true'
