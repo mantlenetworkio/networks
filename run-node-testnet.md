@@ -10,7 +10,7 @@
 
 - 16GB+ RAM
 - 8C+ CPU
-- 500GB+ disk (HDD works for now, SSD is better)
+- 1000GB+ disk (HDD works for now, SSD is better)
 - 10mb/s+ download
 
 ## Installation and Setup Instructions
