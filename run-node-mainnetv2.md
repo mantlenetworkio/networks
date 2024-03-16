@@ -33,22 +33,18 @@ cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > mainne
 
 #### Download latest snapshot from mantle 
 
-We recommend that you start the node with latest shapshot, so that you don't need to wait a long time to sync data.
+After mantle upgrade to v2 , you have to start the node with latest shapshot.
 
 example: 
 
 ```sh 
 mkdir -p ./data/mainnet-geth
 
-# latest snapshot tarball
-linux:
-date=$(date -d "2 days ago" +%Y%m%d)
-mac:
-date=$(date -v-2d +%Y%m%d)
+# latest snapshot tarball 
 
-tarball="$date-mainnet-chaindata.tar"
 
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mainnet.mantle.xyz/${tarball}
+#updating 
+
 
 tar xf ${tarball} -C ./data/mainnet-geth
 
@@ -63,7 +59,7 @@ chaindata
 #### Start
 
 ```sh
-docker-compose -f docker-compose-mainnet.yml up -d 
+docker-compose -f docker-compose-mainnetv2.yml up -d 
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
@@ -75,7 +71,7 @@ This process takes hours.
 #### Stop
 
 ```sh
-docker-compose -f docker-compose-mainnet.yml down
+docker-compose -f docker-compose-mainnetv2.yml down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -84,7 +80,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker-compose -f docker-compose-mainnet.yml down -v
+docker-compose -f docker-compose-mainnetv2.yml down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
@@ -121,7 +117,7 @@ I recommend that you run this command every once in a while (once a week should 
 If the service status is 'up,' it means that the service has started without any issues.
 
 ```sh
-docker-compose -f docker-compose-mainnet.yml ps
+docker-compose -f docker-compose-mainnetv2.yml ps
 ```
 
 ### Check Data
@@ -132,7 +128,7 @@ example:
 
 ```sh
 cast bn
-cast bn --rpc-url  https://rpc.mainnet.mantle.xyz 
+cast bn --rpc-url  https://rpc.mantle.xyz 
 ```
 
 Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe_l2 and inalized_l2 increases.
