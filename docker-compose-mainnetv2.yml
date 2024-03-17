@@ -53,6 +53,7 @@ services:
       - --metrics
       - --metrics.addr=0.0.0.0
       - --metrics.port=9001
+      - --snapshot=false
     volumes:
       - ./mainnet/secret:/secret/
       - ./data/mainnet-geth:/db/geth/
