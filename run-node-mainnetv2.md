@@ -5,12 +5,13 @@
 - [docker](https://docs.docker.com/engine/install/)
 - [node](https://nodejs.org/en/download/)
 - [foundry](https://github.com/foundry-rs/foundry/releases)
+- [zstd](https://github.com/facebook/zstd)
 
 ## Recommended Hardware
 
 - 16GB+ RAM
 - 8C+ CPU
-- 500GB+ disk (HDD works for now, SSD is better)
+- 4T+ disk(HDD works for now, SSD is better)
 - 10mb/s+ download
 
 ## Installation and Setup Instructions
@@ -43,10 +44,12 @@ mkdir -p ./data/mainnet-geth
 # latest snapshot tarball 
 
 
-#updating 
+
+archive:  https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-archive.20240315.tar.zst
+fullnode: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-fullnode.20240315.tar.zst
 
 
-tar xf ${tarball} -C ./data/mainnet-geth
+tar --use-compress-program=unzstd -xvf mantle-archive.20240315.tar.zst -C /home/ssm-user/git/networks/data/mainnet-geth
 
 ```
 
@@ -72,6 +75,7 @@ This process takes hours.
 
 ```sh
 docker-compose -f docker-compose-mainnetv2.yml down
+
 ```
 
 Will shut down the node without wiping any volumes.
