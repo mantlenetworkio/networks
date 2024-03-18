@@ -3,7 +3,7 @@
 
 #set up env
 export OP_NODE_L1_ETH_RPC='wss://mainnet.gateway.tenderly.co' #change this
-export OP_NODE_L2_ENGINE_RPC='http://op-geth:8551'
+export OP_NODE_L2_ENGINE_RPC='http://localhost:8551'
 export OP_NODE_L2_ENGINE_AUTH=./mainnet/secret/jwt_secret_txt
 export OP_NODE_ROLLUP_CONFIG='./mainnet/rollup.json'
 export OP_NODE_P2P_PRIV_PATH=./mainnet/secret/p2p_node_key_txt
