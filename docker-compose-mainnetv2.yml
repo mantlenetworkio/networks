@@ -40,7 +40,7 @@ services:
       - --ws.api=web3,eth,debug,txpool,net
       - --syncmode=full
       - --maxpeers=0
-      - --networkid=5003
+      - --networkid=5000
       - --rpc.allow-unprotected-txs
       - --authrpc.addr=0.0.0.0
       - --authrpc.port=8551
