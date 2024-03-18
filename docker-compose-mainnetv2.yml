@@ -54,6 +54,7 @@ services:
       - --metrics.addr=0.0.0.0
       - --metrics.port=9001
       - --snapshot=false
+      -- --rollup.sequencerhttp=https://rpc-moon.mantle.xyz/v1/OTFjNjk2ODA5Yjk5MGE1MzA0N2E2MDc1
     volumes:
       - ./mainnet/secret:/secret/
       - ./data/mainnet-geth:/db/geth/
