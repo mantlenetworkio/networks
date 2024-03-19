@@ -1,0 +1,52 @@
+version: '3.4'
+
+services:
+  op-node:
+    image: mantlenetworkio/op-node:v1.0.0-alpha.1
+    network_mode: "host"
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8000M
+        reservations:
+          cpus: '4'
+          memory: 8000M
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - ./mainnet/secret:/secret
+      - ./mainnet/rollup.json:/config/rollup.json
+    environment:
+      OP_NODE_L1_ETH_RPC: 'wss://mainnet.gateway.tenderly.co' #change this
+      OP_NODE_L2_ENGINE_RPC: 'http://localhost:8551'
+      OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
+      OP_NODE_ROLLUP_CONFIG: '/config/rollup.json'
+      OP_NODE_P2P_PRIV_PATH: /secret/p2p_node_key_txt
+      OP_NODE_VERIFIER_L1_CONFS: '3'
+      OP_NODE_RPC_ADDR: '0.0.0.0'
+      OP_NODE_RPC_PORT: 8545
+      OP_NODE_P2P_LISTEN_IP: '0.0.0.0'
+      OP_NODE_P2P_LISTEN_TCP_PORT: 9003
+      OP_NODE_P2P_LISTEN_UDP_PORT: 9003
+      OP_NODE_P2P_PEER_SCORING: 'light'
+      OP_NODE_P2P_PEER_BANNING: 'true'
+      OP_NODE_METRICS_ENABLED: 'true'
+      OP_NODE_METRICS_ADDR: '0.0.0.0'
+      OP_NODE_METRICS_PORT: 7300
+      OP_NODE_PPROF_ENABLED: 'true'
+      OP_NODE_PPROF_PORT: 6060
+      OP_NODE_PPROF_ADDR: '0.0.0.0'
+      OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
+      OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
+      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.mantle.xyz:443'
+      OP_NODE_INDEXER_ENABLE: 'true'
+      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.mantle.xyz
+      OP_NODE_P2P_STATIC: '/dns4/peer0.mantle.xyz/tcp/9003/p2p/16Uiu2HAmKVKzUAns2gLhZAz1PYcbnhY3WpxNxUZYeTN1x29tNBAW,/dns4/peer1.mantle.xyz/tcp/9003/p2p/16Uiu2HAm1AiZtVp8f5C8LvpSTAXC6GtwqAVKnB3VLawWYSEBmcFN,/dns4/peer2.mantle.xyz/tcp/9003/p2p/16Uiu2HAm2UHVKiPXpovs8VbbUQVPr7feBAqBJdFsH1z5XDiLEvHT'
+      OP_NODE_SEQUENCER_ENABLED: 'false'
+      OP_NODE_P2P_AGENT: 'mantle'
+      OP_NODE_L2_ENGINE_SYNC_ENABLED: 'true'
+      OP_NODE_L2_SKIP_SYNC_START_CHECK: 'true'
+      OP_NODE_P2P_SYNC_REQ_RESP: 'true'
+    ports:
+      - 9545:8545
