@@ -58,7 +58,7 @@ services:
       - ./mainnet/secret:/secret/
       - ./data/mainnet-geth:/db/geth/
   op-node:
-    image: 346612984731.dkr.ecr.ap-southeast-1.amazonaws.com/mantle-op-node:v1.0.0-alpha.1
+    image: mantlenetworkio/op-node:v1.0.0-alpha.1
     network_mode: "host"
     deploy:
       resources:
