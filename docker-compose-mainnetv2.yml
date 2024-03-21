@@ -76,7 +76,7 @@ services:
       - ./mainnet/secret:/secret
       - ./mainnet/rollup.json:/config/rollup.json
     environment:
-      OP_NODE_L1_ETH_RPC: 'https://eth-mainnet.g.alchemy.com/v2/C1HA_ubz9iHEBkGZi-LxwHijrRHzRhUe' #change this
+      OP_NODE_L1_ETH_RPC: 'wss://mainnet.gateway.tenderly.co' #change this
       OP_NODE_L2_ENGINE_RPC: 'http://localhost:8551'
       OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
       OP_NODE_ROLLUP_CONFIG: '/config/rollup.json'
