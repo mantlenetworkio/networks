@@ -49,10 +49,8 @@ example:
 mkdir -p ./data/mainnet-geth
 
 # latest snapshot tarball
-
-archive:  https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-archive.20240315.tar.zst
-fullnode: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-fullnode.20240315.tar.zst
-
+# Replace this link to suit your needs
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-archive.20240315.tar.zst
 
 tar --use-compress-program=unzstd -xvf mantle-archive.20240315.tar.zst -C /home/ssm-user/git/networks/data/mainnet-geth
 
