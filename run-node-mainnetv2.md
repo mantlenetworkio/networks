@@ -64,6 +64,9 @@ chaindata
 ```
 
 #### Start
+> **_NOTE:_**  please change  the OP_NODE_L1_ETH_RPC in docker-compose-mainnetv2.yml to your own RPC
+> 
+> **_NOTE:_**  please add OP_NODE_P2P_ADVERTISE_IP: PUBLIC_IP into the docker-compose-mainnetv2.yml if your instance have public IP and make the 9003 port could forward to op-node 9003
 
 ```sh
 docker-compose -f docker-compose-mainnetv2.yml up -d
@@ -149,3 +152,16 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 ```
+
+### debug p2p 
+
+if you have public IP of the instance you run op-node , open p2p will fast the sync speed , if your rpc is slow at sync please run the following command and check the status 
+
+```sh
+#check all the connection 
+cast rpc opp2p_peers true --rpc-url http://localhost:9545
+
+#check self peer info 
+cast rpc opp2p_self --rpc-url http://localhost:9545
+
+``` 
