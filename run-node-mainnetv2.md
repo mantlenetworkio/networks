@@ -16,7 +16,6 @@
 
 ## Installation and Setup Instructions
 
-
 ### Init to generate the 'jwt_secret_txt' file and the 'p2p_node_key_txt'
 
 ```sh
@@ -32,37 +31,42 @@ cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > mainne
 
 ### Operating the Node
 
-#### Download latest snapshot from mantle 
+#### Download latest snapshot from mantle
 
-After mantle upgrade to v2 , you have to start the node with latest shapshot.
+After mantle upgrade to v2, you have to start the node with latest snapshot.
 
-example: 
+You can choose different types of node running modes (fullnode or archive) based on your needs, thus selecting different snapshots for node synchronization. Additionally, we provide download links for snapshots in different regions to expedite your snapshot downloads. (Given that fullnode snapshots are relatively small, we will not provide additional download links.) Currently supported regions include:
 
-```sh 
+- **Archive**
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-archive.20240315.tar.zst
+  - **Europe:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/mantle-archive.20240315.tar.zst
+- **Fullnode**
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240322-mainnet-full-chaindata.tar.zst
+
+example:
+
+```sh
 mkdir -p ./data/mainnet-geth
 
-# latest snapshot tarball 
-
-
-
-archive:  https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-archive.20240315.tar.zst
-fullnode: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-fullnode.20240315.tar.zst
-
+# latest snapshot tarball
+# Replace this link to suit your needs
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/mantle-archive.20240315.tar.zst
 
 tar --use-compress-program=unzstd -xvf mantle-archive.20240315.tar.zst -C /home/ssm-user/git/networks/data/mainnet-geth
 
 ```
 
-Check the data was unarchived successfully: 
-```sh 
+Check the data was unarchived successfully:
+
+```sh
 $ ls ./data/mainnet-geth
-chaindata 
+chaindata
 ```
 
 #### Start
 
 ```sh
-docker-compose -f docker-compose-mainnetv2.yml up -d 
+docker-compose -f docker-compose-mainnetv2.yml up -d
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
@@ -100,9 +104,9 @@ Will display the logs for a given service.
 You can also follow along with the logs for a service in real time by adding the flag `-f`.
 
 The available services are:
+
 - [`op-geth`](#mantle-node)
 - [`op-node`](#mantle-node)
-
 
 #### Update
 
@@ -128,17 +132,17 @@ docker-compose -f docker-compose-mainnetv2.yml ps
 
 Use the command 'cast bn' to execute multiple times and check if the height increases.
 
-example: 
+example:
 
 ```sh
 cast bn
-cast bn --rpc-url  https://rpc.mantle.xyz 
+cast bn --rpc-url  https://rpc.mantle.xyz
 ```
 
 Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe_l2 and inalized_l2 increases.
 It may need to be increased after thirty minutes
 
-example: 
+example:
 
 ```sh
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
