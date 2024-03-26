@@ -1,8 +1,10 @@
 # Simple Mantle Node
 
+**Tips: This tutorial is based on Mantle v1, if you want to use the latest Mantle v2, please refer to the [Mantle v2](https://github.com/mantlenetworkio/networks/blob/main/run-node-mainnetv2.md)**
+
 ## Required Software
 
-- [golang 1.19  ]
+- [golang 1.19 ]
 
 ## Recommended Hardware
 
@@ -18,8 +20,7 @@ Usage as of 2022-09-21:
 
 ## Installation and Setup Instructions
 
-### build a binary file 
-
+### build a binary file
 
 ```sh
 git clone https://github.com/mantlenetworkio/mantle.git
@@ -29,14 +30,15 @@ make geth
 
 ```
 
-### set up env  and run 
+### set up env and run
+
 ```sh
 git clone https://github.com/mantlenetworkio/networks.git
 cd networks
 cd mainnet/envs
 set -a
 . ./geth.env
-set +a 
+set +a
 mkdir ~/mantle_l2geth_data
 cd ../..
 export ETH1_HTTP=https://rpc.ankr.com/eth
@@ -56,10 +58,5 @@ sh geth.sh
 
 you need to change DATADIR to where you want to store data \
 you need to change ETH1_HTTP to your own rpc
+
 > note: if sync speed is slow , You could try to use https://dtl-us.mantle.xyz for US , https://dtl-eu.mantle.xyz/ for EU, https://dtl-ap.mantle.xyz/ for APAC . You could find this config in ./mainnet/envs/geth.env, the default value is : https://dtl.mantle.xyz .
-
-
-
-
-
-
