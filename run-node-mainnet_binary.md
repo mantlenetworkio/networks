@@ -1,5 +1,7 @@
 # Simple Mantle Node
 
+**Tips: This tutorial is based on Mantle v1, if you want to use the latest Mantle v2, please refer to the [Mantle v2](https://github.com/mantlenetworkio/networks/blob/main/run-node-mainnetv2.md)**
+
 ## Required Software
 
 - [golang 1.19 ]
