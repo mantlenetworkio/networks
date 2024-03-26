@@ -101,7 +101,7 @@ services:
       OP_NODE_PPROF_ADDR: '0.0.0.0'
       OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
       OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
-      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.mantle.xyz:443'
+      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.mantle.xyz:80'
       OP_NODE_INDEXER_ENABLE: 'true'
       OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.mantle.xyz
       OP_NODE_P2P_STATIC: '/dns4/peer0.mantle.xyz/tcp/9003/p2p/16Uiu2HAmKVKzUAns2gLhZAz1PYcbnhY3WpxNxUZYeTN1x29tNBAW,/dns4/peer1.mantle.xyz/tcp/9003/p2p/16Uiu2HAm1AiZtVp8f5C8LvpSTAXC6GtwqAVKnB3VLawWYSEBmcFN,/dns4/peer2.mantle.xyz/tcp/9003/p2p/16Uiu2HAm2UHVKiPXpovs8VbbUQVPr7feBAqBJdFsH1z5XDiLEvHT'
