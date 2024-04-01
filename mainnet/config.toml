@@ -1,0 +1,4 @@
+    [Node.HTTPTimeouts]
+    ReadTimeout = 30000000000
+    WriteTimeout = 1000000000000
+    IdleTimeout = 120000000000
