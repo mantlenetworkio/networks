@@ -20,8 +20,6 @@ jobs:
         date=$(date +%Y%m%d)
         current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
-        git config --global user.email "yu.sun@mantle.xyz"
-        git config --global user.name "lqS0317"
         git log --pretty=format:'- %s (%an, %ar)' HEAD^..HEAD
         git add run-node-mainnetv2.md
         git commit -m "Update README v2 with latest commits"
@@ -29,5 +27,5 @@ jobs:
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
+        github_token: ${{ secrets.PAT }}
+        branch: main
