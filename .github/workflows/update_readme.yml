@@ -1,0 +1,27 @@
+name: update readme
+on: 
+  schedule:
+    - cron: '0 12 */7 * *'
+run-name:  update readme
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 2  # This is needed for git diff to work properly
+    - name: Update README
+      run: |
+        date=$(date +%Y%m%d)
+        current_time=$(grep -Eo '\d{8}' run-node-mainnetv2.md|head -n1)
+        sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
+        git log --pretty=format:'- %s (%an, %ar)' HEAD^..HEAD
+        git add run-node-mainnetv2.md
+        git commit -m "Update README v2 with latest commits"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

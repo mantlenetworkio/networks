@@ -41,26 +41,19 @@ You can choose different types of node running modes (fullnode or archive) based
   - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240325-mainnet-chaindata.tar.zst
   - **Europe:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240323-mainnet-chaindata.tar.zst
 - **Fullnode**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240322-mainnet-full-chaindata.tar.zst
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240325-mainnet-full-chaindata.tar.zst
 
 example:
 
 ```sh
 mkdir -p ./data/mainnet-geth
 
-linux:
-date=$(date -d "2 days ago" +%Y%m%d)
-mac:
-date=$(date -v-2d +%Y%m%d)
-
-full_tarball="$date-mainnet-full-chaindata.tar.zst"
-tarball="$date-mainnet-chaindata.tar.zst"
 # latest snapshot tarball
 # Replace this link to suit your needs
-# if you want to start fullnode, change ${tarball} to ${full_tarball}
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${tarball}
 
-tar --use-compress-program=unzstd -xvf $tarball -C /home/ssm-user/git/networks/data/mainnet-geth
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240325-mainnet-chaindata.tar.zst
+
+tar --use-compress-program=unzstd -xvf 20240325-mainnet-chaindata.tar.zst -C /home/ssm-user/git/networks/data/mainnet-geth
 
 ```
 
