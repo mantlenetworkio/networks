@@ -24,6 +24,6 @@ jobs:
     - name: Update resources
       uses: test-room-7/action-update-file@v1
       with:
-        github_token: ${{ secrets.PAT }}
+        github-token: ${{ secrets.PAT }}
         branch: main
         file-path: run-node-mainnetv2.md
