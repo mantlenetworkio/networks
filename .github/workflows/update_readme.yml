@@ -18,7 +18,7 @@ jobs:
     - name: Update README
       run: |
         date=$(date +%Y%m%d)
-        current_time=$(grep -Eo '\d{8}' run-node-mainnetv2.md|head -n1)
+        current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
         git log --pretty=format:'- %s (%an, %ar)' HEAD^..HEAD
         git add run-node-mainnetv2.md
