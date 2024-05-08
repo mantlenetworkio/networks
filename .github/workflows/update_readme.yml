@@ -27,3 +27,5 @@ jobs:
         github-token: ${{ secrets.PAT }}
         branch: main
         file-path: run-node-mainnetv2.md
+        commit-msg: Update resources
+        committer-email: git.action@mantle.xyz
