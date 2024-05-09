@@ -15,6 +15,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Update README
       run: |
+        git checkout main
         date=$(date +%Y%m%d)
         current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
