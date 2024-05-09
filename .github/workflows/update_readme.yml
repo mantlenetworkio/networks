@@ -21,11 +21,8 @@ jobs:
         current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
 
-    - name: Update resources
-      uses: test-room-7/action-update-file@v1
+    - uses: int128/update-generated-files-action@v2
+      name: Update resources
       with:
-        github-token: ${{ secrets.PAT }}
-        branch: main
-        file-path: ./run-node-mainnetv2.md
-        commit-msg: Update resources
-        committer-email: git.action@mantle.xyz
+        token: ${{ secrets.PAT }}
+        commit-message: "Update snapshot date"
