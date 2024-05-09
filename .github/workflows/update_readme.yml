@@ -1,11 +1,7 @@
 name: update readme
-# on: 
-#   schedule:
-#     - cron: '0 12 */7 * *'
-on:
-  pull_request:
-    branches:
-      - main 
+on: 
+  schedule:
+    - cron: '0 5 * * *'
 run-name:  update readme
 jobs:
   update-readme:
