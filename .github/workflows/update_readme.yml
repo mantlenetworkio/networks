@@ -1,7 +1,7 @@
 name: update readme
 on: 
   schedule:
-    - cron: '0 5 * * *'
+    - cron: '0 12 */7 * *'
 run-name:  update readme
 jobs:
   update-readme:
@@ -14,6 +14,7 @@ jobs:
         ref: main
     - name: Update README
       run: |
+        echo $(date)
         date=$(date +%Y%m%d)
         current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
