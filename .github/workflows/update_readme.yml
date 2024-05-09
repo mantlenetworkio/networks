@@ -22,6 +22,7 @@ jobs:
         git config --global user.name "mantle-github-bot"
         git status
         git branch
+        git remote -v
         # git add run-node-mainnetv2.md
         # git commit -m "update snapshot tar date"
         # git push https://mantle-github-bot:${{ secrets.PAT }}@github.com/mantlenetworkio/networks.git main
