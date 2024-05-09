@@ -38,10 +38,10 @@ After mantle upgrade to v2, you have to start the node with latest snapshot.
 You can choose different types of node running modes (fullnode or archive) based on your needs, thus selecting different snapshots for node synchronization. Additionally, we provide download links for snapshots in different regions to expedite your snapshot downloads. (Given that fullnode snapshots are relatively small, we will not provide additional download links.) Currently supported regions include:
 
 - **Archive**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240508-mainnet-chaindata.tar.zst
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240509-mainnet-chaindata.tar.zst
   - **Europe:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240323-mainnet-chaindata.tar.zst
 - **Fullnode**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240508-mainnet-full-chaindata.tar.zst
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240509-mainnet-full-chaindata.tar.zst
 
 example:
 
@@ -51,9 +51,9 @@ mkdir -p ./data/mainnet-geth
 # latest snapshot tarball
 # Replace this link to suit your needs
 
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240508-mainnet-chaindata.tar.zst
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240509-mainnet-chaindata.tar.zst
 
-tar --use-compress-program=unzstd -xvf 20240508-mainnet-chaindata.tar.zst -C /home/ssm-user/git/networks/data/mainnet-geth
+tar --use-compress-program=unzstd -xvf 20240509-mainnet-chaindata.tar.zst -C /home/ssm-user/git/networks/data/mainnet-geth
 
 ```
 
