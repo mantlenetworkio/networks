@@ -20,7 +20,7 @@ jobs:
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
         git add run-node-mainnetv2.md
         git commit -m "update snapshot tar date"
-        git push https://mantle-git-bot:${{ secrets.PAT }}@github.com/mantlenetworkio/networks.git
+        git push https://mantle-github-bot:${{ secrets.PAT }}@github.com/mantlenetworkio/networks.git
 
     # - uses: int128/update-generated-files-action@v2
     #   name: Update resources
