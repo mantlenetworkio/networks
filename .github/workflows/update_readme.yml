@@ -13,8 +13,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        fetch-depth: 2  # This is needed for git diff to work properly
     - name: Update README
       run: |
         date=$(date +%Y%m%d)
