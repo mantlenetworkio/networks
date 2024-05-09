@@ -1,7 +1,11 @@
 name: update readme
-on: 
-  schedule:
-    - cron: '0 5 * * *'
+# on: 
+#   schedule:
+#     - cron: '0 12 */7 * *'
+on:
+  pull_request:
+    branches:
+      - main 
 run-name:  update readme
 jobs:
   update-readme:
@@ -15,6 +19,7 @@ jobs:
     - name: Update README
       run: |
         date=$(date +%Y%m%d)
+        echo $date
         current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
         git config --global user.email "git.action@mantle.xyz"
