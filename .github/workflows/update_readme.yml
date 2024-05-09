@@ -13,6 +13,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        token: ${{secrets.PAT}}
     - name: Update README
       run: |
         git checkout main
