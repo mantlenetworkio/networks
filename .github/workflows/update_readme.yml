@@ -1,0 +1,37 @@
+name: Update README
+
+# on:
+#   schedule:
+#     - cron: '0 * * * *' # 每小时运行一次
+on:
+  pull_request:
+    branches:
+      - main 
+jobs:
+  update_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.MY_PAT }}
+        persist-credentials: false
+
+    - name: Update README
+      run: |
+        echo "Updating README file..."
+        # 这里是你想要执行的sed命令，例如：
+        # sed -i 's/old-text/new-text/g' README.md
+        # 请替换上面的sed命令为你实际需要的更新操作
+        sed -i 's/Last updated:.*/Last updated: ${{ github.event.head_commit.timestamp }}/' README.md
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.email "yu.sun@mantle.xyz"
+        git config --global user.name "lqS0317"
+        git add README.md
+        git commit -m "Automated update of README file"
+        git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.MY_PAT }}
