@@ -25,6 +25,7 @@ jobs:
         # sed -i 's/old-text/new-text/g' README.md
         # 请替换上面的sed命令为你实际需要的更新操作
         sed -i 's/Last updated:.*/Last updated: ${{ github.event.head_commit.timestamp }}/' README.md
+        echo "tttttt" >> README.md
 
     - name: Commit and push changes
       run: |
