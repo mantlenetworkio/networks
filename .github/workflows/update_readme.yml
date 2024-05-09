@@ -1,0 +1,24 @@
+name: update readme
+on: 
+  schedule:
+    - cron: '0 5 * * *'
+run-name:  update readme
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{secrets.PAT}}
+        ref: main
+    - name: Update README
+      run: |
+        date=$(date +%Y%m%d)
+        current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
+        sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
+        git config --global user.email "git.action@mantle.xyz"
+        git config --global user.name "mantle-github-bot"
+        git add run-node-mainnetv2.md
+        git commit -m "update snapshot tar date"
+        git push https://mantle-github-bot:${{ secrets.PAT }}@github.com/mantlenetworkio/networks.git main
