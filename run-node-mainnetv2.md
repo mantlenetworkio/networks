@@ -39,7 +39,7 @@ You can choose different types of node running modes (fullnode or archive) based
 
 - **Archive**
   - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240508-mainnet-chaindata.tar.zst
-  - **Europe:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240508-mainnet-chaindata.tar.zst
+  - **Europe:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240323-mainnet-chaindata.tar.zst
 - **Fullnode**
   - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240508-mainnet-full-chaindata.tar.zst
 
