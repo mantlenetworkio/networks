@@ -16,8 +16,11 @@ jobs:
       run: |
         echo $(date)
         date=$(date +%Y%m%d)
-        current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
-        sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
+        current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md)
+        for i in $current_time
+        do
+          sed -i "s/$i/$date/g" run-node-mainnetv2.md
+        done
         git config --global user.email "git.action@mantle.xyz"
         git config --global user.name "mantle-github-bot"
         git add run-node-mainnetv2.md
