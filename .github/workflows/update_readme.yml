@@ -14,8 +14,8 @@ jobs:
         ref: main
     - name: Update README
       run: |
+        date=$(date +%Y%m%d --date='last sunday')
         echo $(date)
-        date=$(date +%Y%m%d)
         current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
         git config --global user.email "git.action@mantle.xyz"
