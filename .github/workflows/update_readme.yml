@@ -18,8 +18,9 @@ jobs:
         echo $(date)
         current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
         sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
+        sed -i "s/${current_time}/$date/g" run-node-sepolia.md
         git config --global user.email "git.action@mantle.xyz"
         git config --global user.name "mantle-github-bot"
-        git add run-node-mainnetv2.md
+        git add run-node-mainnetv2.md run-node-sepolia.md
         git commit -m "update snapshot tar date"
         git push https://mantle-github-bot:${{ secrets.PAT }}@github.com/mantlenetworkio/networks.git main
