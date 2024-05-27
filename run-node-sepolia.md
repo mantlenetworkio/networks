@@ -5,6 +5,8 @@
 - [docker](https://docs.docker.com/engine/install/)
 - [node](https://nodejs.org/en/download/)
 - [foundry](https://github.com/foundry-rs/foundry/releases)
+- [zstd](https://github.com/facebook/zstd)
+- [aira2](hhttps://aria2.github.io/)
 
 ## Recommended Hardware
 
@@ -48,7 +50,7 @@ wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${tarba
 2.
 aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${tarball}
 
-tar xf ${tarball} -C ./data/sepolia-geth
+tar --use-compress-program=unzstd -xvf ${tarball} -C  ./data/sepolia-geth
 
 ```
 
