@@ -6,7 +6,7 @@
 - [node](https://nodejs.org/en/download/)
 - [foundry](https://github.com/foundry-rs/foundry/releases)
 - [zstd](https://github.com/facebook/zstd)
-
+- [aira2](hhttps://aria2.github.io/)
 ## Recommended Hardware
 
 - 16GB+ RAM
@@ -49,8 +49,11 @@ example:
 mkdir -p ./data/mainnet-geth
 
 # latest snapshot tarball
-# Replace this link to suit your needs
+# You can choose one of two ways to download，Using aria2c to download can improve download speed, but you need to install aria2
+1.
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240519-mainnet-chaindata.tar.zst
+2.
+aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240519-mainnet-chaindata.tar.zst
 
 tar --use-compress-program=unzstd -xvf 20240519-mainnet-chaindata.tar.zst -C /home/ssm-user/git/networks/data/mainnet-geth
 
