@@ -15,12 +15,21 @@ jobs:
     - name: Update README
       run: |
         date=$(date +%Y%m%d --date='last sunday')
+        url="https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/$date-mainnet-chaindata.tar.zst"
+        url_us="https://s3.amazonaws.com/snapshot-us.mantle.xyz/$date-mainnet-chaindata.tar.zst"
         echo $(date)
-        current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
-        sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
-        sed -i "s/${current_time}/$date/g" run-node-sepolia.md
-        git config --global user.email "git.action@mantle.xyz"
-        git config --global user.name "mantle-github-bot"
-        git add run-node-mainnetv2.md run-node-sepolia.md
-        git commit -m "update snapshot tar date"
-        git push https://mantle-github-bot:${{ secrets.PAT }}@github.com/mantlenetworkio/networks.git main
+        curl -I -L --fail --silent --show-error --output /dev/null "$url" && curl -I -L --fail --silent --show-error --output /dev/null ${url_us}
+        if [ $? -eq 0 ]
+        then
+          current_time=$(grep -Eo '[0-9]{8}' run-node-mainnetv2.md |head -n1)
+          sed -i "s/${current_time}/$date/g" run-node-mainnetv2.md
+          sed -i "s/${current_time}/$date/g" run-node-sepolia.md
+          git config --global user.email "git.action@mantle.xyz"
+          git config --global user.name "mantle-github-bot"
+          git add run-node-mainnetv2.md run-node-sepolia.md
+          git commit -m "update snapshot tar date"
+          git push https://mantle-github-bot:${{ secrets.PAT }}@github.com/mantlenetworkio/networks.git main
+        else
+          echo "file do not exit"
+        fi
+

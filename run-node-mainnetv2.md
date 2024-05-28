@@ -39,7 +39,7 @@ You can choose different types of node running modes (fullnode or archive) based
 
 - **Archive**
   - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240519-mainnet-chaindata.tar.zst
-  - **Europe:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240323-mainnet-chaindata.tar.zst
+  - **US:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240519-mainnet-chaindata.tar.zst
 - **Fullnode**
   - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240519-mainnet-full-chaindata.tar.zst
 
@@ -55,7 +55,7 @@ wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240519-mainne
 2.
 aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240519-mainnet-chaindata.tar.zst
 
-tar --use-compress-program=unzstd -xvf 20240519-mainnet-chaindata.tar.zst -C /home/ssm-user/git/networks/data/mainnet-geth
+tar --use-compress-program=unzstd -xvf 20240519-mainnet-chaindata.tar.zst -C ./data/mainnet-geth
 
 ```
 
