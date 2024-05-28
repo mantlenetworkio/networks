@@ -5,6 +5,8 @@
 - [docker](https://docs.docker.com/engine/install/)
 - [node](https://nodejs.org/en/download/)
 - [foundry](https://github.com/foundry-rs/foundry/releases)
+- [zstd](https://github.com/facebook/zstd)
+- [aira2](https://aria2.github.io/)
 
 ## Recommended Hardware
 
@@ -41,12 +43,14 @@ example:
 mkdir -p ./data/sepolia-geth
 
 # latest snapshot tarball
-
+# You can choose one of two ways to download，Using aria2c to download can improve download speed, but you need to install aria2
 tarball="20240519-sepolia-chaindata.tar.zst"
-
+1.
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${tarball}
+2.
+aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${tarball}
 
-tar xf ${tarball} -C ./data/sepolia-geth
+tar --use-compress-program=unzstd -xvf ${tarball} -C  ./data/sepolia-geth
 
 ```
 
