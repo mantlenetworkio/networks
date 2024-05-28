@@ -6,7 +6,7 @@
 - [node](https://nodejs.org/en/download/)
 - [foundry](https://github.com/foundry-rs/foundry/releases)
 - [zstd](https://github.com/facebook/zstd)
-- [aira2](hhttps://aria2.github.io/)
+- [aira2](https://aria2.github.io/)
 
 ## Recommended Hardware
 
