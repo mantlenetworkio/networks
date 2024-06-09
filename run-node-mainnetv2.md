@@ -38,10 +38,10 @@ After mantle upgrade to v2, you have to start the node with latest snapshot.
 You can choose different types of node running modes (fullnode or archive) based on your needs, thus selecting different snapshots for node synchronization. Additionally, we provide download links for snapshots in different regions to expedite your snapshot downloads. (Given that fullnode snapshots are relatively small, we will not provide additional download links.) Currently supported regions include:
 
 - **Archive**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240526-mainnet-chaindata.tar.zst
-  - **US:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240526-mainnet-chaindata.tar.zst
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240602-mainnet-chaindata.tar.zst
+  - **US:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240602-mainnet-chaindata.tar.zst
 - **Fullnode**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240526-mainnet-full-chaindata.tar.zst
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240602-mainnet-full-chaindata.tar.zst
 
 example:
 
@@ -51,11 +51,11 @@ mkdir -p ./data/mainnet-geth
 # latest snapshot tarball
 # You can choose one of two ways to download，Using aria2c to download can improve download speed, but you need to install aria2
 1.
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240526-mainnet-chaindata.tar.zst
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240602-mainnet-chaindata.tar.zst
 2.
-aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240526-mainnet-chaindata.tar.zst
+aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240602-mainnet-chaindata.tar.zst
 
-tar --use-compress-program=unzstd -xvf 20240526-mainnet-chaindata.tar.zst -C ./data/mainnet-geth
+tar --use-compress-program=unzstd -xvf 20240602-mainnet-chaindata.tar.zst -C ./data/mainnet-geth
 
 ```
 
