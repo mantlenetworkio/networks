@@ -44,7 +44,7 @@ mkdir -p ./data/sepolia-geth
 
 # latest snapshot tarball
 # You can choose one of two ways to download，Using aria2c to download can improve download speed, but you need to install aria2
-tarball="20240602-sepolia-chaindata.tar.zst"
+tarball="20240609-sepolia-chaindata.tar.zst"
 1.
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${tarball}
 2.
