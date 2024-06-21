@@ -99,9 +99,8 @@ services:
       OP_NODE_PPROF_ADDR: '0.0.0.0'
       OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
       OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
-      # da retriever
-      OP_NODE_RETRIEVER_SOCKET: retriever.sepolia.mantle.xyz:8000
-      OP_NODE_GRAPH_PROVIDER: https://graphnode.sepolia.mantle.xyz/subgraphs/name/datalayr
+      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.sepolia.mantle.xyz:80'
+      OP_NODE_INDEXER_ENABLE: 'true'
       OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.sepolia.mantle.xyz
       OP_NODE_P2P_STATIC: '/ip4/18.139.118.7/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM'
       OP_NODE_SEQUENCER_ENABLED: 'false'
