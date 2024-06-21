@@ -146,14 +146,15 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 ```
 
-### upgrade for June 27
-stop rpc 
+### Upgrade for June 27 2024
+#### Stop rpc 
 ```sh
 docker-compose -f docker-compose-sepolia.yml down
 ```
 pull the latest code of this repo 
 
-by default , you will use mantle da-indexer to pull the info ,  all you need to edit is 
+#### Change config and start 
+##### by default , you will use mantle da-indexer to pull the info ,  all you need to edit is 
 
 docker-compose-sepolia-upgrade-da-indexer.yml 
 
@@ -166,7 +167,7 @@ docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d
 ```
 
 
-if you prefer use beacon :
+##### if you prefer use beacon :
 edit docker-compose-sepolia-upgrade-beacon.yml
 
 replace OP_NODE_L1_BEACON to your own beacon rpc 
@@ -176,3 +177,25 @@ then start with
 ```sh
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
+
+#### Check data 
+Use the command 'cast bn' to execute multiple times and check if the height increases.
+
+example: 
+
+```sh
+cast bn
+cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
+```
+
+Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe_l2 and inalized_l2 increases.
+It may need to be increased after thirty minutes
+
+example: 
+
+```sh
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
+
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+```
+
