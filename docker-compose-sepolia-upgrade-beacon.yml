@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantlenetworkio/op-geth:v0.5.0-1
+    image: mantlenetworkio/op-geth:v1.0.1
     deploy:
       resources:
         limits:
@@ -53,6 +53,8 @@ services:
       - --metrics
       - --metrics.addr=0.0.0.0
       - --metrics.port=9001
+      - --snapshot=false
+      - --rollup.sequencerhttp=https://rpc.sepolia.mantle.xyz
     volumes:
       - ./sepolia/secret:/secret/
       - ./data/sepolia-geth:/db/geth/
@@ -61,7 +63,7 @@ services:
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantlenetworkio/op-node:v0.5.0-1
+    image: mantlenetworkio/op-node:v1.0.1
     deploy:
       resources:
         limits:
@@ -99,8 +101,6 @@ services:
       OP_NODE_PPROF_ADDR: '0.0.0.0'
       OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
       OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
-      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.sepolia.mantle.xyz:80'
-      OP_NODE_INDEXER_ENABLE: 'true'
       OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.sepolia.mantle.xyz
       OP_NODE_P2P_STATIC: '/ip4/18.139.118.7/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM'
       OP_NODE_SEQUENCER_ENABLED: 'false'
@@ -108,5 +108,7 @@ services:
       OP_NODE_L2_ENGINE_SYNC_ENABLED: 'true'
       OP_NODE_L2_SKIP_SYNC_START_CHECK: 'true'
       OP_NODE_P2P_SYNC_REQ_RESP: 'true'
+      OP_NODE_DA_RPC: 'disperser-holesky.eigenda.xyz:443'
+      OP_NODE_L1_BEACON: 'beaconrpc_fixme'
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
