@@ -146,7 +146,7 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 ```
 
-### Upgrade for June 27 2024
+### Upgrade for 2024-07-10
 #### Stop rpc 
 ```sh
 docker-compose -f docker-compose-sepolia.yml down
