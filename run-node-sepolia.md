@@ -44,7 +44,7 @@ mkdir -p ./data/sepolia-geth
 
 # latest snapshot tarball
 # You can choose one of two ways to download，Using aria2c to download can improve download speed, but you need to install aria2
-tarball="20240623-sepolia-chaindata.tar.zst"
+tarball="20240707-sepolia-chaindata.tar.zst"
 1.
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${tarball}
 2.
@@ -62,20 +62,19 @@ chaindata
 
 #### Start
 
+change  OP_NODE_L1_ETH_RPC to your own l1 rpc in docker-compose-sepolia-upgrade-da-indexer.yml
 ```sh
-docker-compose -f docker-compose-sepolia.yml up -d 
+docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
 You will need to run this again if you ever turn your machine off.
 
-The first time you start the node it synchronizes from regenesis (December 1th, 2022) to the present.
-This process takes hours.
 
 #### Stop
 
 ```sh
-docker-compose -f docker-compose-sepolia.yml down
+docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml down
 ```
 
 Will shut down the node without wiping any volumes.
@@ -84,7 +83,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker-compose -f docker-compose-sepolia.yml down -v
+docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
