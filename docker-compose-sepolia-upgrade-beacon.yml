@@ -114,5 +114,6 @@ services:
       OP_NODE_L1_BEACON: 'beaconrpc_fixme' #change this
       OP_NODE_RETRIEVER_SOCKET: retriever.sepolia.mantle.xyz:8000
       OP_NODE_GRAPH_PROVIDER: https://graphnode.sepolia.mantle.xyz/subgraphs/name/datalayr
+      OP_NODE_RETRIEVER_TIMEOUT: 120s
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
