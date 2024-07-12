@@ -150,7 +150,7 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 ```sh
 docker-compose -f docker-compose-sepolia.yml down
 ```
-pull the latest code of this repo 
+#### pull the latest code of this repo 
 
 #### Change config and start 
 ##### by default , you will use mantle da-indexer to pull the info ,  all you need to edit is 
