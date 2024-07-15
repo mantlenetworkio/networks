@@ -309,4 +309,3 @@ Otherwise
 ```
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
-
