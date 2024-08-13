@@ -57,10 +57,10 @@ mkdir -p ./data/sepolia-geth
 
 ```
 # download the latest official snapshot
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/20240707-sepolia-chaindata.tar.zst
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/20240811-sepolia-chaindata.tar.zst
 
 # unzip snapshot to the ledger path
-tar --use-compress-program=unzstd -xvf 20240707-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
+tar --use-compress-program=unzstd -xvf 20240811-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
 ```
 
 Check the data was unarchived successfully:
