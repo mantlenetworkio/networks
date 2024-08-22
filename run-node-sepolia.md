@@ -56,11 +56,13 @@ mkdir -p ./data/sepolia-geth
 
 
 ```
+SEPOLIA_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current.info`
+
 # download the latest official snapshot
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/20240811-sepolia-chaindata.tar.zst
+wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst
 
 # unzip snapshot to the ledger path
-tar --use-compress-program=unzstd -xvf 20240811-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
+tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
 ```
 
 Check the data was unarchived successfully:
