@@ -66,6 +66,7 @@ echo "${SEPOLIA_CURRENT_TARBALL_CHECKSUM} *${SEPOLIA_CURRENT_TARBALL_DATE}-sepol
 # ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst: OK
 ```
 
+
 Third, unzip snapshot to the ledger path
 ```
 tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
