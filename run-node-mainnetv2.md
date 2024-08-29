@@ -11,7 +11,7 @@
 
 - 16GB+ RAM
 - 8C+ CPU
-- 4T+ disk(HDD works for now, SSD is better)
+- 5T+ disk(HDD works for now, SSD is better)
 - 10mb/s+ download
 
 ## Installation and Setup Instructions
@@ -38,24 +38,33 @@ After mantle upgrade to v2, you have to start the node with latest snapshot.
 You can choose different types of node running modes (fullnode or archive) based on your needs, thus selecting different snapshots for node synchronization. Additionally, we provide download links for snapshots in different regions to expedite your snapshot downloads. (Given that fullnode snapshots are relatively small, we will not provide additional download links.) Currently supported regions include:
 
 - **Archive**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240623-mainnet-chaindata.tar.zst
-  - **US:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/20240623-mainnet-chaindata.tar.zst
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
+  - **US:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
 - **Fullnode**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240623-mainnet-full-chaindata.tar.zst
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-full-chaindata.tar.zst
 
 example:
 
 ```sh
 mkdir -p ./data/mainnet-geth
 
-# latest snapshot tarball
+# Download latest snapshot tarball
 # You can choose one of two ways to download，Using aria2c to download can improve download speed, but you need to install aria2
+MAINNET_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/current.info`
 1.
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240623-mainnet-chaindata.tar.zst
+wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
 2.
-aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/20240623-mainnet-chaindata.tar.zst
+aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
 
-tar --use-compress-program=unzstd -xvf 20240623-mainnet-chaindata.tar.zst -C ./data/mainnet-geth
+#Then you can verify your download
+MAINNET_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-chaindata.tar.zst.sha256sum | awk '{print $1}'`
+echo "${MAINNET_CURRENT_TARBALL_CHECKSUM} *${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst" | shasum -a 256 --check
+
+# You should get the following output:
+# ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst: OK
+
+# unzip snapshot to the ledger path:
+tar --use-compress-program=unzstd -xvf ${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst -C ./data/mainnet-geth
 
 ```
 

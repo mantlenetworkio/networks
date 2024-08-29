@@ -52,8 +52,6 @@ First, create a path for ledger:
 mkdir -p ./data/sepolia-geth
 ```
 
-\# latest snapshot tarball# You can choose one of two ways to download，~~Using aria2c to download can improve download speed, but you need to install aria2~~
-
 Second, download the latest official snapshot:
 ```
 # Download tarball
@@ -300,10 +298,11 @@ rm -fr ./data/sepolia-geth
 mkdir -p ./data/sepolia-geth
 
 # download the latest official snapshot
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/20240707-sepolia-chaindata.tar.zst
+SEPOLIA_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current.info`
+wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst
 
 # unzip snapshot to the ledger path
-tar --use-compress-program=unzstd -xvf 20240707-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
+tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
 ```
 
 ## 3 Start the service
