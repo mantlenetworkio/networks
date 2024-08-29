@@ -37,11 +37,17 @@ After mantle upgrade to v2, you have to start the node with latest snapshot.
 
 You can choose different types of node running modes (fullnode or archive) based on your needs, thus selecting different snapshots for node synchronization. Additionally, we provide download links for snapshots in different regions to expedite your snapshot downloads. (Given that fullnode snapshots are relatively small, we will not provide additional download links.) Currently supported regions include:
 
-- Archive
-  - Asia: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
-  - US: https://s3.amazonaws.com/snapshot-us.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
-- Fullnode
-  - Asia: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-full-chaindata.tar.zst
+You need to get the latest tarball date first:
+```sh
+MAINNET_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/current.info`
+```
+
+Then replace the MAINNET_CURRENT_TARBALL_DATE in the link below:
+- **Archive**
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
+  - **US:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
+- **Fullnode**
+  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-full-chaindata.tar.zst
 
 example:
 
@@ -61,7 +67,7 @@ MAINNET_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/s
 echo "${MAINNET_CURRENT_TARBALL_CHECKSUM} *${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst" | shasum -a 256 --check
 
 # You should get the following output:
-# ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst: OK
+# ${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst: OK
 
 # unzip snapshot to the ledger path:
 tar --use-compress-program=unzstd -xvf ${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst -C ./data/mainnet-geth
