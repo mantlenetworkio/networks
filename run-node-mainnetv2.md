@@ -37,11 +37,11 @@ After mantle upgrade to v2, you have to start the node with latest snapshot.
 
 You can choose different types of node running modes (fullnode or archive) based on your needs, thus selecting different snapshots for node synchronization. Additionally, we provide download links for snapshots in different regions to expedite your snapshot downloads. (Given that fullnode snapshots are relatively small, we will not provide additional download links.) Currently supported regions include:
 
-- **Archive**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
-  - **US:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
-- **Fullnode**
-  - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-full-chaindata.tar.zst
+- Archive
+  - Asia: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
+  - US: https://s3.amazonaws.com/snapshot-us.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
+- Fullnode
+  - Asia: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${CURRENT_TARBALL_DATE}-mainnet-full-chaindata.tar.zst
 
 example:
 
