@@ -63,7 +63,7 @@ wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CU
 aria2c -x 16 -s 16 -k 100M https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
 
 #Then you can verify your download
-MAINNET_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-chaindata.tar.zst.sha256sum | awk '{print $1}'`
+MAINNET_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst.sha256sum | awk '{print $1}'`
 echo "${MAINNET_CURRENT_TARBALL_CHECKSUM} *${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst" | shasum -a 256 --check
 
 # You should get the following output:
