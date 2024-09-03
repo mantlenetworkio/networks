@@ -52,16 +52,23 @@ First, create a path for ledger:
 mkdir -p ./data/sepolia-geth
 ```
 
-\# latest snapshot tarball# You can choose one of two ways to download，~~Using aria2c to download can improve download speed, but you need to install aria2~~
-
-
+Second, download the latest official snapshot:
 ```
+# Download tarball
 SEPOLIA_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current.info`
-
-# download the latest official snapshot
 wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst
 
-# unzip snapshot to the ledger path
+# Then you can verify your download
+SEPOLIA_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst.sha256sum | awk '{print $1}'`
+echo "${SEPOLIA_CURRENT_TARBALL_CHECKSUM} *${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst" | shasum -a 256 --check
+
+# You should get the following output:
+# ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst: OK
+```
+
+
+Third, unzip snapshot to the ledger path
+```
 tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
 ```
 
@@ -292,10 +299,11 @@ rm -fr ./data/sepolia-geth
 mkdir -p ./data/sepolia-geth
 
 # download the latest official snapshot
-wget https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/20240707-sepolia-chaindata.tar.zst
+SEPOLIA_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current.info`
+wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst
 
 # unzip snapshot to the ledger path
-tar --use-compress-program=unzstd -xvf 20240707-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
+tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
 ```
 
 ## 3 Start the service
