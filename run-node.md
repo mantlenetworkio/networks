@@ -35,7 +35,7 @@ You'll need to log out and log in again for this change to take effect.
 
 #### Download latest snapshot from mantle 
 
-We recommend that you start the node with latest shapshot, so that you don't need to wait a long time to sync data.
+We recommend that you start the node with latest snapshot, so that you don't need to wait a long time to sync data.
 
 example: 
 
@@ -64,7 +64,7 @@ chaindata
 docker-compose -f docker-compose.yml up -d 
 ```
 
-Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
+Will start the node in a detached shell (`-d`), meaning the node will continue to run in the background.
 You will need to run this again if you ever turn your machine off.
 
 The first time you start the node it synchronizes from regenesis (December 1th, 2022) to the present.
