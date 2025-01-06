@@ -83,17 +83,11 @@ chaindata
 
 #### 4.1 Start with mantle da-indexer（recommend）
 
-use mantle da-indexer to pull the data for rollup node, and you need to edit
+use mantle da-indexer to pull the data for rollup node, and you need to set up L1_RPC_SEPOLIA
+
 
 ```
-docker-compose-sepolia-upgrade-da-indexer.yml
-```
-
-replace **OP\_NODE\_L1\_ETH\_RPC** to your own l1 rpc (not beacon )
-
-then , start rpc
-
-```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia' 
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
@@ -103,17 +97,13 @@ Congratulations, the node has been deployed！
 
 #### 4.2 Start with EigenDA and L1 beacon chain
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, and you need to edit
+use EigenDA and L1 beacon chain to pull the data for rollup node, and you need set up
+L1_RPC_HOLESKY (EigenDA now only have holesky deployed , this is why we need this holesky rpc) and L1_RPC_SEPOLIA 
 
 ```
-edit docker-compose-sepolia-upgrade-beacon.yml
-```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia' 
+export L1_RPC_HOLESKY='https://rpc.ankr.com/eth_holesky' 
 
-replace **OP\_NODE\_L1\_BEACON** to your own beacon rpc, replace **OP\_NODE\_L1\_ETH\_RPC** to your own l1 rpc (not beacon )
-
-then start with
-
-```
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
 
@@ -193,12 +183,13 @@ docker-compose pull
 
 Will download the latest images for any services where you haven't hard-coded a service version. Updates are regularly pushed to improve the stability of Mantle nodes or to introduce new quality-of-life features like better logging and better metrics. I recommend that you run this command every once in a while (once a week should be more than enough).
 
-# 2024-07-10 Upgrade for historical user
+# 2025-07-10 Upgrade for historical user
 
 ## 1 Stop historical node
 
 ```
 docker-compose -f docker-compose-sepolia.yml down
+docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml down
 ```
 
 ## 2 Pull the latest code of this repo
@@ -209,37 +200,15 @@ docker-compose -f docker-compose-sepolia.yml down
 git pull 
 ```
 
-this upgrade updates three files
-
-* sepolia/rollup.json
-
-    * modify the address of L1 rollup contract for EigenDA data
-
-* docker-compose-sepolia-upgrade-da-indexer.yml
-
-    * start with mantle da-indexer, it will use mantle da-indexer to pull the data for rollup node, the function of da-indexer is caching the rollup data of EigenDA and blobs, making it available for third-party use
-
-* docker-compose-sepolia-upgrade-beacon.yml
-
-    * start with EigenDA and L1 beacon chain, op-node will pull data from EigenDA and beacon chain directly
-
 **If you start the node using your own way, please refer to the three files from this upgrade. Otherwise, it may cause irreversible damage to the node.**
 
 ## 3 Operating the Node
 
 ### 3.1 start with mantle da-indexer（recommend）
 
-use mantle da-indexer to pull the data for rollup node, and you need to edit
 
 ```
-docker-compose-sepolia-upgrade-da-indexer.yml
-```
-
-replace **OP\_NODE\_L1\_ETH\_RPC** to your own l1 rpc (not beacon )
-
-then , start rpc
-
-```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia' 
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
@@ -247,15 +216,13 @@ docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d
 
 use EigenDA and L1 beacon chain to pull the data for rollup node, and you need to edit
 
-```
-edit docker-compose-sepolia-upgrade-beacon.yml
-```
-
-replace **OP\_NODE\_L1\_BEACON** to your own beacon rpc, replace **OP\_NODE\_L1\_ETH\_RPC** to your own l1 rpc (not beacon )
+L1_RPC_HOLESKY (EigenDA now only have holesky deployed , this is why we need this holesky rpc) and L1_RPC_SEPOLIA 
 
 then start with
 
 ```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia' 
+export L1_RPC_HOLESKY='https://rpc.ankr.com/eth_holesky' 
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
 

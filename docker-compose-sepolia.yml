@@ -69,11 +69,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4'
-          memory: 8000M
+          cpus: '2'
+          memory: 4000M
         reservations:
-          cpus: '4'
-          memory: 8000M
+          cpus: '2'
+          memory: 4000M
       restart_policy:
         condition: on-failure
     depends_on:
@@ -82,7 +82,7 @@ services:
       - ./sepolia/secret:/secret
       - ./sepolia/rollup.json:/config/rollup.json
     environment:
-      OP_NODE_L1_ETH_RPC: 'wss://sepolia.gateway.tenderly.co' #change this
+      OP_NODE_L1_ETH_RPC: $L1_RPC_SEPOLIA 
       OP_NODE_L2_ENGINE_RPC: 'http://op-geth:8551'
       OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
       OP_NODE_ROLLUP_CONFIG: '/config/rollup.json'

@@ -54,7 +54,7 @@ services:
       - --metrics.port=9001
       - --snapshot=false
       - --rollup.sequencerhttp=https://rpc.mantle.xyz
-      - --rollup.historicalrpc=https://rpc-moon.mantle.xyz/v1/OTFjNjk2ODA5Yjk5MGE1MzA0N2E2MDc1
+      - --rollup.historicalrpc=https://rpc.mantle.xyz
       - --config=/config/config.toml
     volumes:
       - ./mainnet/config.toml:/config/config.toml
@@ -102,7 +102,7 @@ services:
       OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
       OP_NODE_INDEXER_SOCKET: 'da-indexer-api.mantle.xyz:80'
       OP_NODE_INDEXER_ENABLE: 'true'
-      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc-moon.mantle.xyz/v1/OTFjNjk2ODA5Yjk5MGE1MzA0N2E2MDc1
+      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.mantle.xyz
       OP_NODE_P2P_STATIC: '/dns4/peer0.mantle.xyz/tcp/9003/p2p/16Uiu2HAmKVKzUAns2gLhZAz1PYcbnhY3WpxNxUZYeTN1x29tNBAW,/dns4/peer1.mantle.xyz/tcp/9003/p2p/16Uiu2HAm1AiZtVp8f5C8LvpSTAXC6GtwqAVKnB3VLawWYSEBmcFN,/dns4/peer2.mantle.xyz/tcp/9003/p2p/16Uiu2HAm2UHVKiPXpovs8VbbUQVPr7feBAqBJdFsH1z5XDiLEvHT'
       OP_NODE_SEQUENCER_ENABLED: 'false'
       OP_NODE_P2P_AGENT: 'mantle'
