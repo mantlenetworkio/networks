@@ -187,7 +187,7 @@ docker-compose pull
 
 Will download the latest images for any services where you haven't hard-coded a service version. Updates are regularly pushed to improve the stability of Mantle nodes or to introduce new quality-of-life features like better logging and better metrics. I recommend that you run this command every once in a while (once a week should be more than enough).
 
-# 2025-07-10 Upgrade for historical user
+# 2025-02-16 Upgrade for historical user
 
 ## 1 Stop historical node
 
@@ -219,6 +219,7 @@ docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d
 ### 3.2 start with EigenDA and L1 beacon chain
 
 use EigenDA and L1 beacon chain to pull the data for rollup node, 
+
 you need to edit L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA ,L1_RPC_HOLESKY
 
 L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
