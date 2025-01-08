@@ -97,10 +97,11 @@ Congratulations, the node has been deployed！
 
 #### 4.2 Start with EigenDA and L1 beacon chain
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, and you need set up
-L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA ,L1_RPC_HOLESKY
+use EigenDA and L1 beacon chain to pull the data for rollup node, 
+you need set up L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA ,L1_RPC_HOLESKY
 
 L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+
 L1_RPC_HOLESKY is for eigenda (eigenda only support holesky test network)
 ```
 export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
@@ -217,11 +218,11 @@ docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d
 
 ### 3.2 start with EigenDA and L1 beacon chain
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, and you need to edit
-
-L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA ,L1_RPC_HOLESKY
+use EigenDA and L1 beacon chain to pull the data for rollup node, 
+you need to edit L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA ,L1_RPC_HOLESKY
 
 L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+
 L1_RPC_HOLESKY is for eigenda (eigenda only support holesky test network)
 
 then start with
