@@ -87,7 +87,7 @@ use mantle da-indexer to pull the data for rollup node, and you need to set up L
 
 
 ```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia' 
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
@@ -211,7 +211,7 @@ git pull
 
 
 ```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia' 
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
