@@ -98,11 +98,14 @@ Congratulations, the node has been deployed！
 #### 4.2 Start with EigenDA and L1 beacon chain
 
 use EigenDA and L1 beacon chain to pull the data for rollup node, and you need set up
-L1_RPC_HOLESKY (EigenDA now only have holesky deployed , this is why we need this holesky rpc) and L1_RPC_SEPOLIA 
+L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA ,L1_RPC_HOLESKY
 
+L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+L1_RPC_HOLESKY is for eigenda (eigenda only support holesky test network)
 ```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia' 
-export L1_RPC_HOLESKY='https://rpc.ankr.com/eth_holesky' 
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+export L1_RPC_HOLESKY='https://rpc.ankr.com/eth_holesky'   #please replace
+export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
 
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
