@@ -83,17 +83,11 @@ chaindata
 
 #### 4.1 Start with mantle da-indexer（recommend）
 
-use mantle da-indexer to pull the data for rollup node, and you need to edit
+use mantle da-indexer to pull the data for rollup node, and you need to set up L1_RPC_SEPOLIA
+
 
 ```
-docker-compose-sepolia-upgrade-da-indexer.yml
-```
-
-replace **OP\_NODE\_L1\_ETH\_RPC** to your own l1 rpc (not beacon )
-
-then , start rpc
-
-```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
@@ -103,17 +97,17 @@ Congratulations, the node has been deployed！
 
 #### 4.2 Start with EigenDA and L1 beacon chain
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, and you need to edit
+use EigenDA and L1 beacon chain to pull the data for rollup node, 
+you need set up L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA ,L1_RPC_HOLESKY
 
+L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+
+L1_RPC_HOLESKY is for eigenda (eigenda only support holesky test network)
 ```
-edit docker-compose-sepolia-upgrade-beacon.yml
-```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+export L1_RPC_HOLESKY='https://rpc.ankr.com/eth_holesky'   #please replace
+export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
 
-replace **OP\_NODE\_L1\_BEACON** to your own beacon rpc, replace **OP\_NODE\_L1\_ETH\_RPC** to your own l1 rpc (not beacon )
-
-then start with
-
-```
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
 
@@ -151,6 +145,13 @@ example:
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+```
+
+
+query data from eigenproxy to confirm eigenproxy working (eigenda)
+
+```
+curl  -v http://127.0.0.1:3100/get/010000f901d5f850f842a0004b89b64c9068bcc5ee718469089461cc9d15176ec1774ded8deeb760f5d637a006a489746934a07df74d7089f141b41a3a9ad03338d729f9fb7380cb536252ad02cac480213701c401213701f901808301cf9872f873eba0b3442b9d2aebd5915bf535d3b43ac8888f2c9b0e54b9794f7c7c14b76926d56e820001826464832f5559a01520df76db0371961b3013d95a7a086e56643b6cc89b5afbf81a1d5c01868cc900832f55b0a090fbee953715da92a591f532409802012bc699d48ca72408a23b3884608e0b01b9010088b880e114817d065490b3945c80b827b710325dc50a768010f83855be9018070c249a7a314aed552c6beb02a5246d6598dca0b07f0cff206cbc881e36972b849339086457ff43cc0931213139c0703c16bb0de8ae6312d2cf440021aef44302e66e3504e989765d23d9cd805ee0fcb8c29e622f6c26a7306759875a007cb5a9b8692a97e2b2cf450a64df1bb75d95cef816e3b768834c22dc7d682087d89e10aeee6e3989d50b6cbd8fef1f1df57478eb6a61b10204125a74561231452eeaf70bef1800f79eaa6db6eec2a51ace404c8636c1b1b207675a842efbc69b9fd1bec79b8087a3dca0c15e3f42209f610dc84f5a532dd0ebff43d12eb8a79899abc4820001
 ```
 
 ## Other useful commands for Operator
@@ -193,12 +194,13 @@ docker-compose pull
 
 Will download the latest images for any services where you haven't hard-coded a service version. Updates are regularly pushed to improve the stability of Mantle nodes or to introduce new quality-of-life features like better logging and better metrics. I recommend that you run this command every once in a while (once a week should be more than enough).
 
-# 2024-07-10 Upgrade for historical user
+# 2025-01-16 Upgrade for historical user
 
 ## 1 Stop historical node
 
 ```
 docker-compose -f docker-compose-sepolia.yml down
+docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml down
 ```
 
 ## 2 Pull the latest code of this repo
@@ -209,53 +211,34 @@ docker-compose -f docker-compose-sepolia.yml down
 git pull 
 ```
 
-this upgrade updates three files
-
-* sepolia/rollup.json
-
-    * modify the address of L1 rollup contract for EigenDA data
-
-* docker-compose-sepolia-upgrade-da-indexer.yml
-
-    * start with mantle da-indexer, it will use mantle da-indexer to pull the data for rollup node, the function of da-indexer is caching the rollup data of EigenDA and blobs, making it available for third-party use
-
-* docker-compose-sepolia-upgrade-beacon.yml
-
-    * start with EigenDA and L1 beacon chain, op-node will pull data from EigenDA and beacon chain directly
-
 **If you start the node using your own way, please refer to the three files from this upgrade. Otherwise, it may cause irreversible damage to the node.**
 
 ## 3 Operating the Node
 
 ### 3.1 start with mantle da-indexer（recommend）
 
-use mantle da-indexer to pull the data for rollup node, and you need to edit
 
 ```
-docker-compose-sepolia-upgrade-da-indexer.yml
-```
-
-replace **OP\_NODE\_L1\_ETH\_RPC** to your own l1 rpc (not beacon )
-
-then , start rpc
-
-```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
 ### 3.2 start with EigenDA and L1 beacon chain
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, and you need to edit
+use EigenDA and L1 beacon chain to pull the data for rollup node, 
 
-```
-edit docker-compose-sepolia-upgrade-beacon.yml
-```
+you need to edit L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA ,L1_RPC_HOLESKY
 
-replace **OP\_NODE\_L1\_BEACON** to your own beacon rpc, replace **OP\_NODE\_L1\_ETH\_RPC** to your own l1 rpc (not beacon )
+L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+
+L1_RPC_HOLESKY is for eigenda (eigenda only support holesky test network)
 
 then start with
 
 ```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+export L1_RPC_HOLESKY='https://rpc.ankr.com/eth_holesky'   #please replace
+export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
 
