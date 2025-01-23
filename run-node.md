@@ -35,7 +35,7 @@ You'll need to log out and log in again for this change to take effect.
 
 #### Download latest snapshot from mantle 
 
-We recommend that you start the node with latest shapshot, so that you don't need to wait a long time to sync data.
+We recommend that you start the node with latest snapshot, so that you don't need to wait a long time to sync data.
 
 example: 
 
