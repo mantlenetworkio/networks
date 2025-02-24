@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantlenetworkio/op-geth:v1.0.0-alpha.4
+    image: mantlenetworkio/mantle-op-geth:v1.1.1
     deploy:
       resources:
         limits:
@@ -41,7 +41,6 @@ services:
       - --syncmode=full
       - --maxpeers=0
       - --networkid=5000
-      - --rpc.allow-unprotected-txs
       - --authrpc.addr=0.0.0.0
       - --authrpc.port=8551
       - --authrpc.vhosts=*
@@ -63,7 +62,7 @@ services:
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantlenetworkio/op-node:v1.0.0-alpha.3
+    image: mantlenetworkio/mantle-op-node:v1.1.1
     deploy:
       resources:
         limits:
@@ -76,7 +75,6 @@ services:
         condition: on-failure
     depends_on:
       - op-geth
-      - eigenda-proxy
     volumes:
       - ./mainnet/secret:/secret
       - ./mainnet/rollup.json:/config/rollup.json
@@ -102,7 +100,7 @@ services:
       OP_NODE_PPROF_ADDR: '0.0.0.0'
       OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
       OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
-      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.mantle.xyz:80'
+      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.mantle.xyz:443'
       OP_NODE_INDEXER_ENABLE: 'true'
       OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.mantle.xyz
       OP_NODE_P2P_STATIC: '/dns4/peer0.mantle.xyz/tcp/9003/p2p/16Uiu2HAmKVKzUAns2gLhZAz1PYcbnhY3WpxNxUZYeTN1x29tNBAW,/dns4/peer1.mantle.xyz/tcp/9003/p2p/16Uiu2HAm1AiZtVp8f5C8LvpSTAXC6GtwqAVKnB3VLawWYSEBmcFN,/dns4/peer2.mantle.xyz/tcp/9003/p2p/16Uiu2HAm2UHVKiPXpovs8VbbUQVPr7feBAqBJdFsH1z5XDiLEvHT'
