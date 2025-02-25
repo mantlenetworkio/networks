@@ -113,6 +113,8 @@ services:
       OP_NODE_P2P_SYNC_REQ_RESP: 'true'
       OP_NODE_L1_BEACON: $L1_BEACON_SEPOLIA
       OP_NODE_EIGENDA_PROXY_URL: 'http://eigenda-proxy:3100'
+      OP_NODE_EIGENDA_DISPERSER_URL: 'disperser-holesky.eigenda.xyz:443'
+
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
   eigenda-proxy:
