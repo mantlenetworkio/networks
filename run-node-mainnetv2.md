@@ -85,7 +85,6 @@ chaindata
 
 ```sh
 export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
-export L1_BEACON_MAINNET='https://changethis.xyz'  #please replace
 docker-compose -f docker-compose-mainnetv2.yml up -d
 ```
 
@@ -152,6 +151,7 @@ git pull
 
 
 ```
+export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
 docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml up -d
 ```
 
