@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantlenetworkio/mantle-op-geth:v1.1.1
+    image: mantlenetworkio/mantle-op-geth:v1.1.0
     pull_policy: always
     deploy:
       resources:
@@ -64,7 +64,7 @@ services:
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantlenetworkio/mantle-op-node:v1.1.1
+    image: mantlenetworkio/mantle-op-node:v1.1.0
     pull_policy: always
     deploy:
       resources:
@@ -83,7 +83,7 @@ services:
       - ./sepolia/secret:/secret
       - ./sepolia/rollup.json:/config/rollup.json
     environment:
-      OP_NODE_L1_ETH_RPC: $L1_RPC_SEPOLIA
+      OP_NODE_L1_ETH_RPC: $L1_RPC_SEPOLIA 
       OP_NODE_L2_ENGINE_RPC: 'http://op-geth:8551'
       OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
       OP_NODE_ROLLUP_CONFIG: '/config/rollup.json'
@@ -111,10 +111,13 @@ services:
       OP_NODE_L2_ENGINE_SYNC_ENABLED: 'true'
       OP_NODE_L2_SKIP_SYNC_START_CHECK: 'true'
       OP_NODE_P2P_SYNC_REQ_RESP: 'true'
+      OP_NODE_DA_RPC: 'disperser-holesky.eigenda.xyz:443'
       OP_NODE_L1_BEACON: $L1_BEACON_SEPOLIA
+      OP_NODE_RETRIEVER_SOCKET: retriever.sepolia.mantle.xyz:8000
+      OP_NODE_GRAPH_PROVIDER: https://graphnode.sepolia.mantle.xyz/subgraphs/name/datalayr
+      OP_NODE_RETRIEVER_TIMEOUT: 120s
       OP_NODE_EIGENDA_PROXY_URL: 'http://eigenda-proxy:3100'
       OP_NODE_EIGENDA_DISPERSER_URL: 'disperser-holesky.eigenda.xyz:443'
-
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
   eigenda-proxy:
