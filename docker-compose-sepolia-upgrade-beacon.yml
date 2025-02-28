@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantlenetworkio/mantle-op-geth:v1.1.0
+    image: mantlenetworkio/mantle-op-geth:v1.1.0-1
     pull_policy: always
     deploy:
       resources:
@@ -64,7 +64,7 @@ services:
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantlenetworkio/mantle-op-node:v1.1.0
+    image: mantlenetworkio/mantle-op-node:v1.1.0-1
     pull_policy: always
     deploy:
       resources:
@@ -121,7 +121,7 @@ services:
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
   eigenda-proxy:
-    image: mantlenetworkio/eigenda-proxy:v1.5.0
+    image: mantlenetworkio/eigenda-proxy:v1.6.3
     pull_policy: always
     deploy:
       resources:
@@ -138,7 +138,7 @@ services:
       EIGENDA_PROXY_PORT: "3100"
       EIGENDA_PROXY_EIGENDA_DISPERSER_RPC: "disperser-holesky.eigenda.xyz:443"
       EIGENDA_PROXY_EIGENDA_ETH_RPC: $L1_RPC_HOLESKY
-      EIGENDA_PROXY_EIGENDA_ETH_CONFIRMATION_DEPTH: "6"
+      EIGENDA_PROXY_EIGENDA_CONFIRMATION_DEPTH: "6"
       EIGENDA_PROXY_EIGENDA_SERVICE_MANAGER_ADDR: "0xD4A7E1Bd8015057293f0D0A557088c286942e84b"
       EIGENDA_PROXY_EIGENDA_MAX_BLOB_LENGTH: "4MiB"
       EIGENDA_PROXY_METRICS_ENABLED: "true"
