@@ -84,6 +84,7 @@ chaindata
 #### Start
 
 ```sh
+export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
 docker-compose -f docker-compose-mainnetv2.yml up -d
 ```
 
@@ -126,15 +127,37 @@ The available services are:
 - [`op-geth`](#mantle-node)
 - [`op-node`](#mantle-node)
 
-#### Update
+#### Upgrade for historical user
 
-```sh
-docker-compose pull
+## 1 Stop historical node
+
+```
+docker-compose -f docker-compose-mainnetv2.yml down
 ```
 
-Will download the latest images for any services where you haven't hard-coded a service version.
-Updates are regularly pushed to improve the stability of Mantle nodes or to introduce new quality-of-life features like better logging and better metrics.
-I recommend that you run this command every once in a while (once a week should be more than enough).
+## 2 Pull the latest code of this repo
+
+```
+# If your local code have changes, please use 'git stash' to cache first
+
+git pull 
+```
+
+**If you start the node using your own way, please refer to the three files from this upgrade. Otherwise, it may cause irreversible damage to the node.**
+
+## 3 Operating the Node
+
+### 3.1 start with mantle da-indexer（recommend）
+
+
+```
+export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
+docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml up -d
+```
+
+### 3.2 start with EigenDA and L1 beacon chain 
+
+only working after upgrade 
 
 ## How To Check If The Deployment Is Successful
 
