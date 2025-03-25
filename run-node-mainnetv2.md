@@ -166,10 +166,9 @@ L1_BEACON_MAINNET is for querying data from eth blob if eigenda failed
 then start with
 
 ```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
-export L1_RPC_HOLESKY='https://rpc.ankr.com/eth_holesky'   #please replace
-export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
-docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
+export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
+export L1_BEACON_MAINNET='https://eth-beacon-chain.drpc.org/rest/'  #please replace
+docker-compose -f docker-compose-mainnetv2-upgrade-beacon.yml up -d 
 ```
 
 ## How To Check If The Deployment Is Successful
