@@ -157,7 +157,19 @@ docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml up -d
 
 ### 3.2 start with EigenDA and L1 beacon chain 
 
-only working after upgrade 
+use EigenDA and L1 beacon chain to pull the data for rollup node, 
+
+you need to edit L1_BEACON_MAINNET and L1_RPC_MAINNET
+
+L1_BEACON_MAINNET is for querying data from eth blob if eigenda failed 
+
+then start with
+
+```
+export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
+export L1_BEACON_MAINNET='https://eth-beacon-chain.drpc.org/rest/'  #please replace
+docker-compose -f docker-compose-mainnetv2-upgrade-beacon.yml up -d 
+```
 
 ## How To Check If The Deployment Is Successful
 
