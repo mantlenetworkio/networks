@@ -1,3 +1,22 @@
+# Mantle Network L2 history Geth Node Docker Compose Configuration
+# This configuration file is used to deploy a Mantle Network L2 Geth node
+# Main Features:
+# 1. Run L2 Geth node and connect to Mantle Network mainnet
+# 2. Configure health check to ensure node operation
+# 3. Set up data persistence storage
+# 4. Configure RPC interface access
+#
+# Usage Instructions:
+# 1. Ensure Docker and Docker Compose are installed
+# 2. download history snapshot 
+# 3. Run command: docker-compose -f docker-compose-mainnetv1.yml up -d
+#
+# Important Notes:
+# - must download history snapshot , do not use snapshot of v2
+# - Ensure sufficient disk space for data storage
+# - Regular backup of data directory is recommended
+
+
 version: '3.4'
 
 x-healthcheck: &healthcheck
