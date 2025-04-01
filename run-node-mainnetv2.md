@@ -154,6 +154,16 @@ git pull
 export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
 docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml up -d
 ```
+NOTE: this default without history data of v1 if you want to query mantle v1 data:
+
+download v1 snapshot and start with docker-compose-mainnetv1.yml,this will give you a full data mantle rpc but need more disk :
+``` 
+cd networks
+wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/historyrpcdata-mainnet-chaindata.tar.zst
+
+tar --use-compress-program=unzstd -xvf historyrpcdata-mainnet-chaindata.tar.zst -C ./data/gethv1
+docker-compose -f docker-compose-mainnetv1.yml up -d
+``` 
 
 ### 3.2 start with EigenDA and L1 beacon chain 
 
