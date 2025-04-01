@@ -68,7 +68,7 @@ services:
       - --metrics.port=9001
       - --snapshot=false
       - --rollup.sequencerhttp=https://rpc.mantle.xyz
-      - --rollup.historicalrpctimeout=http://op-geth-v1:8545
+      - --rollup.historicalrpc=http://op-geth-v1:8545
     volumes:
       - ./mainnet/secret:/secret/
       - ./data/mainnet-geth:/db/geth/

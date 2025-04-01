@@ -96,7 +96,7 @@ This process takes hours.
 
 NOTE: this default without history data of v1 if you want to query mantle v1 data:
 
-download v1 snapshot and start with docker-compose-mainnetv1.yml,this will give you a full data mantle rpc but need more disk :
+besides v2 snapshot(you still need untar v2 snapshot to ./data/mainnet-geth) , you also need download v1 snapshot and start with docker-compose-mainnetv1.yml,this will give you a full data mantle rpc but need more disk :
 ``` 
 cd networks
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/historyrpcdata-mainnet-chaindata.tar.zst
@@ -166,7 +166,7 @@ docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml up -d
 ```
 NOTE: this default without history data of v1 if you want to query mantle v1 data:
 
-download v1 snapshot and start with docker-compose-mainnetv1.yml,this will give you a full data mantle rpc but need more disk :
+besides v2 snapshot(you still need untar v2 snapshot to ./data/mainnet-geth) , you also need download v1 snapshot and start with docker-compose-mainnetv1.yml,this will give you a full data mantle rpc but need more disk :
 ``` 
 cd networks
 wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/historyrpcdata-mainnet-chaindata.tar.zst
