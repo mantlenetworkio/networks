@@ -302,3 +302,111 @@ Otherwise
 ```
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
+
+
+# 2025-07-5 Upgrade for historical user
+
+## 1 Stop historical node
+
+```
+docker-compose -f docker-compose-sepolia.yml down
+docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml down
+```
+
+## 2 Pull the latest code of this repo
+
+```
+# If your local code have changes, please use 'git stash' to cache first
+
+git pull 
+```
+
+**If you start the node using your own way, please refer to the three files from this upgrade. Otherwise, it may cause irreversible damage to the node.**
+
+## 3 Operating the Node
+
+### 3.1 start with mantle da-indexer（recommend）
+
+
+```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
+```
+
+### 3.2 start with EigenDA and L1 beacon chain
+
+use EigenDA and L1 beacon chain to pull the data for rollup node, 
+
+you need to edit L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA 
+
+L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+
+
+then start with
+
+```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
+docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
+```
+
+## 4 Check data
+
+Use the command 'cast bn' to execute multiple times and check if the height increases.
+
+example:
+
+```
+# query local op-geth latest block height
+cast bn
+
+# query latest block height from mantle rpc
+cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
+```
+
+Use the command 'cast rpc optimism\_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
+
+example:
+
+```
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
+
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+```
+
+# Restore from snapshot
+
+If your node's data is corrupted due to abnormal operations, please refer to the following steps for recovery
+
+## 1 Clean up historical data
+
+```
+rm -fr ./data/sepolia-geth 
+```
+
+## 2 Download the latest data
+
+```
+mkdir -p ./data/sepolia-geth
+
+# download the latest official snapshot
+SEPOLIA_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current.info`
+wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst
+
+# unzip snapshot to the ledger path
+tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
+```
+
+## 3 Start the service
+
+If you use da-indexer
+
+```
+docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
+```
+
+Otherwise
+
+```
+docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
+```
