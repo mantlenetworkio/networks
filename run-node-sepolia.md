@@ -135,7 +135,7 @@ cast bn
 cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
 ```
 
-Use the command 'cast rpc optimism\_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
+Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
 
 example:
 
@@ -146,11 +146,6 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 ```
 
 
-query data from eigenproxy to confirm eigenproxy working (eigenda)
-
-```
-curl  -v http://127.0.0.1:3100/get/010000f901d5f850f842a0004b89b64c9068bcc5ee718469089461cc9d15176ec1774ded8deeb760f5d637a006a489746934a07df74d7089f141b41a3a9ad03338d729f9fb7380cb536252ad02cac480213701c401213701f901808301cf9872f873eba0b3442b9d2aebd5915bf535d3b43ac8888f2c9b0e54b9794f7c7c14b76926d56e820001826464832f5559a01520df76db0371961b3013d95a7a086e56643b6cc89b5afbf81a1d5c01868cc900832f55b0a090fbee953715da92a591f532409802012bc699d48ca72408a23b3884608e0b01b9010088b880e114817d065490b3945c80b827b710325dc50a768010f83855be9018070c249a7a314aed552c6beb02a5246d6598dca0b07f0cff206cbc881e36972b849339086457ff43cc0931213139c0703c16bb0de8ae6312d2cf440021aef44302e66e3504e989765d23d9cd805ee0fcb8c29e622f6c26a7306759875a007cb5a9b8692a97e2b2cf450a64df1bb75d95cef816e3b768834c22dc7d682087d89e10aeee6e3989d50b6cbd8fef1f1df57478eb6a61b10204125a74561231452eeaf70bef1800f79eaa6db6eec2a51ace404c8636c1b1b207675a842efbc69b9fd1bec79b8087a3dca0c15e3f42209f610dc84f5a532dd0ebff43d12eb8a79899abc4820001
-```
 
 ## Other useful commands for Operator
 
@@ -253,7 +248,7 @@ cast bn
 cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
 ```
 
-Use the command 'cast rpc optimism\_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
+Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
 
 example:
 
