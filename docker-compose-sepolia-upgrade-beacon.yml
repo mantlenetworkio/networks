@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantlenetworkio/mantle-op-geth:v1.1.0-1
+    image: mantlenetworkio/mantle-op-geth:v1.3.0
     pull_policy: always
     deploy:
       resources:
@@ -64,7 +64,7 @@ services:
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantlenetworkio/mantle-op-node:v1.1.0-1
+    image: mantlenetworkio/mantle-op-node:v1.3.0
     pull_policy: always
     deploy:
       resources:
@@ -111,13 +111,9 @@ services:
       OP_NODE_L2_ENGINE_SYNC_ENABLED: 'true'
       OP_NODE_L2_SKIP_SYNC_START_CHECK: 'true'
       OP_NODE_P2P_SYNC_REQ_RESP: 'true'
-      OP_NODE_DA_RPC: 'disperser-holesky.eigenda.xyz:443'
       OP_NODE_L1_BEACON: $L1_BEACON_SEPOLIA
-      OP_NODE_RETRIEVER_SOCKET: retriever.sepolia.mantle.xyz:8000
-      OP_NODE_GRAPH_PROVIDER: https://graphnode.sepolia.mantle.xyz/subgraphs/name/datalayr
-      OP_NODE_RETRIEVER_TIMEOUT: 120s
       OP_NODE_EIGENDA_PROXY_URL: 'http://eigenda-proxy:3100'
-      OP_NODE_EIGENDA_DISPERSER_URL: 'disperser-holesky.eigenda.xyz:443'
+      OP_NODE_EIGENDA_DISPERSER_URL: 'disperser-testnet-sepolia.eigenda.xyz:443'
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
   eigenda-proxy:
@@ -136,10 +132,10 @@ services:
     environment:
       EIGENDA_PROXY_ADDR: "0.0.0.0"
       EIGENDA_PROXY_PORT: "3100"
-      EIGENDA_PROXY_EIGENDA_DISPERSER_RPC: "disperser-holesky.eigenda.xyz:443"
-      EIGENDA_PROXY_EIGENDA_ETH_RPC: $L1_RPC_HOLESKY
+      EIGENDA_PROXY_EIGENDA_DISPERSER_RPC: "disperser-testnet-sepolia.eigenda.xyz:443"
+      EIGENDA_PROXY_EIGENDA_ETH_RPC: $L1_RPC_SEPOLIA
       EIGENDA_PROXY_EIGENDA_CONFIRMATION_DEPTH: "6"
-      EIGENDA_PROXY_EIGENDA_SERVICE_MANAGER_ADDR: "0xD4A7E1Bd8015057293f0D0A557088c286942e84b"
+      EIGENDA_PROXY_EIGENDA_SERVICE_MANAGER_ADDR: "0x3a5acf46ba6890B8536420F4900AC9BC45Df4764"
       EIGENDA_PROXY_EIGENDA_MAX_BLOB_LENGTH: "4MiB"
       EIGENDA_PROXY_METRICS_ENABLED: "true"
       EIGENDA_PROXY_METRICS_PORT: "7300"
