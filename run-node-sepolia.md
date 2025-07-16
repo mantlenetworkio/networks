@@ -209,7 +209,7 @@ git pull
 
 ## 3 Operating the Node
 
-### 3.1 start with mantle da-indexer（recommend）
+### 3.1 start with mantle da-indexer
 
 
 ```
@@ -217,7 +217,7 @@ export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
-### 3.2 start with EigenDA and L1 beacon chain
+### 3.2 start with EigenDA and L1 beacon chain（recommend）
 
 use EigenDA and L1 beacon chain to pull the data for rollup node, 
 
