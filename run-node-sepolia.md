@@ -81,7 +81,7 @@ chaindata
 
 ### 4 Operating the Node
 
-#### 4.1 Start with mantle da-indexer（recommend）
+#### 4.1 Start with mantle da-indexer
 
 use mantle da-indexer to pull the data for rollup node, and you need to set up L1_RPC_SEPOLIA
 
@@ -95,7 +95,7 @@ Will start the node in a detached shell (`-d`), meaning the node will continue t
 
 Congratulations, the node has been deployed！
 
-#### 4.2 Start with EigenDA and L1 beacon chain
+#### 4.2 Start with EigenDA and L1 beacon chain（recommend）
 
 use EigenDA and L1 beacon chain to pull the data for rollup node, 
 you need set up L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA 
