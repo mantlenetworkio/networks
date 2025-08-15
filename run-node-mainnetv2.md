@@ -157,7 +157,7 @@ git pull
 
 ## 3 Operating the Node
 
-### 3.1 start with mantle da-indexer（recommend）
+### 3.1 start with mantle da-indexer
 
 
 ```
@@ -175,7 +175,7 @@ tar --use-compress-program=unzstd -xvf historyrpcdata-mainnet-chaindata.tar.zst 
 docker-compose -f docker-compose-mainnetv1.yml up -d
 ``` 
 
-### 3.2 start with EigenDA and L1 beacon chain 
+### 3.2 start with EigenDA and L1 beacon chain （recommend）
 
 use EigenDA and L1 beacon chain to pull the data for rollup node, 
 
