@@ -23,7 +23,7 @@ version: '3.4'
 services:
 
   op-geth:
-    image: mantlenetworkio/mantle-op-geth:v1.1.1
+    image: mantlenetworkio/mantle-op-geth:v1.3.1
     deploy:
       resources:
         limits:
@@ -77,7 +77,7 @@ services:
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
   op-node:
-    image: mantlenetworkio/mantle-op-node:v1.1.1
+    image: mantlenetworkio/mantle-op-node:v1.3.1
     deploy:
       resources:
         limits:
