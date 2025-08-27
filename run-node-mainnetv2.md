@@ -45,7 +45,6 @@ MAINNET_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snaps
 Then replace the MAINNET_CURRENT_TARBALL_DATE in the link below:
 - **Archive**
   - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
-  - **US:** https://s3.amazonaws.com/snapshot-us.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-chaindata.tar.zst
 - **Fullnode**
   - **Asia:** https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/${MAINNET_CURRENT_TARBALL_DATE}-mainnet-full-chaindata.tar.zst
 
