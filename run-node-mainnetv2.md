@@ -84,7 +84,7 @@ chaindata
 
 ```sh
 export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
-docker-compose -f docker-compose-mainnetv2.yml up -d
+docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml up -d
 ```
 
 Will start the node in a detatched shell (`-d`), meaning the node will continue to run in the background.
@@ -106,7 +106,7 @@ docker-compose -f docker-compose-mainnetv1.yml up -d
 #### Stop
 
 ```sh
-docker-compose -f docker-compose-mainnetv2.yml down
+docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml down
 
 ```
 
@@ -116,7 +116,7 @@ You can safely run this command and then restart the node again.
 #### Wipe
 
 ```sh
-docker-compose -f docker-compose-mainnetv2.yml down -v
+docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml down -v
 ```
 
 Will completely wipe the node by removing the volumes that were created for each container.
@@ -141,7 +141,7 @@ The available services are:
 ## 1 Stop historical node
 
 ```
-docker-compose -f docker-compose-mainnetv2.yml down
+docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml down
 ```
 
 ## 2 Pull the latest code of this repo
@@ -197,7 +197,7 @@ docker-compose -f docker-compose-mainnetv2-upgrade-beacon.yml up -d
 If the service status is 'up,' it means that the service has started without any issues.
 
 ```sh
-docker-compose -f docker-compose-mainnetv2.yml ps
+docker-compose -f docker-compose-mainnetv2-upgrade-da-indexer.yml ps
 ```
 
 ### Check Data
