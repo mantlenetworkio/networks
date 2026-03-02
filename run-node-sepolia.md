@@ -30,7 +30,7 @@ git clone https://github.com/mantlenetworkio/networks.git
 
 ### 2 Generate init file
 
-generat the 'jwt\_secret\_txt' file and the 'p2p\_node\_key\_txt'
+generate the 'jwt\_secret\_txt' file and the 'p2p\_node\_key\_txt'
 
 ```
 cd networks/
