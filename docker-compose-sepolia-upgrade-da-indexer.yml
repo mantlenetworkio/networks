@@ -109,8 +109,6 @@ services:
       OP_NODE_P2P_STATIC: '/dns4/peer0.sepolia.mantle.xyz/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM'
       OP_NODE_SEQUENCER_ENABLED: 'false'
       OP_NODE_P2P_AGENT: 'mantle'
-      OP_NODE_L2_ENGINE_SYNC_ENABLED: 'true'
-      OP_NODE_L2_SKIP_SYNC_START_CHECK: 'true'
       OP_NODE_P2P_SYNC_REQ_RESP: 'true'
     ports:
       - ${NODE_RPC_PORT:-9545}:8545

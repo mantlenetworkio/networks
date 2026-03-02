@@ -95,12 +95,12 @@ Will start the node in a detached shell (`-d`), meaning the node will continue t
 
 Congratulations, the node has been deployed！
 
-#### 4.2 Start with EigenDA and L1 beacon chain（recommend）
+#### 4.2 Start with L1 beacon chain（recommend）
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, 
+use L1 beacon chain to pull the data for rollup node, 
 you need set up L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA 
 
-L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+L1_BEACON_SEPOLIA is for querying data from eth blob
 
 ```
 export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
@@ -217,13 +217,13 @@ export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
-### 3.2 start with EigenDA and L1 beacon chain（recommend）
+### 3.2 start with L1 beacon chain（recommend）
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, 
+use L1 beacon chain to pull the data for rollup node
 
 you need to edit L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA 
 
-L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+L1_BEACON_SEPOLIA is for querying data from eth blob
 
 
 then start with
