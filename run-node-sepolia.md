@@ -181,6 +181,8 @@ The available services are:
 
 ### 4 Update
 
+> **Note:** When upgrading, please follow the correct update order: update **mantle-op-geth** first, then update **mantle-op-node**. Reversing this order may cause unexpected issues.
+
 ```
 docker-compose pull
 ```
