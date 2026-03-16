@@ -14,7 +14,7 @@
 
 * 8C+ CPU
 
-* 500GB+ disk (HDD works for now, SSD is better)
+* 1000GB+ disk (HDD works for now, SSD is better)
 
 * 10mb/s+ download
 
@@ -183,7 +183,7 @@ The available services are:
 
 > **Note:** When upgrading, please follow the correct update order: update **mantle-op-geth** first, then update **mantle-op-node**. Reversing this order may cause unexpected issues.
 > 
-> ⚠️ **Important for v1.5.1 Upgrade:** When updating to v1.5.1 version, you must ensure that mantle-op-geth starts before mantle-op-node. Failure to follow this order may cause chain fork. If a fork occurs, please rebuild the RPC node by following the full setup instructions in this document.
+> ⚠️ **Important for v1.5.2 Upgrade:** When updating to v1.5.2 version, you must ensure that mantle-op-geth starts before mantle-op-node. Failure to follow this order may cause chain fork. If a fork occurs, please rebuild the RPC node by following the full setup instructions in this document.
 
 ```
 docker-compose pull
