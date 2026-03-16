@@ -182,6 +182,8 @@ The available services are:
 ### 4 Update
 
 > **Note:** When upgrading, please follow the correct update order: update **mantle-op-geth** first, then update **mantle-op-node**. Reversing this order may cause unexpected issues.
+> 
+> ⚠️ **Important for v1.5.1 Upgrade:** When updating to v1.5.1 version, you must ensure that mantle-op-geth starts before mantle-op-node. Failure to follow this order may cause chain fork. If a fork occurs, please rebuild the RPC node by following the full setup instructions in this document.
 
 ```
 docker-compose pull
