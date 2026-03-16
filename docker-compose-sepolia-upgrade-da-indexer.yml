@@ -103,12 +103,11 @@ services:
       OP_NODE_PPROF_ADDR: '0.0.0.0'
       OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
       OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
-      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.sepolia.mantle.xyz:443'
-      OP_NODE_INDEXER_ENABLE: 'true'
       OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.sepolia.mantle.xyz
       OP_NODE_P2P_STATIC: '/dns4/peer0.sepolia.mantle.xyz/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM'
       OP_NODE_SEQUENCER_ENABLED: 'false'
       OP_NODE_P2P_AGENT: 'mantle'
       OP_NODE_P2P_SYNC_REQ_RESP: 'true'
+      OP_NODE_L1_BEACON: 'https://da-indexer-api.sepolia.mantle.xyz'
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
