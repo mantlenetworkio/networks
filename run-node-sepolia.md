@@ -186,7 +186,11 @@ The available services are:
 > ⚠️ **Important for v1.5.2 Upgrade:** When updating to v1.5.2 version, you must ensure that mantle-op-geth starts before mantle-op-node. Failure to follow this order may cause chain fork. If a fork occurs, please rebuild the RPC node by following the full setup instructions in this document.
 
 ```
-docker-compose pull
+docker-compose -f docker-compose-sepolia-upgrade-beacon.yml down
+
+git pull
+
+docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d
 ```
 
 Will download the latest images for any services where you haven't hard-coded a service version. Updates are regularly pushed to improve the stability of Mantle nodes or to introduce new quality-of-life features like better logging and better metrics. I recommend that you run this command every once in a while (once a week should be more than enough).
