@@ -1,7 +1,7 @@
 version: '3.4'
 
 x-healthcheck: &healthcheck
-  test: [ "CMD", "curl", "-sf", "http://localhost:8545" ]
+  test: [ "CMD", "nc", "-zv", "-w", "2", "localhost", "8545" ]
   interval: 5s
   timeout: 5s
   retries: 3
@@ -63,6 +63,8 @@ services:
       - ${VERIFIER_HTTP_PORT:-8545}:8545
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
+    healthcheck:
+      <<: *healthcheck
   op-node:
     image: mantlenetworkio/mantle-op-node:v1.5.2
     pull_policy: always
@@ -77,7 +79,8 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      - op-geth
+      op-geth:
+        condition: service_healthy
     volumes:
       - ./sepolia/secret:/secret
       - ./sepolia/rollup.json:/config/rollup.json
