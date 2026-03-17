@@ -14,7 +14,7 @@
 
 * 8C+ CPU
 
-* 500GB+ disk (HDD works for now, SSD is better)
+* 1000GB+ disk (HDD works for now, SSD is better)
 
 * 10mb/s+ download
 
@@ -30,7 +30,7 @@ git clone https://github.com/mantlenetworkio/networks.git
 
 ### 2 Generate init file
 
-generat the 'jwt\_secret\_txt' file and the 'p2p\_node\_key\_txt'
+generate the 'jwt\_secret\_txt' file and the 'p2p\_node\_key\_txt'
 
 ```
 cd networks/
@@ -95,12 +95,12 @@ Will start the node in a detached shell (`-d`), meaning the node will continue t
 
 Congratulations, the node has been deployed！
 
-#### 4.2 Start with EigenDA and L1 beacon chain（recommend）
+#### 4.2 Start with L1 beacon chain（recommend）
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, 
+use L1 beacon chain to pull the data for rollup node, 
 you need set up L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA 
 
-L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+L1_BEACON_SEPOLIA is for querying data from eth blob
 
 ```
 export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
@@ -181,6 +181,10 @@ The available services are:
 
 ### 4 Update
 
+> **Note:** When upgrading, please follow the correct update order: update **mantle-op-geth** first, then update **mantle-op-node**. Reversing this order may cause unexpected issues.
+> 
+> ⚠️ **Important for v1.5.2 Upgrade:** When updating to v1.5.2 version, you must ensure that mantle-op-geth starts before mantle-op-node. Failure to follow this order may cause chain fork. If a fork occurs, please rebuild the RPC node by following the full setup instructions in this document.
+
 ```
 docker-compose pull
 ```
@@ -217,13 +221,13 @@ export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
 ```
 
-### 3.2 start with EigenDA and L1 beacon chain（recommend）
+### 3.2 start with L1 beacon chain（recommend）
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, 
+use L1 beacon chain to pull the data for rollup node
 
 you need to edit L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA 
 
-L1_BEACON_SEPOLIA is for querying data from eth blob if eigenda failed 
+L1_BEACON_SEPOLIA is for querying data from eth blob
 
 
 then start with
