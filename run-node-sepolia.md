@@ -190,6 +190,8 @@ docker-compose -f docker-compose-sepolia-upgrade-beacon.yml down
 
 git pull
 
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d
 ```
 
