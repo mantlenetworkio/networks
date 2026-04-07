@@ -1,7 +1,7 @@
 version: '3.4'
 
 x-healthcheck: &healthcheck
-  test: [ "CMD", "curl", "-sf", "http://localhost:8545" ]
+  test: [ "CMD", "nc", "-zv", "-w", "2", "localhost", "8545" ]
   interval: 5s
   timeout: 5s
   retries: 3
@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantlenetworkio/mantle-op-geth:v1.4.2
+    image: mantlenetworkio/mantle-op-geth:v1.5.4
     deploy:
       resources:
         limits:
@@ -61,8 +61,10 @@ services:
       - ${VERIFIER_HTTP_PORT:-8545}:8545
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
+    healthcheck:
+      <<: *healthcheck
   op-node:
-    image: mantlenetworkio/mantle-op-node:v1.4.2
+    image: mantlenetworkio/mantle-op-node:v1.5.4
     deploy:
       resources:
         limits:
@@ -74,7 +76,8 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      - op-geth
+      op-geth:
+        condition: service_healthy
     volumes:
       - ./mainnet/secret:/secret
       - ./mainnet/rollup.json:/config/rollup.json
@@ -100,14 +103,11 @@ services:
       OP_NODE_PPROF_ADDR: '0.0.0.0'
       OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
       OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
-      OP_NODE_INDEXER_SOCKET: 'da-indexer-api.mantle.xyz:443'
-      OP_NODE_INDEXER_ENABLE: 'true'
       OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.mantle.xyz
       OP_NODE_P2P_STATIC: '/dns4/peer0.mantle.xyz/tcp/9003/p2p/16Uiu2HAmKVKzUAns2gLhZAz1PYcbnhY3WpxNxUZYeTN1x29tNBAW,/dns4/peer1.mantle.xyz/tcp/9003/p2p/16Uiu2HAm1AiZtVp8f5C8LvpSTAXC6GtwqAVKnB3VLawWYSEBmcFN,/dns4/peer2.mantle.xyz/tcp/9003/p2p/16Uiu2HAm2UHVKiPXpovs8VbbUQVPr7feBAqBJdFsH1z5XDiLEvHT'
       OP_NODE_SEQUENCER_ENABLED: 'false'
       OP_NODE_P2P_AGENT: 'mantle'
-      OP_NODE_L2_ENGINE_SYNC_ENABLED: 'true'
-      OP_NODE_L2_SKIP_SYNC_START_CHECK: 'true'
       OP_NODE_P2P_SYNC_REQ_RESP: 'true'
+      OP_NODE_L1_BEACON: 'https://da-indexer-api.mantle.xyz'
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
