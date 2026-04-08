@@ -103,6 +103,23 @@ wget https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz/historyrpcdata-
 tar --use-compress-program=unzstd -xvf historyrpcdata-mainnet-chaindata.tar.zst -C ./data/gethv1
 docker-compose -f docker-compose-mainnetv1.yml up -d
 ``` 
+
+#### Start with L1 beacon chain（recommend）
+
+use L1 beacon chain to pull the data for rollup node, 
+
+you need to edit L1_BEACON_MAINNET and L1_RPC_MAINNET
+
+L1_BEACON_MAINNET is for querying data from eth blob
+
+then start with
+
+```
+export L1_RPC_MAINNET='https://rpc.ankr.com/eth'  #please replace
+export L1_BEACON_MAINNET='https://eth-beacon-chain.drpc.org/rest/'  #please replace
+docker-compose -f docker-compose-mainnetv2-upgrade-beacon.yml up -d 
+```
+
 #### Stop
 
 ```sh
@@ -136,7 +153,11 @@ The available services are:
 - [`op-geth`](#mantle-node)
 - [`op-node`](#mantle-node)
 
-#### Upgrade for historical user
+
+# Upgrade for historical user
+> **Note:** When upgrading, please follow the correct update order: update **mantle-op-geth** first, then update **mantle-op-node**. Reversing this order may cause unexpected issues.
+> 
+> ⚠️ **Important for v1.5.4 Upgrade:** When updating to v1.5.4 version, you must ensure that mantle-op-geth starts before mantle-op-node. Failure to follow this order may cause chain fork. If a fork occurs, please rebuild the RPC node by following the full setup instructions in this document.
 
 ## 1 Stop historical node
 
@@ -174,13 +195,14 @@ tar --use-compress-program=unzstd -xvf historyrpcdata-mainnet-chaindata.tar.zst 
 docker-compose -f docker-compose-mainnetv1.yml up -d
 ``` 
 
-### 3.2 start with EigenDA and L1 beacon chain （recommend）
+### 3.2 start with L1 beacon chain（recommend）
 
-use EigenDA and L1 beacon chain to pull the data for rollup node, 
+use L1 beacon chain to pull the data for rollup node
 
 you need to edit L1_BEACON_MAINNET and L1_RPC_MAINNET
 
-L1_BEACON_MAINNET is for querying data from eth blob if eigenda failed 
+L1_BEACON_MAINNET is for querying data from eth blob
+
 
 then start with
 
