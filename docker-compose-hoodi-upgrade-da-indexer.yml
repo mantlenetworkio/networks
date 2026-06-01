@@ -9,7 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-geth:
-    image: mantlenetworkio/mantle-op-geth:v1.5.4
+    image: mantlenetworkio/mantle-op-reth:v1.9.3-mantle-arsia.1
     deploy:
       resources:
         limits:
@@ -40,7 +40,7 @@ services:
       - --ws.api=web3,eth,debug,txpool,net
       - --syncmode=full
       - --maxpeers=0
-      - --networkid=TODO_HOODI_L2_CHAIN_ID
+      - --networkid=50002
       - --authrpc.addr=0.0.0.0
       - --authrpc.port=8551
       - --authrpc.vhosts=*
@@ -53,7 +53,7 @@ services:
       - --metrics.addr=0.0.0.0
       - --metrics.port=9001
       - --snapshot=false
-      - --rollup.sequencerhttp=TODO_HOODI_SEQUENCER_URL
+      - --rollup.sequencerhttp=https://rpc.hoodi.mantle.xyz
     volumes:
       - ./hoodi/secret:/secret/
       - ./data/hoodi-geth:/db/geth/
@@ -103,11 +103,11 @@ services:
       OP_NODE_PPROF_ADDR: '0.0.0.0'
       OP_NODE_P2P_DISCOVERY_PATH: '/op-node/opnode_discovery_db'
       OP_NODE_P2P_PEERSTORE_PATH: '/op-node/opnode_peerstore_db'
-      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: TODO_HOODI_SEQUENCER_URL
-      OP_NODE_P2P_STATIC: 'TODO_HOODI_P2P_STATIC'
+      OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.hoodi.mantle.xyz
+      OP_NODE_P2P_STATIC: '/dns4/peer0.hoodi.mantle.xyz/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM,dns4/peer1.hoodi.mantle.xyz/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM'
       OP_NODE_SEQUENCER_ENABLED: 'false'
       OP_NODE_P2P_AGENT: 'mantle'
       OP_NODE_P2P_SYNC_REQ_RESP: 'true'
-      OP_NODE_L1_BEACON: 'TODO_HOODI_DA_INDEXER_URL'
+      OP_NODE_L1_BEACON: 'https://da-indexer-api.hoodi.mantle.xyz'
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
