@@ -7,4 +7,4 @@ Mantle public resources
 
 [run a node in sepolia testnet](./run-node-sepolia.md)
 
-[run a node in sepolia testnet](./run-node-hoodi.md)
+[run a node in hoodi testnet](./run-node-hoodi.md)
