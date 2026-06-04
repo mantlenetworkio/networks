@@ -1,7 +1,5 @@
 # Simple Mantle Node (Hoodi Testnet)
 
-> **TODO:** 本文档中所有 `TODO_HOODI_*` 占位符（L2 chain id、sequencer URL、P2P peer、snapshot bucket、DA-indexer URL 等）在 Mantle Hoodi 测试网正式上线后需要替换为真实值。`hoodi/genesis.json` 与 `hoodi/rollup.json` 需在正式发布后补齐。
-
 ## Required Software
 
 * [docker](https://docs.docker.com/engine/install/)
