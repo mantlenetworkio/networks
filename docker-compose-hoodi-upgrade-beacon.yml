@@ -1,11 +1,11 @@
 version: '3.4'
 
 x-healthcheck: &healthcheck
-  test: [ "CMD", "nc", "-zv", "-w", "20", "localhost", "8545" ]
+  test: [ "CMD", "nc", "-zv", "-w", "2", "localhost", "8545" ]
   interval: 5s
   timeout: 5s
-  retries: 3
-  start_period: 60s
+  retries: 10
+  start_period: 120s
 
 services:
   op-reth:
