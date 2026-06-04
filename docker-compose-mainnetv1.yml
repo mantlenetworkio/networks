@@ -8,7 +8,7 @@
 #
 # Usage Instructions:
 # 1. Ensure Docker and Docker Compose are installed
-# 2. download history snapshot 
+# 2. download history snapshot
 # 3. Run command: docker-compose -f docker-compose-mainnetv1.yml up -d
 #
 # Important Notes:
@@ -135,7 +135,7 @@ services:
     volumes:
       - ./data/gethv1:/root/.ethereum/geth/
     environment:
-      ETH1_HTTP: $L1_RPC_MAINNET #change this 
+      ETH1_HTTP: $L1_RPC_MAINNET #change this
       SEQUENCER_CLIENT_HTTP: https://rpc.mantle.xyz
       ROLLUP_STATE_DUMP_PATH: https://mantlenetworkio.github.io/networks/mainnet/genesis.json
       ROLLUP_BACKEND: 'l2'
