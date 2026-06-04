@@ -76,7 +76,7 @@ Check the data was unarchived successfully:
 
 ```
 $ ls ./data/hoodi-reth
-chaindata 
+blobstore  db  discovery-secret  genesis.json  invalid_block_hooks  known-peers.json  lost+found  reth.toml  static_files 
 ```
 
 ### 4 Operating the Node

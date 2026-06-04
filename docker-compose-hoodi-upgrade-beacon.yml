@@ -28,21 +28,21 @@ services:
       - -vvv
       - --chain=/genesis.json
       - --datadir=/db
-      - --port="9003"
+      - --port=9003
       - --metrics="0.0.0.0:6060"
       - --http
       - --http.corsdomain="*"
       - --http.addr=0.0.0.0
-      - --http.port="8545"
+      - --http.port=8545
       - --http.api=web3,debug,eth,txpool,net,admin
       - --ws
       - --ws.addr=0.0.0.0
-      - --ws.port="8546"
+      - --ws.port=8546
       - --ws.origins="*"
       - --ws.api=debug,eth,txpool,net
       - --txpool.nolocals
       - --authrpc.addr="0.0.0.0"
-      - --authrpc.port="8551"
+      - --authrpc.port=8551
       - --authrpc.jwtsecret=/secret/jwt_secret_txt
       - --rollup.sequencer-http=https://rpc.hoodi.mantle.xyz
       - --disable-discovery
