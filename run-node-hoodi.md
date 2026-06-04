@@ -16,7 +16,7 @@
 
 * 8C+ CPU
 
-* 1000GB+ disk (HDD works for now, SSD is better)
+* 100GB+ disk (HDD works for now, SSD is better)
 
 * 10mb/s+ download
 
