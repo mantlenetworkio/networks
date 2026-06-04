@@ -49,33 +49,33 @@ We recommend that you start the node with latest shapshot, so that you don't nee
 First, create a path for ledger:
 
 ```
-mkdir -p ./data/hoodi-geth
+mkdir -p ./data/hoodi-reth
 ```
 
 Second, download the latest official snapshot:
 ```
 # Download tarball
 HOODI_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/current.info`
-wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/${HOODI_CURRENT_TARBALL_DATE}-hoodi-chaindata.tar.zst
+wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst
 
 # Then you can verify your download
-HOODI_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/${HOODI_CURRENT_TARBALL_DATE}-hoodi-chaindata.tar.zst.sha256sum | awk '{print $1}'`
-echo "${HOODI_CURRENT_TARBALL_CHECKSUM} *${HOODI_CURRENT_TARBALL_DATE}-hoodi-chaindata.tar.zst" | shasum -a 256 --check
+HOODI_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst.sha256sum | awk '{print $1}'`
+echo "${HOODI_CURRENT_TARBALL_CHECKSUM} *${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst" | shasum -a 256 --check
 
 # You should get the following output:
-# ${HOODI_CURRENT_TARBALL_DATE}-hoodi-chaindata.tar.zst: OK
+# ${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst: OK
 ```
 
 
 Third, unzip snapshot to the ledger path
 ```
-tar --use-compress-program=unzstd -xvf ${HOODI_CURRENT_TARBALL_DATE}-hoodi-chaindata.tar.zst -C  ./data/hoodi-geth
+tar --use-compress-program=unzstd -xvf ${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst -C  ./data/hoodi-reth
 ```
 
 Check the data was unarchived successfully:
 
 ```
-$ ls ./data/hoodi-geth
+$ ls ./data/hoodi-reth
 chaindata 
 ```
 
