@@ -81,8 +81,6 @@ blobstore  db  discovery-secret  genesis.json  invalid_block_hooks  known-peers.
 
 ### 4 Operating the Node
 
-#### 4.1 Start with L1 beacon chain（recommend）
-
 use L1 beacon chain to pull the data for rollup node, 
 you need set up L1_BEACON_HOODI and L1_RPC_HOODI 
 
@@ -91,6 +89,7 @@ L1_BEACON_HOODI is for querying data from eth blob,or you can use mantle da-inde
 ```
 export L1_RPC_HOODI='HOODI_L1_RPC'        #please replace
 export L1_BEACON_HOODI='HOODI_L1_BEACON'  #please replace
+# export L1_BEACON_HOODI='https://da-indexer-api.hoodi.mantle.xyz'  #if you want to use mantle da-indexer.
 
 docker-compose -f docker-compose-hoodi-upgrade.yml up -d 
 ```
@@ -109,26 +108,16 @@ docker-compose -f docker-compose-hoodi-upgrade.yml ps
 
 ### 2 Check Data
 
-Use the command 'cast bn' to execute multiple times and check if the height increases.
-
-example:
-
 ```
 # query local op-geth latest block height
 cast bn
 
 # query latest block height from mantle hoodi rpc
 cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
-```
 
-Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
-
-example:
-
-```
-cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
-
+# check the safe and finalized height. 
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 ```
 
 
@@ -161,17 +150,11 @@ docker-compose -f docker-compose-hoodi-upgrade.yml up -d
 
 ## 4 Check data
 
-Use the command 'cast bn' to execute multiple times and check if the height increases.
-
-example:
-
 ```
-# query local op-geth latest block height
+# query local op-geth latest block height and mantle hoodi rpc
 cast bn && cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
-```
-check the safe and finalized height. 
-```
-cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 
+# check the safe and finalized height. 
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 ```
