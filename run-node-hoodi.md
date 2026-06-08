@@ -81,32 +81,18 @@ blobstore  db  discovery-secret  genesis.json  invalid_block_hooks  known-peers.
 
 ### 4 Operating the Node
 
-#### 4.1 Start with mantle da-indexer
-
-use mantle da-indexer to pull the data for rollup node, and you need to set up L1_RPC_HOODI
-
-
-```
-export L1_RPC_HOODI='TODO_HOODI_L1_RPC'  #please replace, e.g. https://0xrpc.io/hoodi
-docker-compose -f docker-compose-hoodi-upgrade-da-indexer.yml up -d 
-```
-
-Will start the node in a detached shell (`-d`), meaning the node will continue to run in the background. You will need to run this again if you ever turn your machine off.
-
-Congratulations, the node has been deployed！
-
-#### 4.2 Start with L1 beacon chain（recommend）
+#### 4.1 Start with L1 beacon chain（recommend）
 
 use L1 beacon chain to pull the data for rollup node, 
 you need set up L1_BEACON_HOODI and L1_RPC_HOODI 
 
-L1_BEACON_HOODI is for querying data from eth blob
+L1_BEACON_HOODI is for querying data from eth blob,or you can use mantle da-indexer instead.the da-indexer address is https://da-indexer-api.hoodi.mantle.xyz
 
 ```
-export L1_RPC_HOODI='TODO_HOODI_L1_RPC'        #please replace
-export L1_BEACON_HOODI='TODO_HOODI_L1_BEACON'  #please replace
+export L1_RPC_HOODI='HOODI_L1_RPC'        #please replace
+export L1_BEACON_HOODI='HOODI_L1_BEACON'  #please replace
 
-docker-compose -f docker-compose-hoodi-upgrade-beacon.yml up -d 
+docker-compose -f docker-compose-hoodi-upgrade.yml up -d 
 ```
 
 ## Check Installation Result
@@ -118,7 +104,7 @@ Follow these steps to check if the installation is successful
 If the service status is 'up,' it means that the service has started without any issues.
 
 ```
-docker-compose -f docker-compose-hoodi-upgrade-beacon.yml ps
+docker-compose -f docker-compose-hoodi-upgrade.yml ps
 ```
 
 ### 2 Check Data
@@ -132,7 +118,7 @@ example:
 cast bn
 
 # query latest block height from mantle hoodi rpc
-cast bn --rpc-url  TODO_HOODI_SEQUENCER_URL
+cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
 ```
 
 Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
@@ -147,47 +133,12 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 
 
 
-## Other useful commands for Operator
-
-### 1 Stop
-
-```
-docker-compose -f docker-compose-hoodi-upgrade-beacon.yml down
-```
-
-Will shut down the node without wiping any volumes. You can safely run this command and then restart the node again.
-
-### 2 Wipe
-
-```
-docker-compose -f docker-compose-hoodi-upgrade-beacon.yml down -v
-```
-
-Will completely wipe the node by removing the volumes that were created for each container. Note that this is a destructive action, be very careful!
-
-### 3 Logs
-
-```
-docker-compose logs <service name>
-```
-
-Will display the logs for a given service. You can also follow along with the logs for a service in real time by adding the flag `-f`.
-
-The available services are:
-
-* `op-geth`
-
-* `op-node`
-
-
 # Upgrade for historical user
-> **Note:** When upgrading, please follow the correct update order: update **mantle-op-geth** first, then update **mantle-op-node**. Reversing this order may cause unexpected issues.
 
 ## 1 Stop historical node
 
 ```
-docker-compose -f docker-compose-hoodi-upgrade-beacon.yml down
-docker-compose -f docker-compose-hoodi-upgrade-da-indexer.yml down
+docker-compose -f docker-compose-hoodi-upgrade.yml down
 ```
 
 ## 2 Pull the latest code of this repo
@@ -202,29 +153,16 @@ git pull
 
 ## 3 Operating the Node
 
-### 3.1 start with mantle da-indexer
-
-
-```
-export L1_RPC_HOODI='TODO_HOODI_L1_RPC'  #please replace
-docker-compose -f docker-compose-hoodi-upgrade-da-indexer.yml up -d 
-```
-
-### 3.2 start with L1 beacon chain（recommend）
-
 use L1 beacon chain to pull the data for rollup node
 
 you need to edit L1_BEACON_HOODI and L1_RPC_HOODI 
 
-L1_BEACON_HOODI is for querying data from eth blob
-
-
 then start with
 
 ```
-export L1_RPC_HOODI='TODO_HOODI_L1_RPC'        #please replace
-export L1_BEACON_HOODI='TODO_HOODI_L1_BEACON'  #please replace
-docker-compose -f docker-compose-hoodi-upgrade-beacon.yml up -d 
+export L1_RPC_HOODI='HOODI_L1_RPC'        #please replace
+export L1_BEACON_HOODI='HOODI_L1_BEACON'  #please replace
+docker-compose -f docker-compose-hoodi-upgrade.yml up -d 
 ```
 
 ## 4 Check data
@@ -238,7 +176,7 @@ example:
 cast bn
 
 # query latest block height from mantle hoodi rpc
-cast bn --rpc-url  TODO_HOODI_SEQUENCER_URL
+cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
 ```
 
 Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
@@ -249,41 +187,4 @@ example:
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
-```
-
-# Restore from snapshot
-
-If your node's data is corrupted due to abnormal operations, please refer to the following steps for recovery
-
-## 1 Clean up historical data
-
-```
-rm -fr ./data/hoodi-geth 
-```
-
-## 2 Download the latest data
-
-```
-mkdir -p ./data/hoodi-geth
-
-# download the latest official snapshot
-HOODI_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/current.info`
-wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/${HOODI_CURRENT_TARBALL_DATE}-hoodi-chaindata.tar.zst
-
-# unzip snapshot to the ledger path
-tar --use-compress-program=unzstd -xvf ${HOODI_CURRENT_TARBALL_DATE}-hoodi-chaindata.tar.zst -C  ./data/hoodi-geth
-```
-
-## 3 Start the service
-
-If you use da-indexer
-
-```
-docker-compose -f docker-compose-hoodi-upgrade-da-indexer.yml up -d 
-```
-
-Otherwise
-
-```
-docker-compose -f docker-compose-hoodi-upgrade-beacon.yml up -d 
 ```
