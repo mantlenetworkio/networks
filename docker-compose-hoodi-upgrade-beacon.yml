@@ -1,7 +1,7 @@
 version: '3.4'
 
 x-healthcheck: &healthcheck
-  test: [ "CMD", "nc", "-zv", "-w", "2", "localhost", "8545" ]
+  test: [ "CMD", "nc", "-zv", "-w", "2", "op-reth", "8545" ]
   interval: 5s
   timeout: 5s
   retries: 10
@@ -61,8 +61,6 @@ services:
       - ${VERIFIER_WS_PORT:-8546}:8546
       - ${VERIFIER_AUTH_PORT:-8551}:8551
       - ${VERIFIER_METRICS_PORT:-6060}:6060
-    healthcheck:
-      <<: *healthcheck
   op-node:
     image: mantlenetworkio/mantle-op-node:v1.5.4
     deploy:
@@ -76,7 +74,7 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      op-reth:
+      busybox-healthcheck:
         condition: service_healthy
     volumes:
       - ./hoodi/secret:/secret
@@ -111,5 +109,11 @@ services:
       OP_NODE_L1_BEACON: $L1_BEACON_HOODI
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
-
+  busybox-healthcheck:
+    image: busybox:1.35.1
+    command: ["/bin/sh","-c","tail -f /dev/null"]
+    healthcheck:
+      <<: *healthcheck
+    depends_on:
+      - op-reth
 
