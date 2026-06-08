@@ -153,12 +153,6 @@ git pull
 
 ## 3 Operating the Node
 
-use L1 beacon chain to pull the data for rollup node
-
-you need to edit L1_BEACON_HOODI and L1_RPC_HOODI 
-
-then start with
-
 ```
 export L1_RPC_HOODI='HOODI_L1_RPC'        #please replace
 export L1_BEACON_HOODI='HOODI_L1_BEACON'  #please replace
@@ -173,16 +167,9 @@ example:
 
 ```
 # query local op-geth latest block height
-cast bn
-
-# query latest block height from mantle hoodi rpc
-cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
+cast bn && cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
 ```
-
-Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
-
-example:
-
+check the safe and finalized height. 
 ```
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 
