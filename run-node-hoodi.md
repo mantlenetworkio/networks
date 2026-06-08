@@ -109,7 +109,7 @@ docker-compose -f docker-compose-hoodi-upgrade.yml ps
 ### 2 Check Data
 
 ```
-# query local op-geth latest block height
+# query local op-reth latest block height
 cast bn
 
 # query latest block height from mantle hoodi rpc
@@ -151,7 +151,7 @@ docker-compose -f docker-compose-hoodi-upgrade.yml up -d
 ## 4 Check data
 
 ```
-# query local op-geth latest block height and mantle hoodi rpc
+# query local op-reth latest block height and mantle hoodi rpc
 cast bn && cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
 
 # check the safe and finalized height. 
