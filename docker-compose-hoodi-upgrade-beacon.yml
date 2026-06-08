@@ -110,7 +110,7 @@ services:
     ports:
       - ${NODE_RPC_PORT:-9545}:8545
   busybox-healthcheck:
-    image: busybox:1.35.1
+    image: busybox
     command: ["/bin/sh","-c","tail -f /dev/null"]
     healthcheck:
       <<: *healthcheck
