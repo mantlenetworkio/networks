@@ -22,9 +22,11 @@ data:
     SNAPSHOT_BASE_URL="{{ required "el.snapshot.baseUrl is required" .Values.el.snapshot.baseUrl }}"
     TARBALL_SUFFIX="{{ required "el.snapshot.tarballSuffix is required" .Values.el.snapshot.tarballSuffix }}"
 
-    # Skip if the data directory is already populated (op-reth → /db/db,
-    # op-geth → /db/geth/chaindata).
-    if [ -d "$DATA_DIR/db" ] || [ -d "$DATA_DIR/geth/chaindata" ]; then
+    # Skip if the data directory is already populated:
+    #   - op-reth → /db/genesis.json (always present after hoodi snapshot
+    #     extraction) and/or /db/db
+    #   - op-geth → /db/geth/chaindata
+    if [ -f "$DATA_DIR/genesis.json" ] || [ -d "$DATA_DIR/db" ] || [ -d "$DATA_DIR/geth/chaindata" ]; then
       echo "Data directory $DATA_DIR is already populated; skipping snapshot."
       exit 0
     fi
