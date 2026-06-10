@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mantle-node.el.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mantle-node.el.labels" . | nindent 4 }}
+  {{- with .Values.el.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.el.service.type }}
+  selector:
+    {{- include "mantle-node.el.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.el.ports.http }}
+      targetPort: http
+      protocol: TCP
+      {{- if and (eq .Values.el.service.type "NodePort") .Values.el.service.nodePorts.http }}
+      nodePort: {{ .Values.el.service.nodePorts.http }}
+      {{- end }}
+    - name: ws
+      port: {{ .Values.el.ports.ws }}
+      targetPort: ws
+      protocol: TCP
+      {{- if and (eq .Values.el.service.type "NodePort") .Values.el.service.nodePorts.ws }}
+      nodePort: {{ .Values.el.service.nodePorts.ws }}
+      {{- end }}
+    - name: auth
+      port: {{ .Values.el.ports.auth }}
+      targetPort: auth
+      protocol: TCP
+    - name: metrics
+      port: {{ .Values.el.ports.metrics }}
+      targetPort: metrics
+      protocol: TCP

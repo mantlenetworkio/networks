@@ -15,12 +15,9 @@ l1:
   beacon: ""
 
 config:
-  source:
-    repo: mantlenetworkio/networks
-    ref: hoodi
-    subdir: hoodi
+  rollupJsonPath: networks/hoodi/rollup.json
 
-l2:
+el:
   kind: op-reth
   image:
     repository: mantlenetworkio/mantle-op-reth
@@ -30,7 +27,9 @@ l2:
   args:
     - node
     - -vvv
-    - --chain=/config/genesis.json
+    # genesis.json comes from the snapshot init container (it is included in
+    # the official Mantle Hoodi snapshot tarball under /db/genesis.json).
+    - --chain=/db/genesis.json
     - --datadir=/db
     - --port=9003
     - --metrics=0.0.0.0:6060

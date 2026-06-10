@@ -14,12 +14,9 @@ l1:
   beacon: ""
 
 config:
-  source:
-    repo: mantlenetworkio/networks
-    ref: main
-    subdir: mainnet
+  rollupJsonPath: networks/mainnet/rollup.json
 
-l2:
+el:
   kind: op-geth
   image:
     repository: mantlenetworkio/mantle-op-geth
@@ -62,7 +59,7 @@ l2:
     metrics: 9001
     p2p: 30300
 
-  # Mainnet (archive node) needs significant storage. Tune for your environment.
+  # Mainnet archive node — tune for your environment.
   persistence:
     size: 2000Gi
 

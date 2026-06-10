@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mantle-node.rollupConfigName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mantle-node.labels" . | nindent 4 }}
+data:
+  rollup.json: |-
+{{ .Files.Get (required "config.rollupJsonPath is required (e.g. networks/hoodi/rollup.json)" .Values.config.rollupJsonPath) | indent 4 }}

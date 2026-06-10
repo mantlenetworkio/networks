@@ -37,19 +37,19 @@ app.kubernetes.io/name: {{ include "mantle-node.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
-{{- define "mantle-node.l2.name" -}}
-{{- printf "%s-l2" (include "mantle-node.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- define "mantle-node.el.name" -}}
+{{- printf "%s-el" (include "mantle-node.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "mantle-node.l2.labels" -}}
+{{- define "mantle-node.el.labels" -}}
 {{ include "mantle-node.labels" . }}
-app.kubernetes.io/component: l2-client
-mantle.xyz/l2-kind: {{ .Values.l2.kind }}
+app.kubernetes.io/component: execution-layer
+mantle.xyz/el-kind: {{ .Values.el.kind }}
 {{- end -}}
 
-{{- define "mantle-node.l2.selectorLabels" -}}
+{{- define "mantle-node.el.selectorLabels" -}}
 {{ include "mantle-node.selectorLabels" . }}
-app.kubernetes.io/component: l2-client
+app.kubernetes.io/component: execution-layer
 {{- end -}}
 
 {{- define "mantle-node.opNode.name" -}}
@@ -70,8 +70,12 @@ app.kubernetes.io/component: op-node
 {{- printf "%s-secrets" (include "mantle-node.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "mantle-node.configScriptsName" -}}
-{{- printf "%s-init-scripts" (include "mantle-node.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- define "mantle-node.elScriptsName" -}}
+{{- printf "%s-el-scripts" (include "mantle-node.fullname" .) | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "mantle-node.rollupConfigName" -}}
+{{- printf "%s-rollup-config" (include "mantle-node.fullname" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{- define "mantle-node.serviceAccountName" -}}
@@ -83,9 +87,9 @@ app.kubernetes.io/component: op-node
 {{- end -}}
 
 {{/*
-Resolve a value for jwtSecret / p2pNodeKey:
+Resolve jwtSecret / p2pNodeKey:
 - if user supplied one, use it
-- else, try to look up the existing Secret (so we don't rotate on upgrade)
+- else, look up the existing Secret (so we don't rotate on upgrade)
 - else, generate a fresh 32-byte hex string
 */}}
 {{- define "mantle-node.jwtSecret" -}}
@@ -111,26 +115,5 @@ Resolve a value for jwtSecret / p2pNodeKey:
 {{- else -}}
 {{- randAlphaNum 64 | lower -}}
 {{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Compute the genesis.json source URL. Returns the explicit `config.genesisUrl`
-when set, otherwise builds a raw.githubusercontent.com URL from
-`config.source.{repo,ref,subdir}`.
-*/}}
-{{- define "mantle-node.genesisUrl" -}}
-{{- if .Values.config.genesisUrl -}}
-{{- .Values.config.genesisUrl -}}
-{{- else -}}
-{{- printf "https://raw.githubusercontent.com/%s/%s/%s/genesis.json" .Values.config.source.repo .Values.config.source.ref .Values.config.source.subdir -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "mantle-node.rollupUrl" -}}
-{{- if .Values.config.rollupUrl -}}
-{{- .Values.config.rollupUrl -}}
-{{- else -}}
-{{- printf "https://raw.githubusercontent.com/%s/%s/%s/rollup.json" .Values.config.source.repo .Values.config.source.ref .Values.config.source.subdir -}}
 {{- end -}}
 {{- end -}}

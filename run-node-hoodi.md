@@ -122,15 +122,17 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 
 If you'd rather run the node on Kubernetes than via `docker-compose`, this
 repo ships a Helm chart at [`chart/mantle-node`](chart/mantle-node/). It
-deploys two `StatefulSet`s (the `op-reth` execution client and `op-node`),
+deploys two `StatefulSet`s (the `op-reth` execution layer and `op-node`),
 provisions PVCs for chain data and peerstore, auto-generates the JWT secret
-and op-node libp2p key, and fetches `genesis.json` / `rollup.json` via an
-init container.
+and op-node libp2p key, and mounts `rollup.json` straight from this repo
+via a `ConfigMap`. The official snapshot from S3 is fetched + extracted by
+an init container on first boot — no separate `genesis.json` download is
+needed, since the snapshot tarball already includes it.
 
 ## Prerequisites
 
 - Kubernetes 1.23+ with a default `StorageClass` (override with
-  `--set l2.persistence.storageClass=...` if needed)
+  `--set el.persistence.storageClass=...` if needed)
 - Helm 3.8+
 - Same L1 RPC / L1 beacon endpoints as the docker-compose path
 
@@ -163,24 +165,24 @@ helm install hoodi ./chart/mantle-node \
 On first install the chart automatically downloads + extracts the latest
 official Mantle Hoodi snapshot from S3
 (`https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz`) into
-the L2 PVC. No flag is required. The init container is a no-op when the
+the EL PVC. No flag is required. The init container is a no-op when the
 PVC already contains chain data, so it is safe across `helm upgrade`.
 
 Watch progress with:
 
 ```
-kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-l2 -c fetch-snapshot
+kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-el -c fetch-snapshot
 ```
 
 ## Verify
 
 ```
 kubectl -n mantle-hoodi get pods -w
-kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-l2
+kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-el
 kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-op-node
 
 # Query block height
-kubectl -n mantle-hoodi port-forward svc/hoodi-mantle-node-l2 8545:8545 &
+kubectl -n mantle-hoodi port-forward svc/hoodi-mantle-node-el 8545:8545 &
 cast bn
 
 # Compare against the official Mantle hoodi RPC
