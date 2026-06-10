@@ -1,0 +1,82 @@
+# Mantle Sepolia testnet preset.
+# Mirrors docker-compose-sepolia-upgrade-beacon.yml.
+#
+# Before installing, fill in `l1.rpc` and `l1.beacon` below, then run:
+#   helm install sepolia ./chart/mantle-node -f ./chart/mantle-node/sepolia.values.yaml
+
+network: sepolia
+
+# REQUIRED: L1 endpoints. Fill these in before installing.
+#   - l1.rpc:    L1 (Sepolia) execution-layer RPC URL
+#   - l1.beacon: L1 (Sepolia) beacon/blob URL
+l1:
+  rpc: ""
+  beacon: ""
+
+config:
+  source:
+    repo: mantlenetworkio/networks
+    ref: main
+    subdir: sepolia
+
+l2:
+  kind: op-geth
+  image:
+    repository: mantlenetworkio/mantle-op-geth
+    tag: v1.5.3
+  command:
+    - geth
+  args:
+    - --datadir=/db
+    - --verbosity=3
+    - --port=30300
+    - --http
+    - --http.corsdomain=*
+    - --http.vhosts=*
+    - --http.addr=0.0.0.0
+    - --http.port=8545
+    - --http.api=web3,eth,debug,txpool,net
+    - --ws
+    - --ws.addr=0.0.0.0
+    - --ws.port=8546
+    - --ws.origins=*
+    - --ws.api=web3,eth,debug,txpool,net
+    - --syncmode=full
+    - --maxpeers=0
+    - --networkid=5003
+    - --rpc.allow-unprotected-txs
+    - --authrpc.addr=0.0.0.0
+    - --authrpc.port=8551
+    - --authrpc.vhosts=*
+    - --authrpc.jwtsecret=/secret/jwt_secret_txt
+    - --pprof
+    - --pprof.addr=0.0.0.0
+    - --pprof.port=6060
+    - --gcmode=archive
+    - --metrics
+    - --metrics.addr=0.0.0.0
+    - --metrics.port=9001
+    - --snapshot=false
+    - --rollup.sequencerhttp=https://rpc.sepolia.mantle.xyz
+
+  # op-geth uses a different p2p port (30300) than op-reth (9003). Keep the
+  # container "p2p" mapping in sync so the Service exposes the correct port.
+  ports:
+    metrics: 9001
+    p2p: 30300
+
+  persistence:
+    size: 500Gi
+
+  snapshot:
+    baseUrl: https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz
+    tarballSuffix: sepolia-chaindata.tar.zst
+    extractSubpath: geth
+
+opNode:
+  image:
+    repository: mantlenetworkio/mantle-op-node
+    tag: v1.5.4
+  env:
+    OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.sepolia.mantle.xyz
+    OP_NODE_P2P_STATIC: /dns4/peer0.sepolia.mantle.xyz/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM

@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mantle-node.configScriptsName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mantle-node.labels" . | nindent 4 }}
+data:
+  fetch-genesis.sh: |
+    #!/bin/sh
+    set -eu
+    GENESIS_URL="{{ include "mantle-node.genesisUrl" . }}"
+    echo "Fetching genesis.json from $GENESIS_URL"
+    curl --fail --silent --show-error --location --retry 5 --retry-delay 5 \
+      -o /config/genesis.json "$GENESIS_URL"
+    echo "genesis.json size: $(wc -c < /config/genesis.json) bytes"
+
+  fetch-rollup.sh: |
+    #!/bin/sh
+    set -eu
+    ROLLUP_URL="{{ include "mantle-node.rollupUrl" . }}"
+    echo "Fetching rollup.json from $ROLLUP_URL"
+    curl --fail --silent --show-error --location --retry 5 --retry-delay 5 \
+      -o /config/rollup.json "$ROLLUP_URL"
+    echo "rollup.json size: $(wc -c < /config/rollup.json) bytes"
+
+  fetch-snapshot.sh: |
+    #!/bin/sh
+    # Downloads + extracts the latest official Mantle snapshot from S3 into
+    # the L2 data directory on first boot. No-op when the directory is
+    # already populated, so this is safe across pod restarts and upgrades.
+    set -eu
+
+    DATA_DIR="{{ .Values.l2.persistence.mountPath }}"
+    EXTRACT_SUBPATH="{{ .Values.l2.snapshot.extractSubpath }}"
+    SNAPSHOT_BASE_URL="{{ required "l2.snapshot.baseUrl is required" .Values.l2.snapshot.baseUrl }}"
+    TARBALL_SUFFIX="{{ required "l2.snapshot.tarballSuffix is required" .Values.l2.snapshot.tarballSuffix }}"
+
+    # Skip if the data directory is already populated (op-reth → /db/db,
+    # op-geth → /db/geth/chaindata).
+    if [ -d "$DATA_DIR/db" ] || [ -d "$DATA_DIR/geth/chaindata" ]; then
+      echo "Data directory $DATA_DIR is already populated; skipping snapshot."
+      exit 0
+    fi
+
+    apk add --no-cache curl tar zstd >/dev/null
+
+    echo "Reading current snapshot tag from $SNAPSHOT_BASE_URL/current.info"
+    CURRENT="$(curl --fail --silent --show-error "$SNAPSHOT_BASE_URL/current.info" | tr -d '[:space:]')"
+    TARBALL_URL="$SNAPSHOT_BASE_URL/${CURRENT}-${TARBALL_SUFFIX}"
+    echo "Downloading $TARBALL_URL"
+
+    EXTRACT_DIR="$DATA_DIR"
+    if [ -n "$EXTRACT_SUBPATH" ]; then
+      EXTRACT_DIR="$DATA_DIR/$EXTRACT_SUBPATH"
+      mkdir -p "$EXTRACT_DIR"
+    fi
+
+    curl --fail --location --retry 5 --retry-delay 10 \
+      "$TARBALL_URL" | tar --use-compress-program=unzstd -x -C "$EXTRACT_DIR"
+
+    echo "Snapshot extracted into $EXTRACT_DIR"
+    ls -la "$EXTRACT_DIR"

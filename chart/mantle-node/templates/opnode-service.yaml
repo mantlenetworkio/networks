@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mantle-node.opNode.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mantle-node.opNode.labels" . | nindent 4 }}
+  {{- with .Values.opNode.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.opNode.service.type }}
+  selector:
+    {{- include "mantle-node.opNode.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: rpc
+      port: {{ .Values.opNode.ports.rpc }}
+      targetPort: rpc
+      protocol: TCP
+      {{- if and (eq .Values.opNode.service.type "NodePort") .Values.opNode.service.nodePorts.rpc }}
+      nodePort: {{ .Values.opNode.service.nodePorts.rpc }}
+      {{- end }}
+    - name: metrics
+      port: {{ .Values.opNode.ports.metrics }}
+      targetPort: metrics
+      protocol: TCP

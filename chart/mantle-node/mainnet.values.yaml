@@ -1,0 +1,95 @@
+# Mantle Mainnet preset.
+# Mirrors docker-compose-mainnetv2-upgrade-beacon.yml.
+#
+# Before installing, fill in `l1.rpc` and `l1.beacon` below, then run:
+#   helm install mainnet ./chart/mantle-node -f ./chart/mantle-node/mainnet.values.yaml
+
+network: mainnet
+
+# REQUIRED: L1 endpoints. Fill these in before installing.
+#   - l1.rpc:    L1 (Ethereum Mainnet) execution-layer RPC URL
+#   - l1.beacon: L1 (Ethereum Mainnet) beacon/blob URL
+l1:
+  rpc: ""
+  beacon: ""
+
+config:
+  source:
+    repo: mantlenetworkio/networks
+    ref: main
+    subdir: mainnet
+
+l2:
+  kind: op-geth
+  image:
+    repository: mantlenetworkio/mantle-op-geth
+    tag: v1.5.4
+  command:
+    - geth
+  args:
+    - --datadir=/db
+    - --verbosity=3
+    - --port=30300
+    - --http
+    - --http.corsdomain=*
+    - --http.vhosts=*
+    - --http.addr=0.0.0.0
+    - --http.port=8545
+    - --http.api=web3,eth,debug,txpool,net
+    - --ws
+    - --ws.addr=0.0.0.0
+    - --ws.port=8546
+    - --ws.origins=*
+    - --ws.api=web3,eth,debug,txpool,net
+    - --syncmode=full
+    - --maxpeers=0
+    - --networkid=5000
+    - --authrpc.addr=0.0.0.0
+    - --authrpc.port=8551
+    - --authrpc.vhosts=*
+    - --authrpc.jwtsecret=/secret/jwt_secret_txt
+    - --pprof
+    - --pprof.addr=0.0.0.0
+    - --pprof.port=6060
+    - --gcmode=archive
+    - --metrics
+    - --metrics.addr=0.0.0.0
+    - --metrics.port=9001
+    - --snapshot=false
+    - --rollup.sequencerhttp=https://rpc.mantle.xyz
+
+  ports:
+    metrics: 9001
+    p2p: 30300
+
+  # Mainnet (archive node) needs significant storage. Tune for your environment.
+  persistence:
+    size: 2000Gi
+
+  resources:
+    requests:
+      cpu: "4"
+      memory: "8Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+
+  snapshot:
+    baseUrl: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz
+    tarballSuffix: mainnet-chaindata.tar.zst
+    extractSubpath: geth
+
+opNode:
+  image:
+    repository: mantlenetworkio/mantle-op-node
+    tag: v1.5.4
+  resources:
+    requests:
+      cpu: "4"
+      memory: "8Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+  env:
+    OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.mantle.xyz
+    OP_NODE_P2P_STATIC: /dns4/peer0.mantle.xyz/tcp/9003/p2p/16Uiu2HAmKVKzUAns2gLhZAz1PYcbnhY3WpxNxUZYeTN1x29tNBAW,/dns4/peer1.mantle.xyz/tcp/9003/p2p/16Uiu2HAm1AiZtVp8f5C8LvpSTAXC6GtwqAVKnB3VLawWYSEBmcFN,/dns4/peer2.mantle.xyz/tcp/9003/p2p/16Uiu2HAm2UHVKiPXpovs8VbbUQVPr7feBAqBJdFsH1z5XDiLEvHT

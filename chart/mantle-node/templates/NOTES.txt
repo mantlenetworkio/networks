@@ -1,0 +1,31 @@
+Mantle node "{{ .Release.Name }}" deployed to namespace "{{ .Release.Namespace }}".
+
+Network:      {{ .Values.network | default "(none — did you pass -f <network>.values.yaml ?)" }}
+L2 client:    {{ .Values.l2.kind }} ({{ .Values.l2.image.repository }}:{{ .Values.l2.image.tag }})
+op-node:      {{ .Values.opNode.image.repository }}:{{ .Values.opNode.image.tag }}
+
+Internal services:
+  L2 RPC      http://{{ include "mantle-node.l2.name" . }}.{{ .Release.Namespace }}.svc:{{ .Values.l2.ports.http }}
+  L2 WS       ws://{{   include "mantle-node.l2.name" . }}.{{ .Release.Namespace }}.svc:{{ .Values.l2.ports.ws }}
+  op-node RPC http://{{ include "mantle-node.opNode.name" . }}.{{ .Release.Namespace }}.svc:{{ .Values.opNode.ports.rpc }}
+
+Quick checks (run inside the cluster, e.g. `kubectl exec`):
+
+  # L2 latest block:
+  curl -s -X POST -H 'Content-Type: application/json' \
+    --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' \
+    http://{{ include "mantle-node.l2.name" . }}:{{ .Values.l2.ports.http }}
+
+  # op-node sync status:
+  curl -s -X POST -H 'Content-Type: application/json' \
+    --data '{"jsonrpc":"2.0","method":"optimism_syncStatus","params":[],"id":1}' \
+    http://{{ include "mantle-node.opNode.name" . }}:{{ .Values.opNode.ports.rpc }}
+
+Or from outside via port-forward:
+
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "mantle-node.l2.name" . }} {{ .Values.l2.ports.http }}:{{ .Values.l2.ports.http }}
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "mantle-node.opNode.name" . }} 9545:{{ .Values.opNode.ports.rpc }}
+
+Note: on first install, the chart's snapshot initContainer downloads + extracts
+the latest official Mantle {{ .Values.network }} snapshot from S3 into the L2
+PVC. This may take a while; watch `kubectl logs sts/{{ include "mantle-node.l2.name" . }} -c fetch-snapshot`.

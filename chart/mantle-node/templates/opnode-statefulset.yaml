@@ -1,0 +1,164 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "mantle-node.opNode.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mantle-node.opNode.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "mantle-node.opNode.name" . }}
+  replicas: 1
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      {{- include "mantle-node.opNode.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "mantle-node.opNode.selectorLabels" . | nindent 8 }}
+        {{- with .Values.opNode.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        checksum/init-scripts: {{ include (print $.Template.BasePath "/configmap-init-scripts.yaml") . | sha256sum }}
+        {{- with .Values.opNode.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "mantle-node.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: 60
+      initContainers:
+        - name: fetch-rollup
+          image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
+          imagePullPolicy: {{ .Values.initImage.pullPolicy }}
+          command:
+            - /bin/sh
+            - /scripts/fetch-rollup.sh
+          volumeMounts:
+            - name: init-scripts
+              mountPath: /scripts
+            - name: config
+              mountPath: /config
+        - name: wait-for-l2
+          image: "{{ .Values.initImage.repository }}:{{ .Values.initImage.tag }}"
+          imagePullPolicy: {{ .Values.initImage.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              until curl --silent --fail -X POST -H 'Content-Type: application/json' \
+                --data '{"jsonrpc":"2.0","method":"web3_clientVersion","id":1}' \
+                "http://{{ include "mantle-node.l2.name" . }}:{{ .Values.l2.ports.http }}" >/dev/null; do
+                echo "waiting for L2 client at {{ include "mantle-node.l2.name" . }}:{{ .Values.l2.ports.http }}..."
+                sleep 5
+              done
+              echo "L2 client is reachable."
+      containers:
+        - name: op-node
+          image: "{{ .Values.opNode.image.repository }}:{{ .Values.opNode.image.tag }}"
+          imagePullPolicy: {{ .Values.opNode.image.pullPolicy }}
+          env:
+            - name: OP_NODE_L1_ETH_RPC
+              value: {{ required "l1.rpc is required (e.g. --set l1.rpc=https://...)" .Values.l1.rpc | quote }}
+            - name: OP_NODE_L1_BEACON
+              value: {{ required "l1.beacon is required (e.g. --set l1.beacon=https://...)" .Values.l1.beacon | quote }}
+            - name: OP_NODE_L2_ENGINE_RPC
+              value: "http://{{ include "mantle-node.l2.name" . }}:{{ .Values.l2.ports.auth }}"
+            {{- range $k, $v := .Values.opNode.env }}
+            {{- if and (ne $k "OP_NODE_L2_ENGINE_RPC") (ne $k "OP_NODE_L1_ETH_RPC") (ne $k "OP_NODE_L1_BEACON") }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+            {{- end }}
+            {{- with .Values.opNode.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: rpc
+              containerPort: {{ .Values.opNode.ports.rpc }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.opNode.ports.metrics }}
+              protocol: TCP
+            - name: pprof
+              containerPort: {{ .Values.opNode.ports.pprof }}
+              protocol: TCP
+            - name: p2p-tcp
+              containerPort: {{ .Values.opNode.ports.p2p }}
+              protocol: TCP
+            - name: p2p-udp
+              containerPort: {{ .Values.opNode.ports.p2p }}
+              protocol: UDP
+          {{- if .Values.opNode.probes.enabled }}
+          startupProbe:
+            tcpSocket:
+              port: rpc
+            failureThreshold: {{ div .Values.opNode.probes.startupSeconds 10 }}
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: rpc
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: rpc
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          {{- end }}
+          resources:
+            {{- toYaml .Values.opNode.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.opNode.persistence.mountPath }}
+            - name: secrets
+              mountPath: /secret
+              readOnly: true
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: init-scripts
+          configMap:
+            name: {{ include "mantle-node.configScriptsName" . }}
+            defaultMode: 0755
+        - name: secrets
+          secret:
+            secretName: {{ include "mantle-node.secretName" . }}
+            defaultMode: 0400
+        - name: config
+          emptyDir: {}
+      {{- with .Values.opNode.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opNode.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opNode.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.opNode.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "mantle-node.opNode.labels" . | nindent 10 }}
+      spec:
+        accessModes:
+          {{- toYaml .Values.opNode.persistence.accessModes | nindent 10 }}
+        {{- if .Values.opNode.persistence.storageClass }}
+        storageClassName: {{ .Values.opNode.persistence.storageClass | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.opNode.persistence.size | quote }}
+  {{- end }}
