@@ -128,6 +128,13 @@ reads `<baseUrl>/current.info` to find the current snapshot tag, then
 downloads and `zstd`-extracts `<baseUrl>/<tag>-<tarballSuffix>` into the
 PVC.
 
+The tarball is **streamed** through `curl | tar` — at no point is the
+full `*.tar.zst` written to disk. So size `el.persistence.size` to fit
+the *extracted* chain data (with some headroom for growth), not 2× of it.
+Mantle chain state is mostly random hashes, so the tarball is roughly the
+same size as the extracted data — there is no compression benefit to
+buffering it on disk anyway.
+
 The init container is a no-op when the data directory already contains
 chain data (`/db/db` for op-reth, `/db/geth/chaindata` for op-geth), so it
 is safe across pod restarts and `helm upgrade`.

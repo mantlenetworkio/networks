@@ -12,6 +12,11 @@ data:
     # the EL data directory on first boot. No-op when the directory is
     # already populated, so this is safe across pod restarts and upgrades.
     #
+    # IMPORTANT: the tarball is STREAMED via `curl | tar` — at no point is
+    # the full *.tar.zst written to disk. The EL PVC therefore only needs
+    # to fit the *extracted* chain data, not 2× (tarball + extracted).
+    # The kernel pipe buffer between curl and tar is ~64 KiB.
+    #
     # For op-reth (hoodi) the tarball includes /db/genesis.json, which
     # `--chain=/db/genesis.json` consumes directly — no separate genesis
     # fetch step is required.

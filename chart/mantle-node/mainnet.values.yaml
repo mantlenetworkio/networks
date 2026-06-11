@@ -86,7 +86,7 @@ el:
     storageClass: ""
     accessModes:
       - ReadWriteOnce
-    size: 2000Gi
+    size: 6000Gi
     mountPath: /db
 
   snapshot:
