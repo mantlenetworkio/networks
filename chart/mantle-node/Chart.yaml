@@ -1,0 +1,22 @@
+apiVersion: v2
+name: mantle-node
+description: |
+  Generic Helm chart for deploying a Mantle RPC node (op-reth or op-geth) +
+  op-node on Kubernetes. Works for Mantle Hoodi, Sepolia, and Mainnet via
+  per-network values files (values-hoodi.yaml / values-sepolia.yaml /
+  values-mainnet.yaml).
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - mantle
+  - ethereum
+  - rollup
+  - l2
+  - op-node
+  - op-reth
+  - op-geth
+sources:
+  - https://github.com/mantlenetworkio/networks
+maintainers:
+  - name: mantlenetworkio

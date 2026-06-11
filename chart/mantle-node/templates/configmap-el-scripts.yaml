@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mantle-node.elScriptsName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mantle-node.labels" . | nindent 4 }}
+data:
+  fetch-snapshot.sh: |
+    #!/bin/sh
+    # Downloads + extracts the latest official Mantle snapshot from S3 into
+    # the EL data directory on first boot. No-op when the directory is
+    # already populated, so this is safe across pod restarts and upgrades.
+    #
+    # IMPORTANT: the tarball is STREAMED via `curl | tar` — at no point is
+    # the full *.tar.zst written to disk. The EL PVC therefore only needs
+    # to fit the *extracted* chain data, not 2× (tarball + extracted).
+    # The kernel pipe buffer between curl and tar is ~64 KiB.
+    #
+    # For op-reth (hoodi) the tarball includes /db/genesis.json, which
+    # `--chain=/db/genesis.json` consumes directly — no separate genesis
+    # fetch step is required.
+    set -eu
+
+    DATA_DIR="{{ .Values.el.persistence.mountPath }}"
+    EXTRACT_SUBPATH="{{ .Values.el.snapshot.extractSubpath }}"
+    SNAPSHOT_BASE_URL="{{ required "el.snapshot.baseUrl is required" .Values.el.snapshot.baseUrl }}"
+    TARBALL_SUFFIX="{{ required "el.snapshot.tarballSuffix is required" .Values.el.snapshot.tarballSuffix }}"
+
+    # Skip if the data directory is already populated:
+    #   - op-reth → /db/genesis.json (always present after hoodi snapshot
+    #     extraction) and/or /db/db
+    #   - op-geth → /db/geth/chaindata
+    if [ -f "$DATA_DIR/genesis.json" ] || [ -d "$DATA_DIR/db" ] || [ -d "$DATA_DIR/geth/chaindata" ]; then
+      echo "Data directory $DATA_DIR is already populated; skipping snapshot."
+      exit 0
+    fi
+
+    apk add --no-cache curl tar zstd >/dev/null
+
+    echo "Reading current snapshot tag from $SNAPSHOT_BASE_URL/current.info"
+    CURRENT="$(curl --fail --silent --show-error "$SNAPSHOT_BASE_URL/current.info" | tr -d '[:space:]')"
+    TARBALL_URL="$SNAPSHOT_BASE_URL/${CURRENT}-${TARBALL_SUFFIX}"
+    echo "Downloading $TARBALL_URL"
+
+    EXTRACT_DIR="$DATA_DIR"
+    if [ -n "$EXTRACT_SUBPATH" ]; then
+      EXTRACT_DIR="$DATA_DIR/$EXTRACT_SUBPATH"
+      mkdir -p "$EXTRACT_DIR"
+    fi
+
+    curl --fail --location --retry 5 --retry-delay 10 \
+      "$TARBALL_URL" | tar --use-compress-program=unzstd -x -C "$EXTRACT_DIR"
+
+    echo "Snapshot extracted into $EXTRACT_DIR"
+    ls -la "$EXTRACT_DIR"

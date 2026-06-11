@@ -1,0 +1,122 @@
+# =============================================================================
+# Default values for mantle-node chart.
+#
+# This file holds ONLY the values that are common across all Mantle networks
+# (hoodi / sepolia / mainnet) or do not need to be configured by the user.
+# Everything network-specific or environment-tunable (images, command/args,
+# env, ports, persistence, snapshot, L1, secrets, …) lives in the per-network
+# override files:
+#
+#   - hoodi.values.yaml
+#   - sepolia.values.yaml
+#   - mainnet.values.yaml
+#
+# Usage:
+#   helm install my-hoodi   ./chart/mantle-node -f ./chart/mantle-node/hoodi.values.yaml
+#   helm install my-sepolia ./chart/mantle-node -f ./chart/mantle-node/sepolia.values.yaml
+#   helm install my-mainnet ./chart/mantle-node -f ./chart/mantle-node/mainnet.values.yaml
+# =============================================================================
+
+# Which network this release targets — set by the per-network override file.
+# Must be one of: hoodi, sepolia, mainnet.
+network: ""
+
+# Common name override. By default, resources are prefixed with the release name.
+nameOverride: ""
+fullnameOverride: ""
+
+# Image pull secrets (for private registries). Common to all networks.
+imagePullSecrets: []
+
+# Service account for the pods. Common across networks.
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
+
+# Init container image used by the op-node "wait for execution layer" probe.
+# Does not vary across networks; rarely tuned.
+initImage:
+  repository: curlimages/curl
+  tag: "8.10.1"
+  pullPolicy: IfNotPresent
+
+# -----------------------------------------------------------------------------
+# config, secrets, l1 — schema scaffolding only. Real values come from the
+# per-network override files; the chart fails fast with a clear error if any
+# required field is left blank.
+# -----------------------------------------------------------------------------
+config:
+  rollupJsonPath: ""
+
+secrets:
+  jwtSecret: ""
+  p2pNodeKey: ""
+
+l1:
+  rpc: ""
+  beacon: ""
+
+# -----------------------------------------------------------------------------
+# EL = execution layer (op-reth on hoodi, op-geth on sepolia/mainnet).
+#
+# `ports`, `persistence`, `image`, `command`, `args`, `snapshot.baseUrl`,
+# `snapshot.tarballSuffix`, `snapshot.extractSubpath`, and `resources` are
+# defined in the per-network override file. The fields below are either
+# constants across networks or trivial defaults users rarely change.
+# -----------------------------------------------------------------------------
+el:
+  # "op-reth" or "op-geth" — set by the per-network override.
+  kind: ""
+
+  # Service exposure. Default ClusterIP; switch to NodePort or LoadBalancer
+  # if you need external access.
+  service:
+    type: ClusterIP
+    annotations: {}
+    nodePorts:
+      http: ""
+      ws: ""
+
+  probes:
+    enabled: true
+    startupSeconds: 600
+
+  # Snapshot init image — always alpine + apk-installed tools at runtime.
+  snapshot:
+    image:
+      repository: alpine
+      tag: "3.20"
+      pullPolicy: IfNotPresent
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podLabels: {}
+
+# -----------------------------------------------------------------------------
+# op-node (rollup node).
+#
+# `ports`, `persistence`, `env`, `image`, and `resources` are defined in the
+# per-network override file.
+# -----------------------------------------------------------------------------
+opNode:
+  service:
+    type: ClusterIP
+    annotations: {}
+    nodePorts:
+      rpc: ""
+
+  probes:
+    enabled: true
+    startupSeconds: 600
+
+  # Extra env entries (e.g. valueFrom secrets). Appended as-is.
+  extraEnv: []
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  podAnnotations: {}
+  podLabels: {}

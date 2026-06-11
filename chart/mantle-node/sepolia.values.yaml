@@ -1,0 +1,150 @@
+# Mantle Sepolia testnet preset.
+# Mirrors docker-compose-sepolia-upgrade-beacon.yml.
+#
+# Before installing, fill in `l1.*` and `secrets.*` below, then run:
+#   helm install sepolia ./chart/mantle-node -f ./chart/mantle-node/sepolia.values.yaml
+
+network: sepolia
+
+# REQUIRED: L1 endpoints. Fill these in before installing.
+#   - l1.rpc:    L1 (Sepolia) execution-layer RPC URL
+#   - l1.beacon: L1 (Sepolia) beacon/blob URL
+l1:
+  rpc: ""
+  beacon: ""
+
+# REQUIRED: secrets. Both are 32-byte hex strings — generate with:
+#   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+#   # or: openssl rand -hex 32
+#   - secrets.jwtSecret:   engine-API JWT shared between op-node and op-geth
+#   - secrets.p2pNodeKey:  op-node libp2p private key (stable peer identity)
+secrets:
+  jwtSecret: ""
+  p2pNodeKey: ""
+
+config:
+  rollupJsonPath: networks/sepolia/rollup.json
+
+el:
+  kind: op-geth
+  image:
+    repository: mantlenetworkio/mantle-op-geth
+    tag: v1.5.3
+    pullPolicy: IfNotPresent
+  command:
+    - geth
+  args:
+    - --datadir=/db
+    - --verbosity=3
+    - --port=30300
+    - --http
+    - --http.corsdomain=*
+    - --http.vhosts=*
+    - --http.addr=0.0.0.0
+    - --http.port=8545
+    - --http.api=web3,eth,debug,txpool,net
+    - --ws
+    - --ws.addr=0.0.0.0
+    - --ws.port=8546
+    - --ws.origins=*
+    - --ws.api=web3,eth,debug,txpool,net
+    - --syncmode=full
+    - --maxpeers=0
+    - --networkid=5003
+    - --rpc.allow-unprotected-txs
+    - --authrpc.addr=0.0.0.0
+    - --authrpc.port=8551
+    - --authrpc.vhosts=*
+    - --authrpc.jwtsecret=/secret/jwt_secret_txt
+    - --pprof
+    - --pprof.addr=0.0.0.0
+    - --pprof.port=6060
+    - --gcmode=archive
+    - --metrics
+    - --metrics.addr=0.0.0.0
+    - --metrics.port=9001
+    - --snapshot=false
+    - --rollup.sequencerhttp=https://rpc.sepolia.mantle.xyz
+
+  # op-geth listens on 30300 for p2p (vs op-reth's 9003) and 9001 for metrics.
+  ports:
+    http: 8545
+    ws: 8546
+    auth: 8551
+    metrics: 9001
+    p2p: 30300
+
+  resources:
+    requests:
+      cpu: "2"
+      memory: "8Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 600Gi
+    mountPath: /db
+
+  snapshot:
+    baseUrl: https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz
+    tarballSuffix: sepolia-chaindata.tar.zst
+    extractSubpath: geth
+
+opNode:
+  image:
+    repository: mantlenetworkio/mantle-op-node
+    tag: v1.5.3
+    pullPolicy: IfNotPresent
+
+  ports:
+    rpc: 8545
+    metrics: 7300
+    pprof: 6060
+    p2p: 9003
+
+  resources:
+    requests:
+      cpu: "2"
+      memory: "2Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    mountPath: /op-node
+
+  env:
+    OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
+    OP_NODE_ROLLUP_CONFIG: /config/rollup.json
+    OP_NODE_P2P_PRIV_PATH: /secret/p2p_node_key_txt
+    OP_NODE_VERIFIER_L1_CONFS: "3"
+    OP_NODE_RPC_ADDR: 0.0.0.0
+    OP_NODE_RPC_PORT: "8545"
+    OP_NODE_P2P_LISTEN_IP: 0.0.0.0
+    OP_NODE_P2P_LISTEN_TCP_PORT: "9003"
+    OP_NODE_P2P_LISTEN_UDP_PORT: "9003"
+    OP_NODE_P2P_PEER_SCORING: light
+    OP_NODE_P2P_PEER_BANNING: "true"
+    OP_NODE_METRICS_ENABLED: "true"
+    OP_NODE_METRICS_ADDR: 0.0.0.0
+    OP_NODE_METRICS_PORT: "7300"
+    OP_NODE_PPROF_ENABLED: "true"
+    OP_NODE_PPROF_PORT: "6060"
+    OP_NODE_PPROF_ADDR: 0.0.0.0
+    OP_NODE_P2P_DISCOVERY_PATH: /op-node/opnode_discovery_db
+    OP_NODE_P2P_PEERSTORE_PATH: /op-node/opnode_peerstore_db
+    OP_NODE_SEQUENCER_ENABLED: "false"
+    OP_NODE_P2P_AGENT: mantle
+    OP_NODE_P2P_SYNC_REQ_RESP: "true"
+    OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.sepolia.mantle.xyz
+    OP_NODE_P2P_STATIC: /dns4/peer0.sepolia.mantle.xyz/tcp/9003/p2p/16Uiu2HAkywYkvLRUH2MXbD6tSoT3jSMAzTWTp1aDijxpXQXxG6VM

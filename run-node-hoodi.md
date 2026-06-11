@@ -1,19 +1,14 @@
-# Simple Mantle Node (Sepolia Testnet)
+# Simple Mantle Node (Hoodi Testnet)
 
 ## Recommended Hardware
 
-- 16GB+ RAM
-- 8C+ CPU
-- 1000GB+ disk (HDD works for now, SSD is better)
+- 8GB+ RAM
+- 4C+ CPU
+- 100GB+ disk (HDD works for now, SSD is better)
 - 10mb/s+ download
 
-You can run a Mantle Sepolia RPC node either with **Docker Compose** (simplest,
+You can run a Mantle Hoodi RPC node either with **Docker Compose** (simplest,
 single host) or with the bundled **Helm chart** on Kubernetes.
-
-> **Note (v1.5.3 upgrade):** When upgrading, you must ensure that
-> **mantle-op-geth starts before mantle-op-node**. Failure to follow this
-> order may cause a chain fork. If a fork occurs, rebuild the RPC node by
-> following the full setup instructions in this document.
 
 ---
 
@@ -42,11 +37,11 @@ generate the 'jwt\_secret\_txt' file and the 'p2p\_node\_key\_txt'
 ```
 cd networks/
 
-mkdir sepolia/secret
+mkdir hoodi/secret
 
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > sepolia/secret/jwt_secret_txt
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" > hoodi/secret/jwt_secret_txt
 
-cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > sepolia/secret/p2p_node_key_txt
+cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//' > hoodi/secret/p2p_node_key_txt
 ```
 
 ### 3 Download the latest snapshot from mantle
@@ -56,51 +51,50 @@ We recommend that you start the node with latest shapshot, so that you don't nee
 First, create a path for ledger:
 
 ```
-mkdir -p ./data/sepolia-geth
+mkdir -p ./data/hoodi-reth
 ```
 
 Second, download the latest official snapshot:
 
 ```
 # Download tarball
-SEPOLIA_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current.info`
-wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst
+HOODI_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/current.info`
+wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst
 
 # Then you can verify your download
-SEPOLIA_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst.sha256sum | awk '{print $1}'`
-echo "${SEPOLIA_CURRENT_TARBALL_CHECKSUM} *${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst" | shasum -a 256 --check
+HOODI_CURRENT_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz/${HOODI_CURRENT_TARBALL_DATE}-hoodi-chaindata.tar.zst.sha256sum | awk '{print $1}'`
+echo "${HOODI_CURRENT_TARBALL_CHECKSUM} *${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst" | shasum -a 256 --check
 
 # You should get the following output:
-# ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst: OK
+# ${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst: OK
 ```
 
 Third, unzip snapshot to the ledger path
 
 ```
-tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
+tar --use-compress-program=unzstd -xvf ${HOODI_CURRENT_TARBALL_DATE}-hoodi.tar.zst -C  ./data/hoodi-reth
 ```
 
 Check the data was unarchived successfully:
 
 ```
-$ ls ./data/sepolia-geth
-chaindata
+$ ls ./data/hoodi-reth
+blobstore  db  discovery-secret  genesis.json  invalid_block_hooks  known-peers.json  lost+found  reth.toml  static_files 
 ```
 
 ### 4 Operating the Node
 
 use L1 beacon chain to pull the data for rollup node,
-you need set up L1\_BEACON\_SEPOLIA and L1\_RPC\_SEPOLIA
+you need set up L1\_BEACON\_HOODI and L1\_RPC\_HOODI
 
-L1\_BEACON\_SEPOLIA is for querying data from eth blob, or you can use mantle da-indexer instead.
+L1\_BEACON\_HOODI is for querying data from eth blob,or you can use mantle da-indexer instead.the da-indexer address is <https://da-indexer-api.hoodi.mantle.xyz>
 
 ```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'        #please replace
-export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
-# alternatively use the mantle da-indexer:
-# docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d
+export L1_RPC_HOODI='HOODI_L1_RPC'        #please replace
+export L1_BEACON_HOODI='HOODI_L1_BEACON'  #please replace
+# export L1_BEACON_HOODI='https://da-indexer-api.hoodi.mantle.xyz'  #if you want to use mantle da-indexer.
 
-docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d
+docker-compose -f docker-compose-hoodi-upgrade.yml up -d 
 ```
 
 ## Check Installation Result
@@ -112,19 +106,19 @@ Follow these steps to check if the installation is successful
 If the service status is 'up,' it means that the service has started without any issues.
 
 ```
-docker-compose -f docker-compose-sepolia-upgrade-beacon.yml ps
+docker-compose -f docker-compose-hoodi-upgrade.yml ps
 ```
 
 ### 2 Check Data
 
 ```
-# query local op-geth latest block height
+# query local op-reth latest block height
 cast bn
 
-# query latest block height from mantle sepolia rpc
-cast bn --rpc-url  https://rpc.sepolia.mantle.xyz
+# query latest block height from mantle hoodi rpc
+cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
 
-# check the safe and finalized height.
+# check the safe and finalized height. 
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 ```
@@ -134,7 +128,7 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 ### 1 Stop historical node
 
 ```
-docker-compose -f docker-compose-sepolia-upgrade-beacon.yml down
+docker-compose -f docker-compose-hoodi-upgrade.yml down
 ```
 
 ### 2 Pull the latest code of this repo
@@ -142,7 +136,7 @@ docker-compose -f docker-compose-sepolia-upgrade-beacon.yml down
 ```
 # If your local code have changes, please use 'git stash' to cache first
 
-git pull
+git pull 
 ```
 
 **If you start the node using your own way, please refer to the compose files in this repo for the upgrade. Otherwise, it may cause irreversible damage to the node.**
@@ -150,18 +144,18 @@ git pull
 ### 3 Operating the Node
 
 ```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'        #please replace
-export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
-docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d
+export L1_RPC_HOODI='HOODI_L1_RPC'        #please replace
+export L1_BEACON_HOODI='HOODI_L1_BEACON'  #please replace
+docker-compose -f docker-compose-hoodi-upgrade.yml up -d 
 ```
 
 ### 4 Check data
 
 ```
-# query local op-geth latest block height and mantle sepolia rpc
-cast bn && cast bn --rpc-url  https://rpc.sepolia.mantle.xyz
+# query local op-reth latest block height and mantle hoodi rpc
+cast bn && cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
 
-# check the safe and finalized height.
+# check the safe and finalized height. 
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 ```
@@ -171,12 +165,13 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 # 2. Deploy on Kubernetes with Helm
 
 This repo also ships a Helm chart at [`chart/mantle-node`](chart/mantle-node/).
-It deploys two `StatefulSet`s (the `op-geth` execution layer and `op-node`),
+It deploys two `StatefulSet`s (the `op-reth` execution layer and `op-node`),
 provisions PVCs for chain data and peerstore, and mounts `rollup.json`
 straight from this repo via a `ConfigMap`. You supply the engine-API JWT
 and op-node libp2p key in the per-network values file. The official
 snapshot from S3 is fetched + extracted by an init container on first
-boot.
+boot — no separate `genesis.json` download is needed, since the snapshot
+tarball already includes it.
 
 ## Required Software
 
@@ -209,15 +204,16 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//'
 ```
 
-### 3 Edit sepolia.values.yaml
+### 3 Edit hoodi.values.yaml
 
-Open `chart/mantle-node/sepolia.values.yaml` and fill in your L1 endpoints
+Open `chart/mantle-node/hoodi.values.yaml` and fill in your L1 endpoints
 and the two secrets you just generated:
 
 ```yaml
 l1:
-  rpc:    "SEPOLIA_L1_RPC"        # please replace
-  beacon: "SEPOLIA_L1_BEACON"     # please replace
+  rpc:    "HOODI_L1_RPC"        # please replace
+  beacon: "HOODI_L1_BEACON"     # please replace
+  # beacon: "https://da-indexer-api.hoodi.mantle.xyz"  # or use Mantle DA indexer
 
 secrets:
   jwtSecret:   "<paste the jwt_secret_txt value here>"
@@ -227,39 +223,39 @@ secrets:
 ### 4 Install
 
 ```
-helm install sepolia ./chart/mantle-node \
-  -f ./chart/mantle-node/sepolia.values.yaml \
-  --namespace mantle-sepolia --create-namespace
+helm install hoodi ./chart/mantle-node \
+  -f ./chart/mantle-node/hoodi.values.yaml \
+  --namespace mantle-hoodi --create-namespace
 ```
 
 On first install, the chart automatically downloads + extracts the latest
-official Mantle Sepolia snapshot from S3
-(`https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz`)
-into the EL PVC. The init container is a no-op when the PVC already
-contains chain data, so it is safe across `helm upgrade`.
+official Mantle Hoodi snapshot from S3
+(`https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz`) into
+the EL PVC. The init container is a no-op when the PVC already contains
+chain data, so it is safe across `helm upgrade`.
 
 Watch snapshot progress with:
 
 ```
-kubectl -n mantle-sepolia logs -f sts/sepolia-mantle-node-el -c fetch-snapshot
+kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-el -c fetch-snapshot
 ```
 
 ## Check Installation Result
 
 ```
-kubectl -n mantle-sepolia get pods -w
-kubectl -n mantle-sepolia logs -f sts/sepolia-mantle-node-el
-kubectl -n mantle-sepolia logs -f sts/sepolia-mantle-node-op-node
+kubectl -n mantle-hoodi get pods -w
+kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-el
+kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-op-node
 
 # Query block height
-kubectl -n mantle-sepolia port-forward svc/sepolia-mantle-node-el 8545:8545 &
+kubectl -n mantle-hoodi port-forward svc/hoodi-mantle-node-el 8545:8545 &
 cast bn
 
-# Compare against the official Mantle sepolia RPC
-cast bn --rpc-url https://rpc.sepolia.mantle.xyz
+# Compare against the official Mantle hoodi RPC
+cast bn --rpc-url https://rpc.hoodi.mantle.xyz
 
 # Sync status from op-node
-kubectl -n mantle-sepolia port-forward svc/sepolia-mantle-node-op-node 9545:8545 &
+kubectl -n mantle-hoodi port-forward svc/hoodi-mantle-node-op-node 9545:8545 &
 cast rpc optimism_syncStatus --rpc-url localhost:9545 | jq .safe_l2.number
 cast rpc optimism_syncStatus --rpc-url localhost:9545 | jq .finalized_l2.number
 ```
@@ -268,11 +264,11 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 | jq .finalized_l2.number
 
 ```
 git pull
-helm upgrade sepolia ./chart/mantle-node \
-  -f ./chart/mantle-node/sepolia.values.yaml \
-  --namespace mantle-sepolia
+helm upgrade hoodi ./chart/mantle-node \
+  -f ./chart/mantle-node/hoodi.values.yaml \
+  --namespace mantle-hoodi
 ```
 
 See [`chart/mantle-node/README.md`](chart/mantle-node/README.md) for the
-full list of values and the same-chart presets for Hoodi and Mainnet
-(`hoodi.values.yaml`, `mainnet.values.yaml`).
+full list of values and the same-chart presets for Sepolia and Mainnet
+(`sepolia.values.yaml`, `mainnet.values.yaml`).

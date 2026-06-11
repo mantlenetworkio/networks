@@ -1,0 +1,140 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "mantle-node.el.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mantle-node.el.labels" . | nindent 4 }}
+spec:
+  serviceName: {{ include "mantle-node.el.name" . }}
+  replicas: 1
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      {{- include "mantle-node.el.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "mantle-node.el.selectorLabels" . | nindent 8 }}
+        {{- with .Values.el.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        # Roll the pod whenever the snapshot script (e.g. tarball URL) changes.
+        checksum/el-scripts: {{ include (print $.Template.BasePath "/configmap-el-scripts.yaml") . | sha256sum }}
+        {{- with .Values.el.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "mantle-node.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: 120
+      initContainers:
+        - name: fetch-snapshot
+          image: "{{ .Values.el.snapshot.image.repository }}:{{ .Values.el.snapshot.image.tag }}"
+          imagePullPolicy: {{ .Values.el.snapshot.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - /scripts/fetch-snapshot.sh
+          volumeMounts:
+            - name: el-scripts
+              mountPath: /scripts
+            - name: data
+              mountPath: {{ .Values.el.persistence.mountPath }}
+      containers:
+        - name: el
+          image: "{{ .Values.el.image.repository }}:{{ .Values.el.image.tag }}"
+          imagePullPolicy: {{ .Values.el.image.pullPolicy }}
+          {{- with .Values.el.command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.el.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.el.ports.http }}
+              protocol: TCP
+            - name: ws
+              containerPort: {{ .Values.el.ports.ws }}
+              protocol: TCP
+            - name: auth
+              containerPort: {{ .Values.el.ports.auth }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.el.ports.metrics }}
+              protocol: TCP
+            - name: p2p-tcp
+              containerPort: {{ .Values.el.ports.p2p }}
+              protocol: TCP
+            - name: p2p-udp
+              containerPort: {{ .Values.el.ports.p2p }}
+              protocol: UDP
+          {{- if .Values.el.probes.enabled }}
+          startupProbe:
+            tcpSocket:
+              port: http
+            failureThreshold: {{ div .Values.el.probes.startupSeconds 10 }}
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          {{- end }}
+          resources:
+            {{- toYaml .Values.el.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: {{ .Values.el.persistence.mountPath }}
+            - name: secrets
+              mountPath: /secret
+              readOnly: true
+      volumes:
+        - name: el-scripts
+          configMap:
+            name: {{ include "mantle-node.elScriptsName" . }}
+            defaultMode: 0755
+        - name: secrets
+          secret:
+            secretName: {{ include "mantle-node.secretName" . }}
+            defaultMode: 0400
+      {{- with .Values.el.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.el.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.el.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.el.persistence.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          {{- include "mantle-node.el.labels" . | nindent 10 }}
+      spec:
+        accessModes:
+          {{- toYaml .Values.el.persistence.accessModes | nindent 10 }}
+        {{- if .Values.el.persistence.storageClass }}
+        storageClassName: {{ .Values.el.persistence.storageClass | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.el.persistence.size | quote }}
+  {{- end }}
