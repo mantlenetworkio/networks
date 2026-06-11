@@ -87,33 +87,13 @@ app.kubernetes.io/component: op-node
 {{- end -}}
 
 {{/*
-Resolve jwtSecret / p2pNodeKey:
-- if user supplied one, use it
-- else, look up the existing Secret (so we don't rotate on upgrade)
-- else, generate a fresh 32-byte hex string
+Resolve jwtSecret / p2pNodeKey — both REQUIRED in the per-network values file.
+The chart fails fast if either is missing or empty.
 */}}
 {{- define "mantle-node.jwtSecret" -}}
-{{- if .Values.secrets.jwtSecret -}}
-{{- .Values.secrets.jwtSecret -}}
-{{- else -}}
-{{- $existing := lookup "v1" "Secret" .Release.Namespace (include "mantle-node.secretName" .) -}}
-{{- if and $existing $existing.data (index $existing.data "jwt_secret_txt") -}}
-{{- index $existing.data "jwt_secret_txt" | b64dec -}}
-{{- else -}}
-{{- randAlphaNum 64 | lower -}}
-{{- end -}}
-{{- end -}}
+{{- required "secrets.jwtSecret is required (set it in the per-network values file as a 32-byte hex string)" .Values.secrets.jwtSecret -}}
 {{- end -}}
 
 {{- define "mantle-node.p2pNodeKey" -}}
-{{- if .Values.secrets.p2pNodeKey -}}
-{{- .Values.secrets.p2pNodeKey -}}
-{{- else -}}
-{{- $existing := lookup "v1" "Secret" .Release.Namespace (include "mantle-node.secretName" .) -}}
-{{- if and $existing $existing.data (index $existing.data "p2p_node_key_txt") -}}
-{{- index $existing.data "p2p_node_key_txt" | b64dec -}}
-{{- else -}}
-{{- randAlphaNum 64 | lower -}}
-{{- end -}}
-{{- end -}}
+{{- required "secrets.p2pNodeKey is required (set it in the per-network values file as a 32-byte hex string)" .Values.secrets.p2pNodeKey -}}
 {{- end -}}

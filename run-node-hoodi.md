@@ -1,5 +1,19 @@
 # Simple Mantle Node (Hoodi Testnet)
 
+## Recommended Hardware
+
+- 8GB+ RAM
+- 4C+ CPU
+- 100GB+ disk (HDD works for now, SSD is better)
+- 10mb/s+ download
+
+You can run a Mantle Hoodi RPC node either with **Docker Compose** (simplest,
+single host) or with the bundled **Helm chart** on Kubernetes.
+
+---
+
+# 1. Deploy with Docker Compose
+
 ## Required Software
 
 - [docker](https://docs.docker.com/engine/install/)
@@ -8,21 +22,12 @@
 - [zstd](https://github.com/facebook/zstd)
 - [aira2](https://aria2.github.io/)
 
-## Recommended Hardware
-
-- 8GB+ RAM
-- 4C+ CPU
-- 100GB+ disk (HDD works for now, SSD is better)
-- 10mb/s+ download
-
-# Installation and Setup Instructions For New User
-
 ## Installation
 
 ### 1 Download repo
 
 ```
-git clone https://github.com/mantlenetworkio/networks.git
+git clone https://github.com/mantle-xyz/networks.git
 ```
 
 ### 2 Generate init file
@@ -118,41 +123,104 @@ cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 ```
 
-# Deploy on Kubernetes with Helm
+## Upgrade for historical user
 
-If you'd rather run the node on Kubernetes than via `docker-compose`, this
-repo ships a Helm chart at [`chart/mantle-node`](chart/mantle-node/). It
-deploys two `StatefulSet`s (the `op-reth` execution layer and `op-node`),
-provisions PVCs for chain data and peerstore, auto-generates the JWT secret
-and op-node libp2p key, and mounts `rollup.json` straight from this repo
-via a `ConfigMap`. The official snapshot from S3 is fetched + extracted by
-an init container on first boot — no separate `genesis.json` download is
-needed, since the snapshot tarball already includes it.
-
-## Prerequisites
-
-- Kubernetes 1.23+ with a default `StorageClass` (override with
-  `--set el.persistence.storageClass=...` if needed)
-- Helm 3.8+
-- Same L1 RPC / L1 beacon endpoints as the docker-compose path
-
-## Install
+### 1 Stop historical node
 
 ```
-git clone https://github.com/mantlenetworkio/networks.git
+docker-compose -f docker-compose-hoodi-upgrade.yml down
+```
+
+### 2 Pull the latest code of this repo
+
+```
+# If your local code have changes, please use 'git stash' to cache first
+
+git pull 
+```
+
+**If you start the node using your own way, please refer to the compose files in this repo for the upgrade. Otherwise, it may cause irreversible damage to the node.**
+
+### 3 Operating the Node
+
+```
+export L1_RPC_HOODI='HOODI_L1_RPC'        #please replace
+export L1_BEACON_HOODI='HOODI_L1_BEACON'  #please replace
+docker-compose -f docker-compose-hoodi-upgrade.yml up -d 
+```
+
+### 4 Check data
+
+```
+# query local op-reth latest block height and mantle hoodi rpc
+cast bn && cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
+
+# check the safe and finalized height. 
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
+```
+
+---
+
+# 2. Deploy on Kubernetes with Helm
+
+This repo also ships a Helm chart at [`chart/mantle-node`](chart/mantle-node/).
+It deploys two `StatefulSet`s (the `op-reth` execution layer and `op-node`),
+provisions PVCs for chain data and peerstore, and mounts `rollup.json`
+straight from this repo via a `ConfigMap`. You supply the engine-API JWT
+and op-node libp2p key in the per-network values file. The official
+snapshot from S3 is fetched + extracted by an init container on first
+boot — no separate `genesis.json` download is needed, since the snapshot
+tarball already includes it.
+
+## Required Software
+
+- [helm](https://helm.sh/docs/intro/install/) 3.8+
+- [kubectl](https://kubernetes.io/docs/tasks/tools/) pointed at a cluster
+  with a default `StorageClass` (override with
+  `--set el.persistence.storageClass=...` if needed)
+- [node](https://nodejs.org/en/download/) (for generating the JWT secret)
+- [foundry](https://github.com/foundry-rs/foundry/releases) (for `cast` —
+  generates the p2p key and queries the node)
+
+## Installation
+
+### 1 Download repo
+
+```
+git clone https://github.com/mantle-xyz/networks.git
 cd networks
 ```
 
-Edit `chart/mantle-node/hoodi.values.yaml` and fill in your L1 endpoints:
+### 2 Generate init file
+
+generate the 'jwt\_secret\_txt' value and the 'p2p\_node\_key\_txt' value
+(same commands as the Docker path, just printed to stdout so you can paste
+them into the values file below):
+
+```
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//'
+```
+
+### 3 Edit hoodi.values.yaml
+
+Open `chart/mantle-node/hoodi.values.yaml` and fill in your L1 endpoints
+and the two secrets you just generated:
 
 ```yaml
 l1:
   rpc:    "HOODI_L1_RPC"        # please replace
   beacon: "HOODI_L1_BEACON"     # please replace
   # beacon: "https://da-indexer-api.hoodi.mantle.xyz"  # or use Mantle DA indexer
+
+secrets:
+  jwtSecret:   "<paste the jwt_secret_txt value here>"
+  p2pNodeKey:  "<paste the p2p_node_key_txt value here>"
 ```
 
-Then install:
+### 4 Install
 
 ```
 helm install hoodi ./chart/mantle-node \
@@ -160,21 +228,19 @@ helm install hoodi ./chart/mantle-node \
   --namespace mantle-hoodi --create-namespace
 ```
 
-## Snapshot bootstrap
-
-On first install the chart automatically downloads + extracts the latest
+On first install, the chart automatically downloads + extracts the latest
 official Mantle Hoodi snapshot from S3
 (`https://s3.ap-southeast-1.amazonaws.com/snapshot.hoodi.mantle.xyz`) into
-the EL PVC. No flag is required. The init container is a no-op when the
-PVC already contains chain data, so it is safe across `helm upgrade`.
+the EL PVC. The init container is a no-op when the PVC already contains
+chain data, so it is safe across `helm upgrade`.
 
-Watch progress with:
+Watch snapshot progress with:
 
 ```
 kubectl -n mantle-hoodi logs -f sts/hoodi-mantle-node-el -c fetch-snapshot
 ```
 
-## Verify
+## Check Installation Result
 
 ```
 kubectl -n mantle-hoodi get pods -w
@@ -206,41 +272,3 @@ helm upgrade hoodi ./chart/mantle-node \
 See [`chart/mantle-node/README.md`](chart/mantle-node/README.md) for the
 full list of values and the same-chart presets for Sepolia and Mainnet
 (`sepolia.values.yaml`, `mainnet.values.yaml`).
-
-# Upgrade for historical user
-
-## 1 Stop historical node
-
-```
-docker-compose -f docker-compose-hoodi-upgrade.yml down
-```
-
-## 2 Pull the latest code of this repo
-
-```
-# If your local code have changes, please use 'git stash' to cache first
-
-git pull 
-```
-
-**If you start the node using your own way, please refer to the compose files in this repo for the upgrade. Otherwise, it may cause irreversible damage to the node.**
-
-## 3 Operating the Node
-
-```
-export L1_RPC_HOODI='HOODI_L1_RPC'        #please replace
-export L1_BEACON_HOODI='HOODI_L1_BEACON'  #please replace
-docker-compose -f docker-compose-hoodi-upgrade.yml up -d 
-```
-
-## 4 Check data
-
-```
-# query local op-reth latest block height and mantle hoodi rpc
-cast bn && cast bn --rpc-url  https://rpc.hoodi.mantle.xyz
-
-# check the safe and finalized height. 
-cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
-cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
-```
-

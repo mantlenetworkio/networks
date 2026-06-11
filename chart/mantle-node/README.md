@@ -25,8 +25,8 @@ repository:
   DB. The `rollup.json` config is mounted from a `ConfigMap` that the chart
   builds from `<network>/rollup.json` in this repo via a symlink under
   `chart/mantle-node/networks/<network>/rollup.json`.
-- A `Secret` holding the engine-API JWT and the op-node libp2p key (auto-
-  generated on first install if not supplied, preserved across upgrades).
+- A `Secret` holding the engine-API JWT and the op-node libp2p key, both
+  required to be supplied by the user in the per-network values file.
 - `ClusterIP` services exposing the EL HTTP / WS / authrpc / metrics ports
   and the op-node RPC / metrics ports.
 
@@ -56,13 +56,24 @@ git clone https://github.com/mantle-xyz/networks.git
 cd networks
 ```
 
-Edit the L1 endpoints in the per-network values file you plan to use:
+Edit the L1 endpoints and secrets in the per-network values file you plan
+to use. Generate two 32-byte hex strings first:
+
+```bash
+JWT=$(openssl rand -hex 32)
+P2P=$(openssl rand -hex 32)
+echo "$JWT"; echo "$P2P"
+```
 
 ```yaml
 # chart/mantle-node/hoodi.values.yaml (also: sepolia.values.yaml, mainnet.values.yaml)
 l1:
   rpc:    "https://your-l1-rpc"
   beacon: "https://your-l1-beacon"   # or https://da-indexer-api.hoodi.mantle.xyz for hoodi
+
+secrets:
+  jwtSecret:   "<paste $JWT here>"
+  p2pNodeKey:  "<paste $P2P here>"
 ```
 
 Then install:
@@ -137,8 +148,8 @@ Snapshot URLs are pre-configured per network:
 |---------|---------|-------|
 | `l1.rpc` | _required, edit values file_ | L1 execution RPC |
 | `l1.beacon` | _required, edit values file_ | L1 beacon / blob endpoint, or Mantle DA indexer |
-| `secrets.jwtSecret` | auto-generated | 32-byte hex; set for stable identity |
-| `secrets.p2pNodeKey` | auto-generated | 32-byte hex; set for stable identity |
+| `secrets.jwtSecret` | _required, edit values file_ | 32-byte hex engine-API JWT |
+| `secrets.p2pNodeKey` | _required, edit values file_ | 32-byte hex op-node libp2p priv key |
 | `el.persistence.size` | 200Gi (hoodi) / 500Gi (sepolia) / 2000Gi (mainnet) | Adjust per network growth |
 | `el.persistence.storageClass` | cluster default | e.g. `gp3`, `ssd` |
 | `el.service.type` | ClusterIP | Switch to `NodePort` or `LoadBalancer` for external RPC |

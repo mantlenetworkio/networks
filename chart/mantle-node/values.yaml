@@ -1,10 +1,11 @@
 # =============================================================================
 # Default values for mantle-node chart.
 #
-# This file defines the *schema* and sensible defaults that are common across
-# all Mantle networks (hoodi / sepolia / mainnet). Network-specific values
-# (image tags, command/args, env vars, sequencer URLs, P2P static peers,
-# snapshot tarball naming) live in the per-network override files:
+# This file holds ONLY the values that are common across all Mantle networks
+# (hoodi / sepolia / mainnet) or do not need to be configured by the user.
+# Everything network-specific or environment-tunable (images, command/args,
+# env, ports, persistence, snapshot, L1, secrets, …) lives in the per-network
+# override files:
 #
 #   - hoodi.values.yaml
 #   - sepolia.values.yaml
@@ -16,78 +17,59 @@
 #   helm install my-mainnet ./chart/mantle-node -f ./chart/mantle-node/mainnet.values.yaml
 # =============================================================================
 
-# Which network this release targets. Must be one of: hoodi, sepolia, mainnet.
-# Set by the per-network override files; leave empty in default values.
+# Which network this release targets — set by the per-network override file.
+# Must be one of: hoodi, sepolia, mainnet.
 network: ""
 
 # Common name override. By default, resources are prefixed with the release name.
 nameOverride: ""
 fullnameOverride: ""
 
-# -----------------------------------------------------------------------------
-# Config files (rollup.json, genesis.json) shipped with the chart.
-#
-# rollup.json is small (~2 KB) and lives in this repo at <network>/rollup.json.
-# Each per-network values file sets `config.rollupJsonPath` to a symlink under
-# `chart/mantle-node/networks/<network>/rollup.json` so the chart has a single
-# source of truth without copying. Helm reads symlink targets via .Files.Get.
-#
-# genesis.json is NOT shipped:
-#   - op-reth (hoodi): the official Mantle snapshot already contains
-#     /db/genesis.json, which `--chain=/db/genesis.json` consumes directly.
-#   - op-geth (sepolia/mainnet): genesis is baked into the image and selected
-#     via `--networkid`; no genesis file is needed at runtime.
-# -----------------------------------------------------------------------------
-config:
-  # Chart-relative path to the rollup.json used by op-node. Set by per-network
-  # override; e.g. `networks/hoodi/rollup.json`.
-  rollupJsonPath: ""
+# Image pull secrets (for private registries). Common to all networks.
+imagePullSecrets: []
 
-# -----------------------------------------------------------------------------
-# Secrets. If left empty, the chart auto-generates them on first install and
-# preserves them across upgrades (via a lookup of the existing Secret).
-# -----------------------------------------------------------------------------
-secrets:
-  # 32-byte hex string used as the engine-API JWT secret.
-  jwtSecret: ""
-  # 32-byte hex string used as the op-node libp2p private key.
-  p2pNodeKey: ""
+# Service account for the pods. Common across networks.
+serviceAccount:
+  create: true
+  name: ""
+  annotations: {}
 
-# -----------------------------------------------------------------------------
 # Init container image used by the op-node "wait for execution layer" probe.
-# -----------------------------------------------------------------------------
+# Does not vary across networks; rarely tuned.
 initImage:
   repository: curlimages/curl
   tag: "8.10.1"
   pullPolicy: IfNotPresent
 
 # -----------------------------------------------------------------------------
+# config, secrets, l1 — schema scaffolding only. Real values come from the
+# per-network override files; the chart fails fast with a clear error if any
+# required field is left blank.
+# -----------------------------------------------------------------------------
+config:
+  rollupJsonPath: ""
+
+secrets:
+  jwtSecret: ""
+  p2pNodeKey: ""
+
+l1:
+  rpc: ""
+  beacon: ""
+
+# -----------------------------------------------------------------------------
 # EL = execution layer (op-reth on hoodi, op-geth on sepolia/mainnet).
 #
-# image, command, args are all set by the per-network override file.
+# `ports`, `persistence`, `image`, `command`, `args`, `snapshot.baseUrl`,
+# `snapshot.tarballSuffix`, `snapshot.extractSubpath`, and `resources` are
+# defined in the per-network override file. The fields below are either
+# constants across networks or trivial defaults users rarely change.
 # -----------------------------------------------------------------------------
 el:
-  # "op-reth" or "op-geth". Set by the per-network override.
+  # "op-reth" or "op-geth" — set by the per-network override.
   kind: ""
-  image:
-    repository: ""
-    tag: ""
-    pullPolicy: IfNotPresent
 
-  # Container entrypoint binary. e.g. "op-reth" or "geth".
-  command: []
-  # Container arguments. See per-network overrides for full lists.
-  args: []
-
-  # Container ports. Defaults match the docker-compose files.
-  ports:
-    http: 8545
-    ws: 8546
-    auth: 8551
-    metrics: 6060
-    p2p: 9003
-
-  # Service exposure. ClusterIP by default; switch to NodePort or LoadBalancer
+  # Service exposure. Default ClusterIP; switch to NodePort or LoadBalancer
   # if you need external access.
   service:
     type: ClusterIP
@@ -96,41 +78,12 @@ el:
       http: ""
       ws: ""
 
-  resources:
-    requests:
-      cpu: "2"
-      memory: "8Gi"
-    limits:
-      cpu: "4"
-      memory: "8Gi"
-
-  persistence:
-    enabled: true
-    storageClass: ""
-    accessModes:
-      - ReadWriteOnce
-    size: 500Gi
-    mountPath: /db
-
   probes:
     enabled: true
     startupSeconds: 600
 
-  # Snapshot bootstrap. An initContainer ALWAYS downloads and extracts the
-  # latest official Mantle snapshot into the EL data PVC. It is a no-op on
-  # subsequent restarts (it checks for an already-populated data directory).
-  #
-  # Per-network overrides set baseUrl / tarballSuffix / extractSubpath.
+  # Snapshot init image — always alpine + apk-installed tools at runtime.
   snapshot:
-    baseUrl: ""
-    # Suffix appended to "<date>-" to form the tarball filename:
-    #   hoodi   → "hoodi.tar.zst"
-    #   sepolia → "sepolia-chaindata.tar.zst"
-    #   mainnet → "mainnet-chaindata.tar.zst"
-    tarballSuffix: ""
-    # Subdir under `el.persistence.mountPath` to extract into. Empty for
-    # op-reth (root of /db); "geth" for op-geth.
-    extractSubpath: ""
     image:
       repository: alpine
       tag: "3.20"
@@ -143,103 +96,27 @@ el:
   podLabels: {}
 
 # -----------------------------------------------------------------------------
-# op-node (rollup node). All OP_NODE_* env vars are network-specific and set
-# in the per-network override files.
+# op-node (rollup node).
+#
+# `ports`, `persistence`, `env`, `image`, and `resources` are defined in the
+# per-network override file.
 # -----------------------------------------------------------------------------
 opNode:
-  image:
-    repository: mantlenetworkio/mantle-op-node
-    tag: ""
-    pullPolicy: IfNotPresent
-
-  ports:
-    rpc: 8545
-    metrics: 7300
-    pprof: 6060
-    p2p: 9003
-
   service:
     type: ClusterIP
     annotations: {}
     nodePorts:
       rpc: ""
 
-  # Environment variables passed to op-node. Network-agnostic defaults are set
-  # here; the per-network override file fills in network-specific values.
-  env:
-    OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
-    OP_NODE_ROLLUP_CONFIG: /config/rollup.json
-    OP_NODE_P2P_PRIV_PATH: /secret/p2p_node_key_txt
-    OP_NODE_VERIFIER_L1_CONFS: "3"
-    OP_NODE_RPC_ADDR: 0.0.0.0
-    OP_NODE_RPC_PORT: "8545"
-    OP_NODE_P2P_LISTEN_IP: 0.0.0.0
-    OP_NODE_P2P_LISTEN_TCP_PORT: "9003"
-    OP_NODE_P2P_LISTEN_UDP_PORT: "9003"
-    OP_NODE_P2P_PEER_SCORING: light
-    OP_NODE_P2P_PEER_BANNING: "true"
-    OP_NODE_METRICS_ENABLED: "true"
-    OP_NODE_METRICS_ADDR: 0.0.0.0
-    OP_NODE_METRICS_PORT: "7300"
-    OP_NODE_PPROF_ENABLED: "true"
-    OP_NODE_PPROF_PORT: "6060"
-    OP_NODE_PPROF_ADDR: 0.0.0.0
-    OP_NODE_P2P_DISCOVERY_PATH: /op-node/opnode_discovery_db
-    OP_NODE_P2P_PEERSTORE_PATH: /op-node/opnode_peerstore_db
-    OP_NODE_SEQUENCER_ENABLED: "false"
-    OP_NODE_P2P_AGENT: mantle
-    OP_NODE_P2P_SYNC_REQ_RESP: "true"
-    # Set by per-network overrides:
-    #   OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC
-    #   OP_NODE_P2P_STATIC
-
-  extraEnv: []
-
-  resources:
-    requests:
-      cpu: "2"
-      memory: "2Gi"
-    limits:
-      cpu: "4"
-      memory: "8Gi"
-
-  persistence:
-    enabled: true
-    storageClass: ""
-    accessModes:
-      - ReadWriteOnce
-    size: 10Gi
-    mountPath: /op-node
-
   probes:
     enabled: true
     startupSeconds: 600
+
+  # Extra env entries (e.g. valueFrom secrets). Appended as-is.
+  extraEnv: []
 
   nodeSelector: {}
   tolerations: []
   affinity: {}
   podAnnotations: {}
   podLabels: {}
-
-# -----------------------------------------------------------------------------
-# L1 endpoints (REQUIRED).
-#
-# These MUST be filled in by the user in the per-network override file before
-# `helm install` (the chart will fail-fast otherwise).
-# -----------------------------------------------------------------------------
-l1:
-  rpc: ""
-  beacon: ""
-
-# -----------------------------------------------------------------------------
-# Service account for the pods.
-# -----------------------------------------------------------------------------
-serviceAccount:
-  create: true
-  name: ""
-  annotations: {}
-
-# -----------------------------------------------------------------------------
-# Image pull secrets (for private registries).
-# -----------------------------------------------------------------------------
-imagePullSecrets: []

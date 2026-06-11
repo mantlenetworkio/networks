@@ -1,31 +1,38 @@
-# Simple Mantle Node
-
-## Required Software
-
-* [docker](https://docs.docker.com/engine/install/)
-* [node](https://nodejs.org/en/download/)
-* [foundry](https://github.com/foundry-rs/foundry/releases)
-* [zstd](https://github.com/facebook/zstd)
-* [aira2](https://aria2.github.io/)
+# Simple Mantle Node (Sepolia Testnet)
 
 ## Recommended Hardware
 
-* 16GB+ RAM
+- 16GB+ RAM
+- 8C+ CPU
+- 1000GB+ disk (HDD works for now, SSD is better)
+- 10mb/s+ download
 
-* 8C+ CPU
+You can run a Mantle Sepolia RPC node either with **Docker Compose** (simplest,
+single host) or with the bundled **Helm chart** on Kubernetes.
 
-* 1000GB+ disk (HDD works for now, SSD is better)
+> **Note (v1.5.3 upgrade):** When upgrading, you must ensure that
+> **mantle-op-geth starts before mantle-op-node**. Failure to follow this
+> order may cause a chain fork. If a fork occurs, rebuild the RPC node by
+> following the full setup instructions in this document.
 
-* 10mb/s+ download
+---
 
-# Installation and Setup Instructions For New User
+# 1. Deploy with Docker Compose
+
+## Required Software
+
+- [docker](https://docs.docker.com/engine/install/)
+- [node](https://nodejs.org/en/download/)
+- [foundry](https://github.com/foundry-rs/foundry/releases)
+- [zstd](https://github.com/facebook/zstd)
+- [aira2](https://aria2.github.io/)
 
 ## Installation
 
 ### 1 Download repo
 
 ```
-git clone https://github.com/mantlenetworkio/networks.git
+git clone https://github.com/mantle-xyz/networks.git
 ```
 
 ### 2 Generate init file
@@ -53,6 +60,7 @@ mkdir -p ./data/sepolia-geth
 ```
 
 Second, download the latest official snapshot:
+
 ```
 # Download tarball
 SEPOLIA_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current.info`
@@ -66,8 +74,8 @@ echo "${SEPOLIA_CURRENT_TARBALL_CHECKSUM} *${SEPOLIA_CURRENT_TARBALL_DATE}-sepol
 # ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst: OK
 ```
 
-
 Third, unzip snapshot to the ledger path
+
 ```
 tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
 ```
@@ -76,37 +84,23 @@ Check the data was unarchived successfully:
 
 ```
 $ ls ./data/sepolia-geth
-chaindata 
+chaindata
 ```
 
 ### 4 Operating the Node
 
-#### 4.1 Start with mantle da-indexer
+use L1 beacon chain to pull the data for rollup node,
+you need set up L1\_BEACON\_SEPOLIA and L1\_RPC\_SEPOLIA
 
-use mantle da-indexer to pull the data for rollup node, and you need to set up L1_RPC_SEPOLIA
-
-
-```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
-docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
-```
-
-Will start the node in a detached shell (`-d`), meaning the node will continue to run in the background. You will need to run this again if you ever turn your machine off.
-
-Congratulations, the node has been deployed！
-
-#### 4.2 Start with L1 beacon chain（recommend）
-
-use L1 beacon chain to pull the data for rollup node, 
-you need set up L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA 
-
-L1_BEACON_SEPOLIA is for querying data from eth blob
+L1\_BEACON\_SEPOLIA is for querying data from eth blob, or you can use mantle da-indexer instead.
 
 ```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'        #please replace
 export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
+# alternatively use the mantle da-indexer:
+# docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d
 
-docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
+docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d
 ```
 
 ## Check Installation Result
@@ -118,174 +112,167 @@ Follow these steps to check if the installation is successful
 If the service status is 'up,' it means that the service has started without any issues.
 
 ```
-docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml ps
+docker-compose -f docker-compose-sepolia-upgrade-beacon.yml ps
 ```
 
 ### 2 Check Data
 
-Use the command 'cast bn' to execute multiple times and check if the height increases.
-
-example:
-
 ```
 # query local op-geth latest block height
 cast bn
 
-# query latest block height from mantle rpc
-cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
-```
+# query latest block height from mantle sepolia rpc
+cast bn --rpc-url  https://rpc.sepolia.mantle.xyz
 
-Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
-
-example:
-
-```
-cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
-
+# check the safe and finalized height.
 cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
 ```
 
+## Upgrade for historical user
 
-
-## Other useful commands for Operator
-
-### 1 Stop
+### 1 Stop historical node
 
 ```
-docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml down
+docker-compose -f docker-compose-sepolia-upgrade-beacon.yml down
 ```
 
-Will shut down the node without wiping any volumes. You can safely run this command and then restart the node again.
-
-### 2 Wipe
-
-```
-docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml down -v
-```
-
-Will completely wipe the node by removing the volumes that were created for each container. Note that this is a destructive action, be very careful!
-
-### 3 Logs
-
-```
-docker-compose logs <service name>
-```
-
-Will display the logs for a given service. You can also follow along with the logs for a service in real time by adding the flag `-f`.
-
-The available services are:
-
-* [`op-geth`](https://github.com/mantlenetworkio/networks/blob/ba6e673b4164864cf40768c95382423d5756bb67/run-node-sepolia.md#mantle-node)
-
-* [`op-node`](https://github.com/mantlenetworkio/networks/blob/ba6e673b4164864cf40768c95382423d5756bb67/run-node-sepolia.md#mantle-node)
-
-
-# Upgrade for historical user
-> **Note:** When upgrading, please follow the correct update order: update **mantle-op-geth** first, then update **mantle-op-node**. Reversing this order may cause unexpected issues.
-> 
-> ⚠️ **Important for v1.5.3 Upgrade:** When updating to v1.5.3 version, you must ensure that mantle-op-geth starts before mantle-op-node. Failure to follow this order may cause chain fork. If a fork occurs, please rebuild the RPC node by following the full setup instructions in this document.
-
-## 1 Stop historical node
-
-```
-docker-compose -f docker-compose-sepolia.yml down
-docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml down
-```
-
-## 2 Pull the latest code of this repo
+### 2 Pull the latest code of this repo
 
 ```
 # If your local code have changes, please use 'git stash' to cache first
 
-git pull 
+git pull
 ```
 
-**If you start the node using your own way, please refer to the three files from this upgrade. Otherwise, it may cause irreversible damage to the node.**
+**If you start the node using your own way, please refer to the compose files in this repo for the upgrade. Otherwise, it may cause irreversible damage to the node.**
 
-## 3 Operating the Node
-
-### 3.1 start with mantle da-indexer
-
+### 3 Operating the Node
 
 ```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
-docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
-```
-
-### 3.2 start with L1 beacon chain（recommend）
-
-use L1 beacon chain to pull the data for rollup node
-
-you need to edit L1_BEACON_SEPOLIA and L1_RPC_SEPOLIA 
-
-L1_BEACON_SEPOLIA is for querying data from eth blob
-
-
-then start with
-
-```
-export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'        #please replace
 export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
-docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
+docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d
 ```
 
-## 4 Check data
-
-Use the command 'cast bn' to execute multiple times and check if the height increases.
-
-example:
+### 4 Check data
 
 ```
-# query local op-geth latest block height
+# query local op-geth latest block height and mantle sepolia rpc
+cast bn && cast bn --rpc-url  https://rpc.sepolia.mantle.xyz
+
+# check the safe and finalized height.
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
+```
+
+---
+
+# 2. Deploy on Kubernetes with Helm
+
+This repo also ships a Helm chart at [`chart/mantle-node`](chart/mantle-node/).
+It deploys two `StatefulSet`s (the `op-geth` execution layer and `op-node`),
+provisions PVCs for chain data and peerstore, and mounts `rollup.json`
+straight from this repo via a `ConfigMap`. You supply the engine-API JWT
+and op-node libp2p key in the per-network values file. The official
+snapshot from S3 is fetched + extracted by an init container on first
+boot.
+
+## Required Software
+
+- [helm](https://helm.sh/docs/intro/install/) 3.8+
+- [kubectl](https://kubernetes.io/docs/tasks/tools/) pointed at a cluster
+  with a default `StorageClass` (override with
+  `--set el.persistence.storageClass=...` if needed)
+- [node](https://nodejs.org/en/download/) (for generating the JWT secret)
+- [foundry](https://github.com/foundry-rs/foundry/releases) (for `cast` —
+  generates the p2p key and queries the node)
+
+## Installation
+
+### 1 Download repo
+
+```
+git clone https://github.com/mantle-xyz/networks.git
+cd networks
+```
+
+### 2 Generate init file
+
+generate the 'jwt\_secret\_txt' value and the 'p2p\_node\_key\_txt' value
+(same commands as the Docker path, just printed to stdout so you can paste
+them into the values file below):
+
+```
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+cast w n |grep -i "Private Key" |awk -F ": " '{print $2}' |sed 's/0x//'
+```
+
+### 3 Edit sepolia.values.yaml
+
+Open `chart/mantle-node/sepolia.values.yaml` and fill in your L1 endpoints
+and the two secrets you just generated:
+
+```yaml
+l1:
+  rpc:    "SEPOLIA_L1_RPC"        # please replace
+  beacon: "SEPOLIA_L1_BEACON"     # please replace
+
+secrets:
+  jwtSecret:   "<paste the jwt_secret_txt value here>"
+  p2pNodeKey:  "<paste the p2p_node_key_txt value here>"
+```
+
+### 4 Install
+
+```
+helm install sepolia ./chart/mantle-node \
+  -f ./chart/mantle-node/sepolia.values.yaml \
+  --namespace mantle-sepolia --create-namespace
+```
+
+On first install, the chart automatically downloads + extracts the latest
+official Mantle Sepolia snapshot from S3
+(`https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz`)
+into the EL PVC. The init container is a no-op when the PVC already
+contains chain data, so it is safe across `helm upgrade`.
+
+Watch snapshot progress with:
+
+```
+kubectl -n mantle-sepolia logs -f sts/sepolia-mantle-node-el -c fetch-snapshot
+```
+
+## Check Installation Result
+
+```
+kubectl -n mantle-sepolia get pods -w
+kubectl -n mantle-sepolia logs -f sts/sepolia-mantle-node-el
+kubectl -n mantle-sepolia logs -f sts/sepolia-mantle-node-op-node
+
+# Query block height
+kubectl -n mantle-sepolia port-forward svc/sepolia-mantle-node-el 8545:8545 &
 cast bn
 
-# query latest block height from mantle rpc
-cast bn --rpc-url  https://rpc.sepolia.mantle.xyz 
+# Compare against the official Mantle sepolia RPC
+cast bn --rpc-url https://rpc.sepolia.mantle.xyz
+
+# Sync status from op-node
+kubectl -n mantle-sepolia port-forward svc/sepolia-mantle-node-op-node 9545:8545 &
+cast rpc optimism_syncStatus --rpc-url localhost:9545 | jq .safe_l2.number
+cast rpc optimism_syncStatus --rpc-url localhost:9545 | jq .finalized_l2.number
 ```
 
-Use the command 'cast rpc optimism_syncStatus' to execute multiple times and check if the safe\_l2 and inalized\_l2 increases. It may need to be increased after thirty minutes
-
-example:
+## Upgrade
 
 ```
-cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .finalized_l2.number
-
-cast rpc optimism_syncStatus --rpc-url localhost:9545 |jq .safe_l2.number
+git pull
+helm upgrade sepolia ./chart/mantle-node \
+  -f ./chart/mantle-node/sepolia.values.yaml \
+  --namespace mantle-sepolia
 ```
 
-# Restore from snapshot
-
-If your node's data is corrupted due to abnormal operations, please refer to the following steps for recovery
-
-## 1 Clean up historical data
-
-```
-rm -fr ./data/sepolia-geth 
-```
-
-## 2 Download the latest data
-
-```
-mkdir -p ./data/sepolia-geth
-
-# download the latest official snapshot
-SEPOLIA_CURRENT_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current.info`
-wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst
-
-# unzip snapshot to the ledger path
-tar --use-compress-program=unzstd -xvf ${SEPOLIA_CURRENT_TARBALL_DATE}-sepolia-chaindata.tar.zst -C  ./data/sepolia-geth
-```
-
-## 3 Start the service
-
-If you use da-indexer
-
-```
-docker-compose -f docker-compose-sepolia-upgrade-da-indexer.yml up -d 
-```
-
-Otherwise
-
-```
-docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
-```
+See [`chart/mantle-node/README.md`](chart/mantle-node/README.md) for the
+full list of values and the same-chart presets for Hoodi and Mainnet
+(`hoodi.values.yaml`, `mainnet.values.yaml`).

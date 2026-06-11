@@ -1,7 +1,7 @@
 # Mantle Mainnet preset.
 # Mirrors docker-compose-mainnetv2-upgrade-beacon.yml.
 #
-# Before installing, fill in `l1.rpc` and `l1.beacon` below, then run:
+# Before installing, fill in `l1.*` and `secrets.*` below, then run:
 #   helm install mainnet ./chart/mantle-node -f ./chart/mantle-node/mainnet.values.yaml
 
 network: mainnet
@@ -13,6 +13,15 @@ l1:
   rpc: ""
   beacon: ""
 
+# REQUIRED: secrets. Both are 32-byte hex strings — generate with:
+#   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+#   # or: openssl rand -hex 32
+#   - secrets.jwtSecret:   engine-API JWT shared between op-node and op-geth
+#   - secrets.p2pNodeKey:  op-node libp2p private key (stable peer identity)
+secrets:
+  jwtSecret: ""
+  p2pNodeKey: ""
+
 config:
   rollupJsonPath: networks/mainnet/rollup.json
 
@@ -21,6 +30,7 @@ el:
   image:
     repository: mantlenetworkio/mantle-op-geth
     tag: v1.5.4
+    pullPolicy: IfNotPresent
   command:
     - geth
   args:
@@ -56,12 +66,11 @@ el:
     - --rollup.sequencerhttp=https://rpc.mantle.xyz
 
   ports:
+    http: 8545
+    ws: 8546
+    auth: 8551
     metrics: 9001
     p2p: 30300
-
-  # Mainnet archive node — tune for your environment.
-  persistence:
-    size: 2000Gi
 
   resources:
     requests:
@@ -70,6 +79,15 @@ el:
     limits:
       cpu: "4"
       memory: "8Gi"
+
+  # Mainnet archive node — tune for your environment.
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 2000Gi
+    mountPath: /db
 
   snapshot:
     baseUrl: https://s3.ap-southeast-1.amazonaws.com/snapshot.mantle.xyz
@@ -80,6 +98,14 @@ opNode:
   image:
     repository: mantlenetworkio/mantle-op-node
     tag: v1.5.4
+    pullPolicy: IfNotPresent
+
+  ports:
+    rpc: 8545
+    metrics: 7300
+    pprof: 6060
+    p2p: 9003
+
   resources:
     requests:
       cpu: "4"
@@ -87,6 +113,37 @@ opNode:
     limits:
       cpu: "4"
       memory: "8Gi"
+
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    mountPath: /op-node
+
   env:
+    OP_NODE_L2_ENGINE_AUTH: /secret/jwt_secret_txt
+    OP_NODE_ROLLUP_CONFIG: /config/rollup.json
+    OP_NODE_P2P_PRIV_PATH: /secret/p2p_node_key_txt
+    OP_NODE_VERIFIER_L1_CONFS: "3"
+    OP_NODE_RPC_ADDR: 0.0.0.0
+    OP_NODE_RPC_PORT: "8545"
+    OP_NODE_P2P_LISTEN_IP: 0.0.0.0
+    OP_NODE_P2P_LISTEN_TCP_PORT: "9003"
+    OP_NODE_P2P_LISTEN_UDP_PORT: "9003"
+    OP_NODE_P2P_PEER_SCORING: light
+    OP_NODE_P2P_PEER_BANNING: "true"
+    OP_NODE_METRICS_ENABLED: "true"
+    OP_NODE_METRICS_ADDR: 0.0.0.0
+    OP_NODE_METRICS_PORT: "7300"
+    OP_NODE_PPROF_ENABLED: "true"
+    OP_NODE_PPROF_PORT: "6060"
+    OP_NODE_PPROF_ADDR: 0.0.0.0
+    OP_NODE_P2P_DISCOVERY_PATH: /op-node/opnode_discovery_db
+    OP_NODE_P2P_PEERSTORE_PATH: /op-node/opnode_peerstore_db
+    OP_NODE_SEQUENCER_ENABLED: "false"
+    OP_NODE_P2P_AGENT: mantle
+    OP_NODE_P2P_SYNC_REQ_RESP: "true"
     OP_NODE_L2_BACKUP_UNSAFE_SYNC_RPC: https://rpc.mantle.xyz
     OP_NODE_P2P_STATIC: /dns4/peer0.mantle.xyz/tcp/9003/p2p/16Uiu2HAmKVKzUAns2gLhZAz1PYcbnhY3WpxNxUZYeTN1x29tNBAW,/dns4/peer1.mantle.xyz/tcp/9003/p2p/16Uiu2HAm1AiZtVp8f5C8LvpSTAXC6GtwqAVKnB3VLawWYSEBmcFN,/dns4/peer2.mantle.xyz/tcp/9003/p2p/16Uiu2HAm2UHVKiPXpovs8VbbUQVPr7feBAqBJdFsH1z5XDiLEvHT
