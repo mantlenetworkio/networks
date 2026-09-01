@@ -109,6 +109,19 @@ export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #ple
 docker-compose -f docker-compose-sepolia-upgrade-beacon.yml up -d 
 ```
 
+#### 4.3 Start a reth-based node (alternative execution client)
+
+If you'd rather run [reth](https://github.com/paradigmxyz/reth) instead of op-geth as the execution client, use `docker-compose-sepolia-reth.yml`. It uses the L1 beacon chain to pull data for the rollup node (same as 4.2), so you need `L1_RPC_SEPOLIA` and `L1_BEACON_SEPOLIA` set the same way.
+
+```
+export L1_RPC_SEPOLIA='https://rpc.ankr.com/eth_sepolia'  #please replace
+export L1_BEACON_SEPOLIA='https://eth-beacon-chain-sepolia.drpc.org/rest/'  #please replace
+
+docker-compose -f docker-compose-sepolia-reth.yml up -d 
+```
+
+By default this initializes reth from genesis and fully syncs via L1 derivation, which takes considerably longer than starting op-geth from a snapshot (step 3). If a downloadable reth snapshot/image becomes available, restore it into `./data/sepolia-reth` before the first `up -d` to skip the full sync.
+
 ## Check Installation Result
 
 Follow these steps to check if the installation is successful
