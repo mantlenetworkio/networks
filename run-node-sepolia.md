@@ -122,6 +122,8 @@ docker-compose -f docker-compose-sepolia-reth.yml up -d
 
 By default this initializes reth from genesis and fully syncs via L1 derivation, which takes considerably longer than starting op-geth from a snapshot (step 3). If a downloadable reth snapshot/image becomes available, restore it into `./data/sepolia-reth` before the first `up -d` to skip the full sync.
 
+**Query through the `proxyd` service, not `op-reth` directly** (`${PROXYD_HTTP_PORT:-1545}` / `${PROXYD_WS_PORT:-1546}` on the host, default `http://localhost:1545`). reth only has chain data from a fixed height onward (see the `init-state`/`import-op` step in `docker-compose-sepolia-reth.yml`), and a few methods (`eth_getProof`, `debug_trace*`) are unreliable on reth regardless of height. `proxyd` forwards both cases to the public RPC (`rpc.sepolia.mantle.xyz`) instead of failing locally — see `sepolia/proxyd.toml` for the exact routing rules. Querying `op-reth`'s own port directly (`${VERIFIER_HTTP_PORT:-8545}`) skips this fallback and will error on pre-cutoff blocks or those methods.
+
 ## Check Installation Result
 
 Follow these steps to check if the installation is successful

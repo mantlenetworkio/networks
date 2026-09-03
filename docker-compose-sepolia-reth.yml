@@ -63,6 +63,34 @@ services:
       - ${VERIFIER_AUTH_PORT:-8551}:8551
     healthcheck:
       <<: *healthcheck
+  proxyd:
+    # Sits in front of op-reth. reth only has data from a fixed height onward
+    # (see op-reth's init-state/import-op step above), and some methods
+    # (eth_getProof, debug_trace*) are unreliable on reth regardless of height.
+    # Both cases get forwarded to the public RPC (rpc.sepolia.mantle.xyz)
+    # instead of erroring — see sepolia/proxyd.toml for the exact routing.
+    #
+    # TODO: replace with the publicly downloadable proxyd image/tag once available
+    image: mantlenetworkio/mantle-proxyd:latest
+    pull_policy: always
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1000M
+        reservations:
+          cpus: '250m'
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      op-reth:
+        condition: service_healthy
+    volumes:
+      - ./sepolia/proxyd.toml:/etc/proxyd/proxyd.toml
+    ports:
+      - ${PROXYD_HTTP_PORT:-1545}:8545
+      - ${PROXYD_WS_PORT:-1546}:8546
   op-node:
     image: mantlenetworkio/mantle-op-node:v1.5.3
     pull_policy: always
