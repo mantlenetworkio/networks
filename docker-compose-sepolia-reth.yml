@@ -9,8 +9,7 @@ x-healthcheck: &healthcheck
 
 services:
   op-reth:
-    # TODO: replace with the publicly downloadable reth image/tag once available
-    image: mantlenetworkio/mantle-op-reth:latest
+    image: mantlenetworkio/mantle-op-reth:op-reth-v2.2.1-mantle-arsia.2
     pull_policy: always
     deploy:
       resources:
@@ -92,7 +91,7 @@ services:
       - ${PROXYD_HTTP_PORT:-1545}:8545
       - ${PROXYD_WS_PORT:-1546}:8546
   op-node:
-    image: mantlenetworkio/mantle-op-node:v1.5.3
+    image: mantlenetworkio/mantle-op-node:v1.6.2
     pull_policy: always
     deploy:
       resources:
