@@ -69,8 +69,7 @@ services:
     # Both cases get forwarded to the public RPC (rpc.sepolia.mantle.xyz)
     # instead of erroring — see sepolia/proxyd.toml for the exact routing.
     #
-    # TODO: replace with the publicly downloadable proxyd image/tag once available
-    image: mantlenetworkio/mantle-proxyd:latest
+    image: mantlenetworkio/mantle-proxyd:v1.0.2
     pull_policy: always
     deploy:
       resources:
