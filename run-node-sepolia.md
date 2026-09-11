@@ -118,19 +118,12 @@ reth only starts from a snapshot — there's no genesis-sync path, so restore on
 ```
 mkdir -p ./data/sepolia-reth
 
-# Snapshots are produced weekly; there's no "latest" pointer yet, so probe back a few days
-for i in 0 1 2 3 4 5 6; do
-  SEPOLIA_RETH_TARBALL_DATE=$(date -u -d "-${i} day" +%Y%m%d 2>/dev/null || date -u -v-${i}d +%Y%m%d)
-  CODE=$(curl -s -o /dev/null -w '%{http_code}' https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_RETH_TARBALL_DATE}-sepolia-reth.tar.zst)
-  [ "$CODE" = "200" ] && break
-done
-echo "Using snapshot date: ${SEPOLIA_RETH_TARBALL_DATE}"
-
-# Download tarball
+# Download the latest official snapshot
+SEPOLIA_RETH_TARBALL_DATE=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/current-reth.info`
 wget -c https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_RETH_TARBALL_DATE}-sepolia-reth.tar.zst
 
 # Then you can verify your download
-SEPOLIA_RETH_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_RETH_TARBALL_DATE}-sepolia-reth-checksum.tmp | awk '{print $1}'`
+SEPOLIA_RETH_TARBALL_CHECKSUM=`curl https://s3.ap-southeast-1.amazonaws.com/snapshot.sepolia.mantle.xyz/${SEPOLIA_RETH_TARBALL_DATE}-sepolia-reth.tar.zst.sha256sum | awk '{print $1}'`
 echo "${SEPOLIA_RETH_TARBALL_CHECKSUM} *${SEPOLIA_RETH_TARBALL_DATE}-sepolia-reth.tar.zst" | shasum -a 256 --check
 
 # Unzip snapshot to the ledger path
